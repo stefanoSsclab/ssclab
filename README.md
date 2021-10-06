@@ -1,0 +1,7 @@
+# ssclab
+Linear programming library
+
+SSC (Software for the Calculation of the Simplex) is a java library for solving linear programming problems. 
+SSC uses the Simplex algorithm for solving this class of optimization problems normally indicated with the initials LP (Linear Programming).
+
+https://www.ssclab.org/en/index.html
