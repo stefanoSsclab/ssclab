@@ -1,0 +1,157 @@
+body {
+	font-size: 1.1em;
+}
+
+.beta {
+	font-weight: bold;
+	font-style: italic;
+	color:red;
+
+}
+
+.alfa { 
+	font-weight: bold;
+	font-style: italic;
+}
+
+.text_center {
+	text-align:center;
+	
+}
+
+.text_center a:link, a:visited {
+	color: #000000;
+	text-align: center;
+	text-decoration: none;
+}
+
+
+
+.paragraph_title {
+	color: #000000 !important;
+	border-radius: 13px;
+	margin-top: 50px;
+	padding: 0px 0px 0px 25px !important;
+	width: auto;
+	background: linear-gradient(#FFFFFF, #F1F1F1) repeat scroll 0 0 #F1F1F1;
+	border: 1px solid #CCCCCC;
+}
+
+#div_p_left {
+	float: left;
+	width: 15%;
+}
+
+#div_p_right {
+	float: right;
+	width: 15%;
+}
+
+#div_p_center {
+	float: right;
+	width: 70%;
+	
+	
+}
+
+#principale {
+	width: 100%;
+}
+
+#div_menu {
+	background: linear-gradient(#FFFFFF, #F1F1F1) repeat scroll 0 0 #F1F1F1;
+	color: #000000 !important;
+	border-radius: 13px;
+	border: 1px solid #CCCCCC;
+	height: 60px;
+}
+
+#div_menu_img {
+	float: left;
+	margin-left: 20px;
+}
+
+#div_menu_ul {
+	float: left;
+}
+
+#div_menu_en {
+	float: right;
+	
+}
+
+.menu {
+	list-style-type: none;
+	padding-left: 0px;
+	margin-top: 23px;
+}
+
+.menu li {
+	display: inline;
+	padding-left: 20px;
+}
+
+#div_menu_ul  a:link, a:visited {
+	color: #000000;
+	text-align: center;
+	height: 150px !important;
+	text-decoration: none;
+}
+
+#div_menu_ul a:hover, a:active {
+	background-color: #000000;
+	color: #FFFFFF;
+}
+
+/*INDICE ESEMPI*/
+ol {
+	list-style-type: none;
+	counter-reset: item;
+	margin: 0;
+	padding: 0;
+}
+
+#icona_en {
+	margin-top: 20px;
+	margin-right: 15px;
+	padding: 5;
+}
+
+.indice_esempi ol>li {
+	display: table;
+	counter-increment: item;
+	margin-bottom: 0.6em;
+}
+
+.indice_esempi ol>li:before {
+	content: counters(item, ".") ". ";
+	display: table-cell;
+	padding-right: 0.6em;
+}
+
+.indice_esempi li ol>li {
+	margin: 0;
+}
+
+.indice_esempi li ol>li:before {
+	content: counters(item, ".") " ";
+}
+
+.indice_esempi ol li a {
+	text-decoration: none;
+	color: #000000;
+}
+
+.indice_esempi ol li a:hover {
+	text-decoration: underline;
+}
+
+.codice_example {
+	font-size: 0.8em;
+}
+
+.commento {
+	width: 90%;
+	margin-left: 5%;
+	text-align: justify;
+}

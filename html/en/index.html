@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<meta name="google-site-verification" content="ycIKL1JafhQIL3TJT-tXMyh7OasmSGERhFch1cb1QcI" />
+<meta name="description" content="API Java for simplex">
+<meta name="keywords" content="Simplesso,Simplex,Programmazione Lineare,LP Solver, MILP, Linear programming,Simplex method,Java simplex solver">
+<title>The simplex method in java</title>
+<link rel="stylesheet" type="text/css" href="css/structure.css"
+	media="screen">
+
+</head>
+<body>
+	<div id="principale">
+		<div id="div_p_left">&nbsp;</div>
+		<div id="div_p_right">&nbsp;</div>
+		<div id="div_p_center">
+			<div id="div_menu">
+				<div id="div_menu_img">
+					<a title="Home" href="index.html"><img alt="Home" src="images/java_ssc_2.gif"></a>
+				</div>
+				<div id="div_menu_ul">
+					<ul class="menu">
+						<li><a title="Linear programming examples" href="esempi.html">Examples</a></li>
+						<li><a title="Documentation API" href="api/index.html" target="_new">Api</a></li>
+						<li><a title="Download SSC" href="download.html">Download</a></li>
+						<li><a title="Information" href="info.html">Info</a></li>
+						
+					</ul>
+				</div>
+			</div>
+
+			<h3 class="paragraph_title">A java simplex solver </h3>
+			
+			<div class="commento">
+			
+			SSC (Software for the Calculation of the Simplex) is a java library for solving  linear 
+			programming problems. SSC uses the Simplex algorithm for solving this class 
+			of optimization problems normally indicated with the initials LP 
+			(Linear Programming).
+			<p>In SSC you can solve problems with free variables, integer, binary and <span class="alfa">semi-continuous</span>.  
+			This subclass of problems are usually named with the initials MILP 
+			(Mixed Integer Linear Programming). For MILP problems, which have 
+			all or part of integer or binary or semi-continuous variables, SSC uses the algorithm 
+			of Branch and Bound (B&B) for their resolution.</p>
+			
+			<p>Starting from version 2.1. it is possible to perform an implementation of the 
+			<span class="alfa">parallel simplex</span>. This option (see example <a href="esempi.html#ese1_14">1.14</a>) makes it possible to exploit multiple 
+			threads for the simulation of the simplex and is of significant advantage in the case 
+			of architectures with at least 4 or more physical cores.
+			
+			Starting from this version it is also possible to perform an implementation of 
+			the  <span class="alfa">parallel Branch and Bound </span>
+			(see example <a href="esempi.html#ese2_13">2.13</a>). In this case, the duration advantages are also obtained starting from two physical cores. 
+			</p>	
+			
+			</p>
+			
+			<p>
+			</p>
+			</div>
+			
+			<h3 class="paragraph_title">The  problem </h3>
+			<div class="commento">
+			
+			
+			
+			The shape of the problems that the API provided by SSC solve 
+			is the following: <br> <br>
+
+			<pre style="font-size: 1.0em">
+		max/min  <b>c</b><sup><i>T</i></sup><b>x</b>	It is the objective function (o.f.)
+</pre>
+			bound to
+<pre style="font-size: 1.0em">
+		<b>Ax</b> (&#x2264;,=,&#x2265;) <b>b</b>		
+		<b>l</b> &#x2264; <b>x</b> &#x2264; <b>u</b> or x&#x1D62;=0
+		x&#x1D62;&#x2208; &#x2124; &#x2200;i &#x2208; I 
+		x&#x1D62;&#x2208; {0,1} &#x2200;i &#x2208; B 
+		x&#x1D62;&#x2208; &#x211D; &#x2200;i&#x2209; (I &#x222A; B); 
+</pre>
+			where
+			<pre style="font-size: 1.0em">
+		<b>x</b> &#x2208; &#x211D;<sup><i>n  </i></sup>	it is the vector of variables    
+		<b>A</b> &#x2208; &#x211A;<sup><i>mxn</i></sup>	it is the matrix of coefficients 
+		<b>c</b> &#x2208; &#x211A;<sup><i>n  </i></sup>	it is the vector of coefficients of the o.f.
+		<b>b</b> &#x2208; &#x211A;<sup><i>m  </i></sup>	it is the vector of the coefficients RHS
+		<b>l</b> &#x2208; &#x211A;<sup><i>n  </i></sup>	it is the vector of the lower bound 
+		<b>u</b> &#x2208; &#x211A;<sup><i>n  </i></sup>	it is the vector of the upper bound 
+		I &#x2208; {1,...,<i>n</i>}   it is a subset of the indices 
+		B &#x2208; {1,...,<i>n</i>} : (I &#x2229; B) = &#x2205;
+</pre>
+
+</div>
+
+			<h3 class="paragraph_title">Details</h3>
+			<div class="commento">
+			
+			The simplex method can 'be divided into two phases. In phase 1 is identified a basic 
+			feasible solution, while in the phase 2 is identified an optimal solution. The procedure 
+			manages free variables, bounded variables bottom and top and the different ranges 
+			of constraints. If they are not explicitly specified lower limits, 
+			 SSC considers the variables to be not negative. 
+			<P>In SSC when a variable is defined as an integer variable or binary, the procedure 
+			uses the algorithm of Branch and Bound for optimization. The Branch and Bound 
+			resolves a succession of relaxed problems (deprived of integer constraints); 
+			to solve these problems is used the Simplex algorithm.</P>
+			<p>
+			</p>
+			</div>
+			
+			
+			<!-------------------------->
+				<h3 class="paragraph_title">Size of problems and memory request</h3>
+			<div class="commento">
+			
+			The simplex method implemented in SSC is very efficient because we tried to optimize all the steps 
+			of the algorithm itself. The problems that can be solved with SSC have no limits in the number of 
+			variables and constraints, the limits are given by the jvm memory availability. For example, if you 
+			tell the jvm to make available a maximum quantity of 4 Gigabytes of memory (using the -Xmx4g declaration) you can solve problems 
+			with tens of thousands of variables and thousands of constraints.  
+			<P>On the contrary, the Branch and Bound method is not very efficient; there are methods in the 
+			literature that are certainly much more efficient from the point of view of computational complexity 
+			and in the use of memory (for example Branch and Cut and Price). Consequently the size of the 
+			MILP problems it must be limited. 
+			 
+				</P>
+			<p>
+			</p>
+			</div>
+			
+			<!----------------------->
+			
+			
+			
+			
+			
+			
+			<h3 class="paragraph_title">Technical requirements</h3>
+			<div class="commento">
+			
+			The requirement to perform the SSC program is to be able to have a JDK (or SDK) java version 8.x or higher. 
+			No other requirement is requested. 
+			<br> <br> <br> <br>
+			
+			
+			<div class="text_center">|  <A href="index.html">Home</a> | <A href="esempi.html">Eamples</a> | <A href="api/index.html">Api</a> | <A href="download.html">Download</a> | <A href="info.html">Info</a> |  </div>
+			
+			 
+			<br> <br> <br> <br> <br>
+			
+			</div>
+
+		</div>
+	</div>
+	
+</body>
+</html>
