@@ -35,39 +35,62 @@ import it.ssc.vector_spaces.MatrixException;
 	
 	private SolutionImpl solution_pl;
 	private SolutionType solutionType;
+	private  MILP father;
 	
 	
-	MilpManager(Input input_sparse,Session session, FormatType format) throws InvalidSessionException, Exception {
+	MilpManager(Input input_sparse,Session session, FormatType format, MILP father) throws InvalidSessionException, Exception {
 		id=createId();  
 		DataSource milp_data_source=session.createDataSource(input_sparse);
 		if(format==FormatType.SPARSE) pl_current=CreatePLProblem.createFromSparse(milp_data_source,isMilp);
 		else if(format==FormatType.COEFF) pl_current=CreatePLProblem.create(milp_data_source,isMilp);
 		pl_current.configureInteger();
 		pl_current.configureSemicont();
+		
+		this.father=father;
+		this.father.father_pl_original_zero=pl_current.clone(); 
 	}
 	
-	MilpManager(LinearObjectiveFunction f,ArrayList<Constraint> constraints) throws InvalidSessionException, Exception {
+	
+	/*
+	 * Il MilpManager è la classe che gestisce il MILP. 
+	 * Durante la fase del costruttore genera un primo PLProblem chiamato pl_current
+	 * 
+	 * 
+	 */
+	
+	
+	
+	MilpManager(LinearObjectiveFunction f,ArrayList<Constraint> constraints, MILP father) throws InvalidSessionException, Exception {
 		id=createId(); 
 		pl_current=CreatePLProblem.create(f,constraints,isMilp);
 		pl_current.configureInteger();
 		pl_current.configureSemicont();
+		
+		this.father=father;
+		this.father.father_pl_original_zero=pl_current.clone(); 
 	}
 	
 	
-	MilpManager(LinearObjectiveFunction f,ArrayList<InternalConstraint> constraints,ArrayList<String> nomi_var,ArrayProblem arrayProb) throws InvalidSessionException, Exception {
+	MilpManager(LinearObjectiveFunction f,ArrayList<InternalConstraint> constraints,ArrayList<String> nomi_var,ArrayProblem arrayProb,  MILP father) throws InvalidSessionException, Exception {
 		id=createId(); 
 		pl_current=CreatePLProblem.create(f,constraints,nomi_var,arrayProb,isMilp);  
 		pl_current.configureInteger();
 		pl_current.configureSemicont();
+		
+		this.father=father;
+		this.father.father_pl_original_zero=pl_current.clone(); 
 	}
 	
 	
-	MilpManager(Input milp_input,Session session) throws InvalidSessionException, Exception {
+	MilpManager(Input milp_input,Session session, MILP father) throws InvalidSessionException, Exception {
 		id=createId(); 
 		DataSource milp_data_source=session.createDataSource(milp_input);
 		pl_current=CreatePLProblem.create(milp_data_source,isMilp);
 		pl_current.configureInteger();
 		pl_current.configureSemicont();
+		
+		this.father=father;
+		this.father.father_pl_original_zero=pl_current.clone(); 
 	}
 	
 	void setEpsilon(EPSILON epsilon) {
@@ -89,10 +112,16 @@ import it.ssc.vector_spaces.MatrixException;
 	public void run() throws Exception {
 		resolve();
 	}
+	
 	SolutionType resolve() throws Exception {
 		
 		PLProblem lp_standard=pl_current.clone();
-		if(pl_original_zero==null) pl_original_zero=pl_current.clone();    //	QUI FORSE SI PUò LASCIARE L'ORIGINALE ... senza fare clone
+		
+		/*
+		 * pl_original_zero viane inizializzato la prima volta se e a null. 
+		 */
+		
+		 pl_original_zero=father.father_pl_original_zero.clone();    //	QUI FORSE SI PUò LASCIARE L'ORIGINALE ... senza fare clone
 		
 		/*
 		 * Nella fase di standardizzazione : 
@@ -397,6 +426,10 @@ import it.ssc.vector_spaces.MatrixException;
 		}
 		
 		System.out.println("");
+	}
+	
+	  static void resetZero()  {
+		pl_original_zero=null;
 	}
 	
 }

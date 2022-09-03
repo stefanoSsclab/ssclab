@@ -46,6 +46,9 @@ public final class MILP implements FormatTypeInput {
 	private boolean isJustTakeFeasibleSolution;
 	private MILPThreadsNumber threadNumber=MILPThreadsNumber.N_1;
 	private double stepDisadvantage=0.0;
+	
+	protected PLProblem father_pl_original_zero;
+	
 
 	{
 		lb=new LB();
@@ -114,7 +117,7 @@ public final class MILP implements FormatTypeInput {
 		ArrayList<String> nomi_var=fo_fromm_string.getListNomiVar();
 		ScanConstraintFromString scan_const=new ScanConstraintFromString(inequality,nomi_var);
 		ArrayList<InternalConstraint> list_constraints=scan_const.getConstraints();
-		this.milp_initiale = new MilpManager(fo,list_constraints,nomi_var,scan_const.getArraysProb());
+		this.milp_initiale = new MilpManager(fo,list_constraints,nomi_var,scan_const.getArraysProb(),this);
 		setAllEpsilon();
 	}
 	
@@ -147,7 +150,7 @@ public final class MILP implements FormatTypeInput {
 		}
 		
 		ArrayList<InternalConstraint> list_constraints=scan_const.getConstraints();
-		this.milp_initiale = new MilpManager(fo,list_constraints,nomi_var,scan_const.getArraysProb());
+		this.milp_initiale = new MilpManager(fo,list_constraints,nomi_var,scan_const.getArraysProb(),this);
 		setAllEpsilon();
 	}
 	
@@ -163,7 +166,8 @@ public final class MILP implements FormatTypeInput {
 	 */
 	
 	public MILP(LinearObjectiveFunction fo,ArrayList<Constraint> constraints) throws  Exception {
-		this.milp_initiale = new MilpManager(fo, constraints);
+		this.milp_initiale = new MilpManager(fo, constraints,this);
+		
 		setAllEpsilon();
 	}
 	
@@ -177,7 +181,7 @@ public final class MILP implements FormatTypeInput {
 	
 	public MILP(Input input) throws  Exception {
 		Session session=Context.createNewSession();
-		this.milp_initiale = new MilpManager(input, session); 
+		this.milp_initiale = new MilpManager(input, session,this); 
 		logger.log(Level.INFO,RB.getString("it.ssc.pl.milp.MILP.msg1"));
 		session.close();
 		setAllEpsilon();
@@ -192,7 +196,7 @@ public final class MILP implements FormatTypeInput {
 	 */
 	
 	public MILP(Input input,Session session) throws  Exception {
-		this.milp_initiale = new MilpManager(input, session); 
+		this.milp_initiale = new MilpManager(input, session,this); 
 		setAllEpsilon();
 	}
 	
@@ -207,7 +211,7 @@ public final class MILP implements FormatTypeInput {
 	 */
 	
 	public MILP(Input input_sparse,Session session, FormatType format) throws Exception {
-		this.milp_initiale = new MilpManager(input_sparse, session,format); 
+		this.milp_initiale = new MilpManager(input_sparse, session,format,this); 
 		setAllEpsilon();
 	}
 	
@@ -221,7 +225,7 @@ public final class MILP implements FormatTypeInput {
 	
 	public MILP(Input input_sparse,FormatType format) throws  Exception {
 		Session session=Context.createNewSession();
-		this.milp_initiale = new MilpManager(input_sparse, session,format);
+		this.milp_initiale = new MilpManager(input_sparse, session,format,this);
 		logger.log(Level.INFO,RB.getString("it.ssc.pl.milp.MILP.msg1"));
 		session.close();
 		setAllEpsilon();
