@@ -1,0 +1,3326 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="ISO-8859-1">
+	<meta name="description" content="Esempi programmazione lineare">
+	<meta name="keywords" content="Esempi Simplesso, Simplex Examples">
+	<title>Examples Java API simplex</title>
+	<script type="text/javascript" src="sintax/scripts/shCore.js"></script>
+	<script type="text/javascript" src="sintax/scripts/shBrushJava.js"></script>
+	<link type="text/css" rel="stylesheet"	href="sintax/styles/shCoreDefault.css" />
+	<script type="text/javascript">
+		SyntaxHighlighter.all();
+	</script>
+	<link rel="stylesheet" type="text/css" href="css/structure.css" media="screen">
+
+</head>
+<body>
+	<div id="principale">
+		<div id="div_p_left">&nbsp;</div>
+		<div id="div_p_right">&nbsp;</div>
+		<div id="div_p_center">
+			<div id="div_menu">
+				<div id="div_menu_img">
+					<a title="Home" href="index.html"><img alt="Home" src="images/java_ssc_2.gif"></a>
+				</div>
+				<div id="div_menu_ul">
+					<ul class="menu">
+						<li><a title="Linear programming examples" href="esempi.html">Examples</a></li>
+						<li><a title="Documentation API" href="api/index.html" target="_new">Api</a></li>
+						<li><a title="Download SSC" href="download.html">Download</a></li>
+						<li><a title="Information" href="info.html">Info</a></li>
+						
+					</ul>
+				</div>
+			</div>
+
+			<h3 class="paragraph_title"><a id="home_indice">Index </a></h3>
+			<div class="indice_esempi">
+				<ol>
+					<li>Linear programming 
+						<ol>
+
+							<li><a href="#ese1_1">Resolution of a LP problem formulated through coefficients</a></li>
+							<li><a href="#ese1_2">Resolution of an LP problem formulated through matrices</a></li>
+							<li><a href="#ese1_3">Resolution of a LP problem with bounded variables and free formulated through coefficients</a></li>
+							<li><a href="#ese1_4">Resolution of a LP problem with bounded variables and free formulated through matrices</a></li>
+							<li><a href="#ese1_5">Resolution of a LP problem formulated through inequalities</a></li>
+							<li><a href="#ese1_6">Resolution of a LP problem with bounded variables and free and  
+									formulated through inequalities</a></li>
+							<li><a href="#ese1_7">Resolution of a LP problem formulated through sparse format</a></li>
+							<li><a href="#ese1_8">Resolution of a LP problem formulated through coefficients
+							                       stored in a text file</a></li>
+							<li><a href="#ese1_9">Resolution of a LP problem formulated through sparse format 
+							                      stored in a database </a></li>
+							<li><a href="#ese1_10">Solving an LP problem in order to get only a feasible solution</a></li>
+							<li><a href="#ese1_11">Resolving an LP problem in inequality format stored in a text file </a></li>
+							<li><a href="#ese1_12">Resolving an LPin problem in sparse format stored in a text file</a></li>
+							
+							<li><a href="#ese1_13">Resolution of a LP problem and change of &epsilon; tolerance of great value o.f. for phase 1 of the simplex</a></li>
+							<li><a href="#ese1_14">Resolution of a LP problem by implementing a parallel simplex</a></li>				
+
+						</ol>
+					</li>
+
+					<li>Linear programming integer, mixed integer and binary 
+						<ol>
+
+							<li><a href="#ese2_1">Resolution of a MILP problem formulated through coefficients</a></li>
+							<li><a href="#ese2_2">Resolution of an MILP problem formulated through matrices</a></li>
+							<li><a href="#ese2_3">Resolution of an MILP problem formulated through sparse format</a></li>
+							<li><a href="#ese2_4">Resolution of a MILP problem formulated through coefficients with binary variables</a></li>
+							<li><a href="#ese2_5">Resolution of a MILP problem formulated through matrices with binary variables</a></li>
+							<li><a href="#ese2_6">Resolution of a MILP problem formulated through sparse format with binary variables</a></li>
+							<li><a href="#ese2_7">Resolution of a MILP problem with formulated through inequalities</a></li>
+							<li><a href="#ese2_8">Resolution of a MILP problem and comparison of the optimal solution with that obtained from its relaxation</a></li>    
+							<li><a href="#ese2_9">Resolution of a MILP problem and comparison of the value that assumes the part LHS of each constraint with the value RHS.</a></li>                      
+							<li><a  href="#ese2_10">Resolution of a MILP problem with variable semi-continuous. </span></a></li>
+							<li><a  href="#ese2_11">Resolution of a MILP problem formulated through matrices with variable semi-continuous. </a></li>  
+							<li><a  href="#ese2_12">Resolution of a MILP problem formulated through sparse format with variable semi-continuous. </a></li>
+							<li><a href="#ese2_13">Resolution of a MILP problem using multiple threads (parallel B&B ).</a></li> 
+							<li><a href="#ese2_14">Resolving a MILP problem in order to obtain a feasible solution.		
+						</ol>
+					</li>
+				</ol>
+			</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			<h3 class="paragraph_title">
+				<a id="ese1_1">Example 1.1</a>
+			</h3>
+
+			<div class="commento">
+				Consider the following LP problem: <br> <br>
+<pre>
+	 max  X<sub>1</sub> +   3X<sub>2</sub>
+	 
+	      X<sub>1</sub> +    X<sub>2</sub> &#x2265;-1
+   	      X<sub>1</sub> + 1.4X<sub>2</sub> &#x2264; 6
+   	    -5X<sub>1</sub> +   3X<sub>2</sub> = 5
+   	    
+   	 with X<sub>1</sub>, X<sub>2</sub> &#x2265; 0
+</pre>
+				<br> To solve this problem with SSC it's enough create text  
+				, where each line represents the objective function or the constraint, 
+				while the columns represent the coefficients of the variables, the relationships, 
+				the rhs values [lines 14-17].  <br> <br> 
+				
+				After formulating the problem you need to specify its record format (or input format). 
+				For input format we mean a statement which describes how should be read 
+				and interpreted the contents of the lines 14-17. The definition of 
+				the input format is done through a string to be passed as an argument to 
+				<i>setInputFormat</i> method [line 21]; in this string, there are the 
+				notations "Column name: column type" to define, in sequence, the name 
+				and type of the columns. Ultimately it states: the names of the 
+				variables of the problem (X<sub>1</sub> e X<sub>2</sub> double numeric type), the 
+				column of relations (TYPE), the column of rhs values 
+				(RHS). The names to be assigned to the variables 
+				can be any, while the column of relations and that of rhs values 
+				must necessarily called TYPE and RHS [line 21].
+				
+				<br> <br> 
+				
+				In general, you can declare the n variables of a problem even with a different notation, 
+				called at intervals, which is particularly useful if the variables of the problem are tens 
+				or hundreds. In this case, instead of representing the n variables with the 
+				notation "X1:double, X2:double, X3:double, ...., Xn:double", it is more convenient to 
+				represent them with the notation "X1-Xn:double". With this second notation we declare all 
+				variables comprised in the range from X<sub>1</sub> to X<sub>n</sub>;  this statement is 
+				certainly more compact.
+				
+				<br> <br> 
+				
+				Once represented the problem and assigned names to variables, you run the 
+				Simplex algorithm by creating a object of the LP class and the invocation 
+				of the <i>resolve</i> method [lines 23-24]. After running the Simplex, the 
+				<i>resolve</i> method returns the type of solution found; if the solution is an optimal 
+				solution is possible to obtain optimal values of the variables and the optimal value 
+				of the objective function. It should be remembered that in SSC, by default, the variables are considered, 
+				unless otherwise specified, as not negative (&#x2265; 0).
+			</div>
+			<br> <br>
+
+			<div class="codice_example">
+				<pre class="brush: java;">
+
+import it.ssc.log.SscLogger;
+import it.ssc.pl.milp.LP;
+import it.ssc.pl.milp.Solution;
+import it.ssc.pl.milp.SolutionType;
+import it.ssc.pl.milp.Variable;
+import it.ssc.ref.InputString;
+
+
+public class Example {
+	
+	public static void main(String[] args) throws Exception {
+
+		String lp_string = 
+			                " 1    3    max      .    \n" +  
+			                " 1    1    ge      -1    \n" +	  
+			                " 1  1.4    le       6    \n" +  
+			                "-5    3    eq       5";
+			
+
+		InputString lp_input = new InputString(lp_string); 
+		lp_input.setInputFormat("X1:double, X2:double, TYPE:varstring(3), RHS:double"); 
+
+		LP lp = new LP(lp_input); 
+		SolutionType solution_type=lp.resolve();
+		
+		if(solution_type==SolutionType.OPTIMUM) { 
+			Solution solution=lp.getSolution();
+			for(Variable var:solution.getVariables()) {
+				SscLogger.log("Variable name :"+var.getName() + " value:"+var.getValue());
+			}
+			SscLogger.log("o.f. value:"+solution.getOptimumValue());
+		}	
+		else SscLogger.log("no optimal solution:"+solution_type);
+	}
+}
+				</pre>
+							
+
+			</div>
+<div class="commento">
+<br>
+<a title="Back to index" href="#home_indice"><img alt="Back to index" src="images/up.png" /></a>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			<h3 class="paragraph_title">
+				<a id="ese1_2">Example 1.2</a>
+			</h3>
+			<div class="commento">
+				Consider the LP problem reported in the previous example and given by: <br> <br>
+				<pre>
+	 max  X<sub>1</sub> +   3X<sub>2</sub>
+	 
+	      X<sub>1</sub> +    X<sub>2</sub> &#x2265;-1
+   	      X<sub>1</sub> + 1.4X<sub>2</sub> &#x2264; 6
+   	    -5X<sub>1</sub> +   3X<sub>2</sub> = 5
+   	    
+   	 with X<sub>1</sub>, X<sub>2</sub> &#x2265; 0
+</pre>
+				<br> 
+				The previous example problem can also be expressed through the 
+				use of vectors and matrices. The representation format used is 
+				similar to that of simplex solver Apache. In this case it is 
+				necessary to define the matrix A of coefficients, the vector c 
+				of the coefficients of o.f. and the vector b of the RHS values.
+				
+				<br><br>
+				
+				Defined such entities [lines 18-23]  you create a LinearObjectiveFunction 
+				object [line 27] which represents the objective function and Constraint 
+				objects [line 31] that represent the constraints. The type of constraint 
+				(LE, GE, EQ) is specified through the elements of the vector of the rel 
+				 relations [line 25]. Finally, the list of constraints and the objective 
+				function are enough parameters to instantiate an object of class LP 
+				[line 34].
+			</div>
+			<br> <br>
+
+			<div class="codice_example">
+				<pre class="brush: java;">
+
+import it.ssc.log.SscLogger;
+import it.ssc.pl.milp.ConsType;
+import it.ssc.pl.milp.Constraint;
+import it.ssc.pl.milp.GoalType;
+import it.ssc.pl.milp.LP;
+import it.ssc.pl.milp.LinearObjectiveFunction;
+import it.ssc.pl.milp.Solution;
+import it.ssc.pl.milp.SolutionType;
+import it.ssc.pl.milp.Variable;
+
+import java.util.ArrayList;
+
+
+public class Example {
+
+	public static void main(String[] args) throws Exception {
+
+		double A[][]={ 
+				{ 1.0 , 1.0 },
+				{ 1.0 , 1.4 },
+				{-5.0 , 3.0 } } ;
+		double b[]= {-1.0, 6.0 ,5.0 };
+		double c[]= { 1.0, 3.0  };	
+
+		ConsType[] rel= {ConsType.GE, ConsType.LE, ConsType.EQ};
+
+		LinearObjectiveFunction fo = new LinearObjectiveFunction(c, GoalType.MAX);
+
+		ArrayList< Constraint > constraints = new ArrayList< Constraint >();
+		for(int i=0; i < A.length; i++) {
+			constraints.add(new Constraint(A[i], rel[i], b[i]));
+		}
+
+		LP lp = new LP(fo,constraints); 
+		SolutionType solution_type=lp.resolve();
+
+		if(solution_type==SolutionType.OPTIMUM) { 
+			Solution solution=lp.getSolution();
+			for(Variable var:solution.getVariables()) {
+				SscLogger.log("Variable name :"+var.getName() + " value:"+var.getValue());
+			}
+			SscLogger.log("o.f. value:"+solution.getOptimumValue());
+		}	
+	}
+}
+			</pre>
+			</div>
+<div class="commento">
+<br>
+<a title="Back to index" href="#home_indice"><img alt="Back to index" src="images/up.png" /></a>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			<h3 class="paragraph_title">
+				<a id="ese1_3">Example 1.3</a>
+			</h3>
+			<div class="commento">
+				Consider the following LP problem: <br> <br>
+				<pre>
+	 max  X<sub>1</sub> +   3X<sub>2</sub>
+	 
+	      X<sub>1</sub> +    X<sub>2</sub> &#x2265; 1
+   	      X<sub>1</sub> + 1.4X<sub>2</sub> &#x2264; 6
+   	    -5X<sub>1</sub> +   3X<sub>2</sub> = 5
+   	    
+   	 con -1 &#x2264; X<sub>1</sub> &#x2264; +1
+   	     -&infin; &#x2264; X<sub>2</sub> &#x2264; +&infin;  
+</pre>
+				<br>
+				In this example the X<sub>1</sub> variable is bounded both inferiorly (inferiorly is  limited but not by zero) 
+				which superiorly. In the representation of the problem , 
+				in order to define a variable with these limits, just add a line for the 
+				upper bound, and one for the lower bound [lines 16-17]. In the case of 
+				variable X<sub>2</sub> (without a lower limits), just specify a lower 
+				bound indefinite  (represented by ".").
+				
+				<br><br>
+				It is important to emphasize that in order to set the free variables, 
+				ie the variables that can assume negative values, just set a lower bound 
+				indefinite (-&infin;) or negative, or an upper bound negative. Conversely, introducing 
+				a constraint on the type X<sub>1</sub>  &#x2265; -1, it does not determine that the variable becomes 
+				free, but only binds the problem to meet this condition; condition that can not be 
+				met unless it makes the variable really free. To make it free you must use only 
+				the notation of the upper and lower bound.
+								
+				<br><br>
+				
+				Finally, during the printing of the solution it is possible to recover for each 
+				variable the upper and lower values previously valued in formulating the problem [line 29].
+				
+				
+
+			</div>
+			<br> <br>
+
+			<div class="codice_example">
+				<pre class="brush: java;">
+import it.ssc.log.SscLogger;
+import it.ssc.pl.milp.LP;
+import it.ssc.pl.milp.Solution;
+import it.ssc.pl.milp.SolutionType;
+import it.ssc.pl.milp.Variable;
+import it.ssc.ref.InputString;
+ 
+public class Example {
+    public static void main(String[] args) throws Exception {
+ 
+        String lp_string = 
+                            " 1    3    max      .    \n" + 
+                            " 1    1    ge       1    \n" + 
+                            " 1  1.4    le       6    \n" +
+                            "-5    3    eq       5    \n" + 
+                            " 1    .    upper    .    \n" +
+                            "-1    .    lower    .    \n" ; 
+             
+ 
+        InputString lp_input = new InputString(lp_string); 
+        lp_input.setInputFormat("X1-X2:double, TYPE:varstring(8), RHS:double"); 
+ 
+        LP lp = new LP(lp_input); 
+        SolutionType solution_type=lp.resolve();
+             
+        if(solution_type==SolutionType.OPTIMUM) {
+            Solution solution=lp.getSolution();
+            for(Variable var:solution.getVariables()) {
+                SscLogger.log("Variable "+var.getName() +": "+var.getLower() + " <= ["+var.getValue()+"] <= "+var.getUpper());
+            }
+            SscLogger.log("o.f. value:"+solution.getOptimumValue());
+        }   
+    }
+}
+			</pre>
+			</div>
+<div class="commento">
+<br>
+<a title="Back to index" href="#home_indice"><img alt="Back to index" src="images/up.png" /></a>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			<h3 class="paragraph_title">
+				<a id="ese1_4">Example 1.4</a>
+			</h3>
+			<div class="commento">
+				Consider the following LP problem reported in the previous example: <br> <br>
+				<pre>
+	 max  X<sub>1</sub> +   3X<sub>2</sub>
+	 
+	      X<sub>1</sub> +    X<sub>2</sub> &#x2265; 1
+   	      X<sub>1</sub> + 1.4X<sub>2</sub> &#x2264; 6
+   	    -5X<sub>1</sub> +   3X<sub>2</sub> = 5
+   	    
+   	 with -1 &#x2264; X<sub>1</sub> &#x2264; +1
+   	     -&infin; &#x2264; X<sub>2</sub> &#x2264; +&infin;  
+</pre>
+				<br>
+				
+				Let's solve the previous example using the matrix format. In order to represent 
+				the variable X<sub>1</sub>, which is bounded both inferiorly and superiorly, it is necessary 
+				to add to the matrix A a line for the upper bounds and one for the lower bounds 
+				[lines 21-22]. In the case of the variable X2, or of a free variable without limits, 
+				it is sufficient to specify a lower bound and an upper bound indefinite with the 
+				value NaN.
+				
+								
+				<br><br> 
+				Recall that in order to set the free variables, or variables that can 
+				assume negative values, must be set a lower bound infinity (-&infin;)  
+				or negative, or an upper bound negative.
+				 
+				
+				<br><br>
+				
+				It is then necessary to add in the vector of relations [line 27] the constants 
+				that declare that the last two lines of the matrix A are relative to the upper 
+				and lower bounds (add ConsType.UPPER and ConsType.LOWER). Finally, the size of 
+				vector b must also be updated (adding two NaN values) which must be equal to the 
+				number of staves of the matrix A.
+				
+
+			</div>
+			<br> <br>
+
+			<div class="codice_example">
+				<pre class="brush: java;">
+import it.ssc.log.SscLogger;
+import it.ssc.pl.milp.ConsType;
+import it.ssc.pl.milp.Constraint;
+import it.ssc.pl.milp.GoalType;
+import it.ssc.pl.milp.LP;
+import it.ssc.pl.milp.LinearObjectiveFunction;
+import it.ssc.pl.milp.Solution;
+import it.ssc.pl.milp.SolutionType;
+import it.ssc.pl.milp.Variable;
+import static it.ssc.pl.milp.LP.NaN;
+import java.util.ArrayList;
+
+public class Example {
+	
+	public static void main(String[] args) throws Exception {
+
+		double A[][]={ 
+				{ 1.0 , 1.0  },
+				{ 1.0 , 1.4  },
+				{-5.0 , 3.0  },
+				{ 1.0 , NaN },
+				{-1.0 , NaN }} ;
+		
+		double b[]= { 1.0, 6.0 ,5.0, NaN, NaN };
+		double c[]= { 1.0, 3.0  };	
+
+		ConsType[] rel= {ConsType.GE, ConsType.LE, ConsType.EQ, ConsType.UPPER, ConsType.LOWER};
+
+		LinearObjectiveFunction f = new LinearObjectiveFunction(c, GoalType.MAX);
+
+		ArrayList< Constraint > constraints = new ArrayList< Constraint >();
+		for(int i=0; i < A.length; i++) {
+			constraints.add(new Constraint(A[i], rel[i], b[i]));
+		}
+
+		LP lp = new LP(f,constraints); 
+		SolutionType solution_type=lp.resolve();
+
+		if(solution_type==SolutionType.OPTIMUM) { 
+			Solution solution=lp.getSolution();
+			for(Variable var:solution.getVariables()) {
+				SscLogger.log("Variable name :"+var.getName() + " value:"+var.getValue());
+			}
+			SscLogger.log("Value :"+solution.getOptimumValue());
+		}	
+	}
+}
+			
+			
+
+			</pre>
+			</div>
+<div class="commento">
+<br>
+<a title="Back to index" href="#home_indice"><img alt="Back to index" src="images/up.png" /></a>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<h3 class="paragraph_title">
+				<a id="ese1_5">Example 1.5</a>
+			</h3>
+			<div class="commento">
+				Consider the following LP problem: <br> <br>
+				<pre>
+	
+   	 min  3Y + 2X<sub>2</sub> + 4X<sub>3</sub> + 7X<sub>4</sub> + 8X<sub>5</sub>
+   	 
+   	      5Y + 2X<sub>2</sub>     <sub> </sub> + 3X<sub>4</sub>     <sub> </sub>  &#x2265;   9
+   	      3Y +  X<sub>2</sub> +  X<sub>3</sub>     <sub> </sub> + 5X<sub>5</sub>  &#x2265;  12
+   	      6Y + 3X<sub>2</sub> + 4X<sub>3</sub> + 5X<sub>4</sub>     <sub> </sub>  &#x2264; 124
+   	       Y + 3X<sub>2</sub>     <sub> </sub> + 3X<sub>4</sub> + 6X<sub>5</sub>  &#x2264; 854
+   	      
+   	 con Y, X<sub>2</sub>, X<sub>3</sub>, X<sub>4</sub>, X<sub>5</sub> &#x2265; 0
+   	   
+				</pre>
+				<br>
+				We want to solve this problem by using another representation format called inequality. In 
+				this format the objective function and the constraints can be expressed by means of 
+				equations / inequalities represented inside strings  [lines 17-21]. The variables 
+				can have any name (they must however start with an alphabetic character followed by 
+				alphanumeric characters) and are not case-sensitive (ie x3 and X3 represent the same variable).
+				 
+				
+				<br><br>
+				One advantage of this format is that if a variable is not present 
+				in a constraint  this may be omitted, unlike the matrix or format coefficients 
+				where it needs to be represented with a coefficient equal to zero. It is 
+				important to remember that the totality of the variables of the problem must 
+				however be expressed in the objective function.
+				
+
+			</div>
+			<br> <br>
+
+			<div class="codice_example">
+				<pre class="brush: java;">
+				
+import java.util.ArrayList;
+import it.ssc.log.SscLogger;
+import it.ssc.pl.milp.GoalType;
+import it.ssc.pl.milp.LP;
+import it.ssc.pl.milp.LinearObjectiveFunction;
+import it.ssc.pl.milp.Solution;
+import it.ssc.pl.milp.SolutionType;
+import it.ssc.pl.milp.Variable;
+
+public class Example {
+	
+	public static void main(String[] args) throws Exception {
+
+		
+		ArrayList< String > constraints = new ArrayList< String >();
+		constraints.add("min:  3Y +2x2 +4x3 +7x4 +8X5 "); 
+		constraints.add("5Y +2x2 +3X4       >= 9");
+		constraints.add("3Y + X2 +X3 +5X5   >= 12");
+		constraints.add("6Y+3.0x2 +4X3 +5X4 <= 124");
+		constraints.add(" y + 3x2 +3X4 +6X5 <= 854");
+		
+		LP lp = new LP(constraints); 
+		SolutionType solution_type=lp.resolve();
+		
+		if(solution_type==SolutionType.OPTIMUM) {
+			Solution soluzione=lp.getSolution();
+			for(Variable var:soluzione.getVariables()) {
+				SscLogger.log("Variable name :"+var.getName() + " value :"+var.getValue());
+			}
+			SscLogger.log("Value:"+soluzione.getOptimumValue());
+		}
+	}
+}
+
+
+			</pre>
+			</div>
+<div class="commento">
+<br>
+<a title="Back to index" href="#home_indice"><img alt="Back to index" src="images/up.png" /></a>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<h3 class="paragraph_title">
+				<a id="ese1_6">Example 1.6</a>
+			</h3>
+			<div class="commento">
+				Consider the following LP problem: <br><br>
+				<pre>
+	
+   	 min  3Y + 2X<sub>2</sub> + 4Z + 7X<sub>4</sub> + 8X<sub>5</sub>
+   	 
+   	      5Y + 2X<sub>2</sub>     <sub> </sub> + 3X<sub>4</sub>     <sub> </sub>  &#x2265;   9
+   	      3Y +  X<sub>2</sub> +  Z     <sub> </sub> + 5X<sub>5</sub>  &#x2265;  12
+   	      6Y + 3X<sub>2</sub> + 4Z + 5X<sub>4</sub>     <sub> </sub>  &#x2264; 124
+   	       Y + 3X<sub>2</sub>     <sub> </sub> + 3X<sub>4</sub> + 6X<sub>5</sub>  &#x2264; 854
+   	      
+   	 con Y, X<sub>4</sub>, X<sub>5</sub> &#x2265; 0
+   	    -1 &#x2264; X<sub>2</sub> &#x2264; +6
+   	     1 &#x2264; Z &#x2264; +&infin;     
+				</pre>
+				<br> 
+				We want to solve this problem using the inequalities format. 
+				In this format to add upper and lower bound a line must be added 
+				for each variable to be limited, respectively [lines 15-16]
+
+			</div>
+			<br> <br>
+
+			<div class="codice_example">
+				<pre class="brush: java;">
+
+
+import java.util.ArrayList;
+import it.ssc.log.SscLogger;
+import it.ssc.pl.milp.*;
+
+public class Example {
+	
+	public static void main(String[] args) throws Exception {
+		
+		ArrayList< String > constraints = new ArrayList< String >();
+		constraints.add("min:  3Y +2x2   +4Z +7x4 +8X5 ");
+		constraints.add("      5Y +2x2       +3X4      >= 9");
+		constraints.add("      3Y + X2   + Z       +5X5 >= 12");
+		constraints.add("      6Y +3.0x2 +4Z +5X4      <= 124");
+		constraints.add("       Y +3x2       +3X4 +6X5 <= 854");
+		constraints.add("-1<=  x2 <= 6");
+		constraints.add("1 <=  z  <= .");
+			
+		LP lp = new LP(constraints); 
+		SolutionType solution_type=lp.resolve();
+		
+		if(solution_type==SolutionType.OPTIMUM) {
+			Solution soluzione=lp.getSolution();
+			for(Variable var:soluzione.getVariables()) {
+				SscLogger.log("Variable Name :"+var.getName() + " value :"+var.getValue());
+			}
+			SscLogger.log("Value:"+soluzione.getOptimumValue());
+		}
+	}
+}
+
+			</pre>
+			</div>
+<div class="commento">
+<br>
+<a title="Back to index" href="#home_indice"><img alt="Back to index" src="images/up.png" /></a>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			<h3 class="paragraph_title">
+				<a id="ese1_7">Example 1.7</a>
+			</h3>
+			<div class="commento">
+				Consider the following LP problem reported in Example 1.4: <br> <br>
+				<pre>
+	 max  X<sub>1</sub> +   3X<sub>2</sub>
+	 
+	      X<sub>1</sub> +    X<sub>2</sub> &#x2265; 1
+   	      X<sub>1</sub> + 1.4X<sub>2</sub> &#x2264; 6
+   	    -5X<sub>1</sub> +   3X<sub>2</sub> = 5
+   	    
+   	 with -1 &#x2264; X<sub>1</sub> &#x2264; +1
+   	     -&infin; &#x2264; X<sub>2</sub> &#x2264; +&infin;  
+</pre>
+				<br> 
+				
+				Example 1.4 can be represented with a fourth format called "sparse" [lines 17-40]. 
+				Each entity (variable name, variable coefficient, RHS value) present in an expression 
+				of the type EQ, LE, GE, UPPER, LOWER, MAX, MIN, in this format has an associated name 
+				(name of the line). This name is initially declared in the ROW_ column with an associated 
+				TYPE to indicate its type [lines 17-22]. The TYPE column can take only one of the following 
+				values: EQ, LE, GE, UPPER, LOWER, MAX, MIN.
+				
+				
+				<br> <br>
+				
+				Then they declare variables of the problem through the COL_ column. 
+				In addition to variables, in COL_ it must also represented the marker 
+				values of rhs. If the variable names can be any, the marker of rhs values 
+				must be expressed necessarily with the RHS notation.
+				
+				The definition of the coefficient that each variable takes on each line 
+				is done by setting, for each combination ROW_ and COL_, its value in the 
+				COEF column. Defined the problem must be held in the reading format 
+				[line 44] the name and type of the four entities required by this format: 
+				TYPE, COL_, ROW_ and COEF.
+				
+				
+				<br> <br> 
+				
+				To be able to instantiate an LP object with this format, the FormatType.SPARSE 
+				constant must be passed as an argument to inform the LP object of the type of format 
+				used [line 46]. This format is particularly suitable for picking up problems 
+				in database tables, since the structure of the requested table is always the same: 
+				it is sufficient that this defines the columns TYPE, COL_, ROW_ and COEF.
+			
+				
+				<br> <br> 
+				Finally, it should be remembered that the values of the TYPE and COL_
+				column can be expressed both in uppercase and in lowercase; in both cases they 
+				will be returned to the upper case; while for the column ROW_ expressing the name 
+				of a line simultaneously in lower case and in upper case, within the same formulation, 
+				means to declare two different names (and therefore two staves).
+				
+
+			</div>
+			<br> <br>
+
+			<div class="codice_example">
+				<pre class="brush: java;">
+
+import it.ssc.log.SscLogger;
+import it.ssc.pl.milp.FormatTypeInput.FormatType;
+import it.ssc.pl.milp.LP;
+import it.ssc.pl.milp.Solution;
+import it.ssc.pl.milp.SolutionType;
+import it.ssc.pl.milp.Variable;
+import it.ssc.ref.InputString;
+
+public class Example {
+	
+	public static void main(String[] args) throws Exception {
+
+		String lp_sparse = 
+		
+			//    TYPE   COL_   ROW_    COEF 
+				 
+				" MAX     .    price      .    \n" +   
+                " GE      .    row1       .    \n" +	  
+                " LE      .    row2       .    \n" +  
+                " EQ      .    row3       .    \n" +
+                " UPPER   .    lim_sup    .    \n" +
+                " LOWER   .    lim_inf    .    \n" +              
+		
+				" .      X1    price      1    \n" +
+				" .      X1    row1       1    \n" +	  
+		        " .      X1    row2       1    \n" +  
+		        " .      X1    row3      -5    \n" +
+		        " .      X1    lim_sup    1    \n" +
+		        " .      X1    lim_inf   -1    \n" +		       
+				 
+				" .      X2    price      3    \n" +
+				" .      X2    row1       1    \n" +	  
+		        " .      X2    row2     1.4    \n" +  
+		        " .      X2    row3       3    \n" +
+		        " .      X2    lim_sup    .    \n" +
+		        " .      X2    lim_inf    .    \n" +	       
+		         
+				" .      RHS   row1       1    \n" +	  
+				" .      RHS   row2       6    \n" +  
+				" .      RHS   row3       5    \n"   ;
+			
+
+		InputString lp_input = new InputString(lp_sparse); 
+		lp_input.setInputFormat("TYPE:varstring(5), COL_:varstring(3) , ROW_:varstring(7), COEF:double"); 
+
+		LP lp = new LP(lp_input,FormatType.SPARSE); 
+		SolutionType solution_type=lp.resolve();
+		
+		if(solution_type==SolutionType.OPTIMUM) {    
+			Solution solution=lp.getSolution();
+			for(Variable var:solution.getVariables()) {
+				SscLogger.log("Variable name :"+var.getName() + " value:"+var.getValue());
+			}
+			SscLogger.log("o.f. value:"+solution.getOptimumValue());
+		}	
+	}
+}
+			</pre>
+			</div>
+<div class="commento">
+<br>
+<a title="Back to index" href="#home_indice"><img alt="Back to index" src="images/up.png" /></a>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			<h3 class="paragraph_title">
+				<a id="ese1_8">Example 1.8</a>
+			</h3>
+			<div class="commento">
+				Consider the following LP problem: <br> <br>
+				<pre>
+	
+   	 min  3Y<sub>1</sub> +  Y<sub>2</sub> + 4Y<sub>3</sub> + 7Y<sub>4</sub> + 8Y<sub>5</sub>
+   	 
+   	      5Y<sub>1</sub> + 2Y<sub>2</sub>     <sub> </sub> + 3Y<sub>4</sub>     <sub> </sub>  &#x2265;   9
+   	      3Y<sub>1</sub> +  Y<sub>2</sub> +  Y<sub>3</sub>     <sub> </sub> + 5Y<sub>5</sub>  &#x2265;  12
+   	      6Y<sub>1</sub> + 3Y<sub>2</sub> + 4Y<sub>3</sub> + 5Y<sub>4</sub>     <sub> </sub>  &#x2264; 124
+   	      1Y<sub>1</sub> + 3Y<sub>2</sub>     <sub> </sub> + 3Y<sub>4</sub> + 6Y<sub>5</sub>  &#x2264; 854
+   	      
+   	 con Y<sub>1</sub>, Y<sub>4</sub>, Y<sub>5</sub> &#x2265; 0
+   	     0 &#x2264; Y<sub>2</sub> &#x2264; +6
+   	     1 &#x2264; Y<sub>3</sub> &#x2264; +&infin;     
+</pre>
+				<br> 
+				In this case we want to solve the LP problem whose 
+				formulation is in a text file (.txt). We call this pl_problem.txt 
+				files and use, for the representation of the problem, the  
+				format coefficients. In pl_problem.txt files we will have the following content:
+			
+
+				<pre>
+   	     
+3 1 4 7 8 min      . 
+5 2 0 3 0 ge       9 
+3 1 1 0 5 ge       12
+6 3 4 5 0 le       124
+1 3 0 3 6 le       854
+. 6 . . . upper    . 
+0 0 1 0 0 lower    . 
+
+</pre>
+
+		Defined such content SSC should be informed that the problem is 
+		contained in a [line 12] file. If you have a significant number 
+		of variables (in this case only 5, but it may be many more) they 
+		can declare [line 13] with the syntax "Y1-Y5: double",  that way 
+		you declare 5 different variables  
+		(Y<sub>1</sub>, Y<sub>2</sub>, Y<sub>3</sub>, Y<sub>4</sub>,
+		 Y<sub>5</sub>) of type double.
+
+
+			</div>
+			<br> <br>
+
+			<div class="codice_example">
+				<pre class="brush: java;">
+
+
+import it.ssc.log.SscLogger;
+import it.ssc.pl.milp.LP;
+import it.ssc.pl.milp.Solution;
+import it.ssc.pl.milp.SolutionType;
+import it.ssc.pl.milp.Variable;
+import it.ssc.ref.InputFile;
+
+public class Example {
+	
+	public static void main(String[] args) throws Exception {
+
+		InputFile input = new InputFile("c:/dir_pl/pl_problem.txt");
+		input.setInputFormat("Y1-Y5:double, TYPE:varstring(10),  RHS:double");
+
+		LP lp=new LP(input);
+		SolutionType solution_type=lp.resolve();
+		
+		if(solution_type==SolutionType.OPTIMUM) {
+			Solution soluzione=lp.getSolution();
+			for(Variable var:soluzione.getVariables()) {
+				SscLogger.log("Variable name :"+var.getName() + " value:"+var.getValue());
+			}
+			SscLogger.log("o.f. value:"+soluzione.getOptimumValue());
+		}
+	}
+}
+			</pre>
+			</div>
+<div class="commento">
+<br>
+<a title="Back to index" href="#home_indice"><img alt="Back to index" src="images/up.png" /></a>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			<h3 class="paragraph_title">
+				<a id="ese1_9">Example 1.9</a>
+			</h3>
+			<div class="commento">
+				Consider the LP problem in example 1.5:
+				<br> <br>
+				<pre>
+	 max  X<sub>1</sub> +   3X<sub>2</sub>
+	 
+	      X<sub>1</sub> +    X<sub>2</sub> &#x2265; 1
+   	      X<sub>1</sub> + 1.4X<sub>2</sub> &#x2264; 6
+   	    -5X<sub>1</sub> +   3X<sub>2</sub> = 5
+   	    
+   	 with -1 &#x2264; X<sub>1</sub> &#x2264; +1
+   	     -&infin; &#x2264; X<sub>2</sub> &#x2264; +&infin;  
+</pre>
+				<br>
+				In this example we want to recover the problem, 
+				formulated in the sparse format, from a table of a 
+				database (DB) Oracle. Recall that in the format shed the 
+				necessary input for the resolution of a LP problem requires 
+				the presence of columns TYPE, ROW_, COL_ and COEF. For which 
+				the Orache table that contains the problem must have such columns. 
+				We call this table as TAB_PL_PROBLEM, and we create it with the 
+				following DDL statement:
+				
+
+				<pre>
+CREATE TABLE  "TAB_PL_PROBLEM" 
+  ("TYPE" VARCHAR2(5), 
+   "COL_" VARCHAR2(3), 
+   "ROW_" VARCHAR2(7), 
+   "COEF" FLOAT(126)
+  )
+</pre>
+
+
+	Finally, we insert in the table the following records 
+	(by no means the null value is not the "null" string):
+<pre>
+
+  MAX     null    price      null   
+  GE      null    row1       null    
+  LE      null    row2       null   
+  EQ      null    row3       null   
+  UPPER   null    lim_sup    null   
+  LOWER   null    lim_inf    null        
+  null      X1    price      1   
+  null      X1    row1       1    
+  null      X1    row2       1   
+  null      X1    row3      -5   
+  null      X1    lim_sup    1   
+  null      X1    lim_inf   -1          
+  null      X2    price      3   
+  null      X2    row1       1    
+  null      X2    row2     1.4   
+  null      X2    row3       3   
+  null      X2    lim_sup    null   
+  null      X2    lim_inf    null         
+  null      RHS   row1       1    
+  null      RHS   row2       6   
+  null      RHS   row3       5   
+
+
+</pre>
+				
+In order to retrieve the formulation of the problem from a 
+table in a database, you must download the JDBC driver 
+for the database in question, and instantiate an object Connection 
+[lines 41-48]. Once you have a connection to the DB, via the 
+Connection object you can, by SSC, access the DB as if it were 
+a library, or a container of tables. SSC to allocate libraries 
+require that a SSC session is created. A SSC session is the 
+environment in which SSC runs. In the previous examples the 
+creation of a session was not necessary because the LP object 
+creates and uses its own implicit SSC session.				
+
+
+				
+			
+				
+		<br> <br> 
+		The [line 21] invocation <i>addLibrary</i> allows you to add a 
+		library to the current session of the SSC (named "DB_ORACLE") 
+		that represents a connection to Oracle DB. After this 
+		invocation the <i>addLibrary</i> method returns an object that 
+		represents an interface to the container. From this interface 
+		we can [line 23] obtain an object of type Input, which refers 
+		to "TAB_PL_PROBLEM" table. 
+		
+		Once you have this input we can pass it
+		(remember that the data in the table are in Sparse) 
+		to the constructor LP [line 24] and run the Simplex.		
+				
+		<br> <br>
+		It 'should be noted that in the constructor of class LP is also 
+		passed as an argument [line 24] SSC session created, this in order 
+		not to instantiate the object a second LP totally unnecessary session.		
+				
+			
+
+
+			</div>
+			<br> <br>
+
+			<div class="codice_example">
+				<pre class="brush: java;">
+
+import it.ssc.context.Context;
+import it.ssc.context.Session;
+import it.ssc.library.Library;
+import it.ssc.log.SscLogger;
+import it.ssc.pl.milp.FormatTypeInput.FormatType;
+import it.ssc.pl.milp.LP;
+import it.ssc.pl.milp.Solution;
+import it.ssc.pl.milp.SolutionType;
+import it.ssc.pl.milp.Variable;
+import it.ssc.ref.Input;
+import java.sql.Connection;
+import oracle.jdbc.pool.OracleDataSource;
+ 
+public class Example {
+     
+    public static void main(String[] args) throws Exception {
+         
+        Session session = null;
+        try {
+            session = Context.createNewSession();
+            Library lib_ora=session.addLibrary("DB_ORACLE", connOracle());
+         
+            Input pl_oracle=lib_ora.getInput("TAB_PL_PROBLEM");
+            LP lp = new LP(pl_oracle,session,FormatType.SPARSE); 
+            SolutionType solution_type=lp.resolve();
+             
+            if(solution_type==SolutionType.OPTIMUM) { 
+                Solution solution=lp.getSolution();
+                for(Variable var:solution.getVariables()) {
+                    SscLogger.log("Variable name :"+var.getName() + " value:"+var.getValue());
+                }
+                SscLogger.log("o.f. value:"+solution.getOptimumValue()); 
+            }   
+        } 
+        finally {
+            session.close();
+        }
+    }
+     
+     
+    private static Connection connOracle() throws Exception {
+        OracleDataSource ods = new OracleDataSource();
+        String URL = "jdbc:oracle:thin:@//192.168.243.134:1521/XE";
+        ods.setURL(URL);
+        ods.setUser("user_pl");
+        ods.setPassword("ora655"); 
+        return ods.getConnection();
+    }
+}
+
+				</pre>
+			</div>
+<div class="commento">
+<br>
+<a title="Back to index" href="#home_indice"><img alt="Back to index" src="images/up.png" /></a>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			<h3 class="paragraph_title">
+				<a id="ese1_10">Example 1.10</a>
+			</h3>
+			<div class="commento">
+			In the example below shows a simple LP problem. In this example you want 
+			to highlight what are the values that the <i>resolve</i> method can return 
+			according to the LP problem:<br><br>
+
+			a) The problem admits an optimal solution<br>
+			b) The problem has no feasible solutions<br>
+			c) The problem has great Unlimited<br>
+			d) Reaches the maximum number of possible iterations<br>
+			e) A feasible solution is returned instead of an optimal solution<br>
+            <br>
+			If the need is to obtain a feasible solution not necessarily optimal (case e), 
+            just invoke the setJustTakeFeasibleSolution () method giving it the value "true" (line 28). 
+            This option allows only the first phase of the simplex to be performed and to obtain a first 
+            (basic) allowable solution. In this case the value returned by the resolve () 
+            method (in case a feasible solution exists) will be SolutionType.FEASIBLE.
+
+			<br>
+			The maximum number of iterations can be changed by the analyst [line 27].
+			
+			</div>
+			<br> <br>
+
+			<div class="codice_example">
+				<pre class="brush: java;">
+import it.ssc.log.SscLogger;
+import it.ssc.pl.milp.LP;
+import it.ssc.pl.milp.Solution;
+import it.ssc.pl.milp.SolutionType;
+import it.ssc.pl.milp.Variable;
+import it.ssc.ref.InputString;
+
+public class Example {
+	
+	public static void main(String[] args) throws Exception {
+
+		String lp_string = 
+			                "5  4   1    3   max     .   \n" +  
+			                "4  3   1    1   ge      2   \n" +	  
+			                "1 -2   1   -1   le      2   \n" +	  		
+			                "3  2   1  1.4   le      6   \n" +  
+			                "9  8   4  1.7   le      7   \n" +  
+			                "5  3  -1  2.4   le      9   \n" +  
+			                "3 -2  -5    3   le      5      ";
+			
+
+		InputString lp_input = new InputString(lp_string); 
+		lp_input.setInputFormat("V1-V4:double, TYPE:varstring(8), RHS:double"); 
+
+		LP lp = new LP(lp_input); 
+		SscLogger.log("Numero di iterazioni di default:"+lp.getNumMaxIteration());
+		lp.setNumMaxIteration(5);
+		lp.setJustTakeFeasibleSolution(true);  //imposto la ricerca di una soluzione ammissibile , 
+		SolutionType solution_type=lp.resolve();
+		
+		if(solution_type==SolutionType.FEASIBLE) { 
+			Solution solution=lp.getSolution();
+			for(Variable var:solution.getVariables()) {
+				SscLogger.log("Variable  name :"+var.getName() + " value:"+var.getValue());
+			}
+			SscLogger.log("o.f. value of feasible solution:"+solution.getOptimumValue());
+		}	
+		else if(solution_type==SolutionType.VUOTUM) {
+			SscLogger.log("Phase 1 of the simplex did not find feasible solutions:("+solution_type+")");
+		}
+		else if(solution_type==SolutionType.ILLIMITATUM) {
+			SscLogger.log("The problem has great Unlimited:("+solution_type+")");
+		}
+		else if(solution_type==SolutionType.MAX_ITERATIUM) {
+			SscLogger.log("Max iteration:("+solution_type+")");
+		}
+		else if(solution_type==SolutionType.OPTIMUM) { 
+			// this section will never be reached as it has been set
+            // setJustTakeFeasibleSolution (true), the simplex can only return feasible solutions
+		}
+		
+	}
+}
+
+				</pre>
+			</div>
+<div class="commento">
+<br>
+<a title="Back to index" href="#home_indice"><img alt="Back to index" src="images/up.png" /></a>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			<h3 class="paragraph_title">
+				<a id="ese1_11">Example 1.11</a>
+			</h3>
+			<div class="commento">
+				In the example below we want to solve the problem already faced in exercise 1.6, 
+				with the particularity that the formulation of the problem (using the inequality format) 
+				is stored in a file. We call this file pl_proble.txt. The file mentioned will contain the 
+				following content:<br><br> 
+				
+					<pre>
+min:  3Y +2x2   +4Z +7x4 +8X5 
+row1:5Y +2x2       +3X4      >= 9
+row2:3Y + X2    +Z      +5X5 >= 12
+Vin1:6Y +3.0x2 +4Z +5X4      <= 124
+vin2: Y +3x2       +3X4 +6X5 <= 854
+-1 <= x2 <= 6
+ 1 <=  z <= .
+				</pre>
+				
+				Unlike the formulation of example 1.6 in this case we have also associated with each 
+				constraint a label (name of the constraint) which is inserted before putting a name 
+				followed by two points at each constraint. It is important to point out that on the 
+				upper and lower bound limits (for example +3 <= x <= + 6) the label must absolutely 
+				not be inserted.
+				
+				
+			</div>
+			<br> <br>
+
+			<div class="codice_example">
+				<pre class="brush: java;">
+
+import it.ssc.log.SscLogger;
+import it.ssc.pl.milp.*;
+import java.util.ArrayList;
+import java.util.Random;
+
+public class Example {
+	
+ public static void main(String[] args) throws Exception {
+ 
+        LP lp = new LP("C:\\ssc_project\\ssc\\dati_testo\\pl_proble.txt");
+        SolutionType solution_type=lp.resolve();
+         
+        if(solution_type==SolutionType.OPTIMUM) {
+            Solution soluzione=lp.getSolution();
+            for(Variable var:soluzione.getVariables()) {
+                SscLogger.log("Variable name :"+var.getName() + " value :"+var.getValue());
+            }
+            for(SolutionConstraint sol_constraint: soluzione.getSolutionConstraint()) {
+                SscLogger.log("Vincolo "+sol_constraint.getName()+" : valore="+sol_constraint.getValue() + 
+                              "[ "+sol_constraint.getRel()+"  "+sol_constraint.getRhs()+" ]" );
+            }
+            SscLogger.log("Valore ottimo:"+soluzione.getOptimumValue());
+        }
+    }
+}
+				</pre>
+			</div>
+<div class="commento">
+<br>
+<a title="Back to index" href="#home_indice"><img alt="Back to index" src="images/up.png" /></a>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<h3 class="paragraph_title">
+				<a id="ese1_12">Example 1.12</a>
+			</h3>
+			<div class="commento">
+			
+			Consider the following LP problem identical to Example 1.9:
+			
+			<br> <br>
+				<pre>
+	 max  X<sub>1</sub> +   3X<sub>2</sub>
+	 
+	      X<sub>1</sub> +    X<sub>2</sub> &#x2265; 1
+   	      X<sub>1</sub> + 1.4X<sub>2</sub> &#x2264; 6
+   	    -5X<sub>1</sub> +   3X<sub>2</sub> = 5
+   	    
+   	 con -1 &#x2264; X<sub>1</sub> &#x2264; +1
+   	     -&infin; &#x2264; X<sub>2</sub> &#x2264; +&infin;  
+</pre>
+				<br> In this example we want to recover the problem, formulated in the scattered format,
+				 from a text file called sparse_problem.txt containing the following listing:
+
+			
+					<pre>
+
+  MAX     .    costo      .   
+  GE      .    row1       .    
+  LE      .    row2       .   
+  EQ      .    row3       .   
+  UPPER   .    lim_sup    .   
+  LOWER   .    lim_inf    .        
+  .      X1    costo      1   
+  .      X1    row1       1    
+  .      X1    row2       1   
+  .      X1    row3      -5   
+  .      X1    lim_sup    1   
+  .      X1    lim_inf   -1          
+  .      X2    costo      3   
+  .      X2    row1       1    
+  .      X2    row2     1.4   
+  .      X2    row3       3   
+  .      X2    lim_sup    .   
+  .      X2    lim_inf    .         
+  .      RHS   row1       1    
+  .      RHS   row2       6   
+  .      RHS   row3       5   
+
+
+</pre>
+<br> 
+It should be noted that the LP class constructor is passed as
+argument an object of type InputFile that refers to the file containing the problem.				
+				
+			
+			</div>
+			<br> <br>
+
+			<div class="codice_example">
+				<pre class="brush: java;">
+import it.ssc.log.SscLogger;
+import it.ssc.pl.milp.FormatTypeInput.FormatType;
+import it.ssc.pl.milp.LP;
+import it.ssc.pl.milp.Solution;
+import it.ssc.pl.milp.SolutionType;
+import it.ssc.pl.milp.Variable;
+import it.ssc.ref.InputFile;
+
+public class Example {
+     
+    public static void main(String[] args) throws Exception {
+         
+        InputFile input_sparse = new InputFile("C:/ssc_project/sparse_problem.txt");
+       	input_sparse.setInputFormat("TYPE:varstring(5), COL_:varstring(3) , ROW_:varstring(7), COEF:double"); 
+        LP lp = new LP(input_sparse,FormatType.SPARSE);  
+        SolutionType solution_type=lp.resolve();
+            
+        if(solution_type==SolutionType.OPTIMUM) { 
+            Solution solution=lp.getSolution();
+            for(Variable var:solution.getVariables()) {
+                SscLogger.log("Variable name :"+var.getName() + " value:"+var.getValue());
+            }
+            SscLogger.log("o.f. value :"+solution.getOptimumValue());
+        }   
+       
+    }
+}
+ 
+				</pre>
+			</div>
+<div class="commento">
+<br>
+<a title="Back to index" href="#home_indice"><img alt="Back to index" src="images/up.png" /></a>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<h3 class="paragraph_title">
+				<a id="ese1_13">Example 1.13</a>
+			</h3>
+			<div class="commento">
+			
+			The example below shows an LP problem generated by pseudocausal numbers, 
+			with the particularity that the vector b is made to take values of the order 
+			of millions of millions. The consequence of working with large numbers may not make 
+			the phase 1 of the simplex converge. In this particular case, if the tolerance &epsilon; of 
+			the optimal value z of the objective function relative to the phase 1 is not modified, 
+			the resolution of the problem may not give admissible solutions. 
+			In other words, at the end of phase 1, if | z | &gt; &epsilon; then the problem does not 
+			allow solutions. In this 
+			case the tolerance it is increased from 1E-8 (default value) to 1E-5. 
+			In other words, if | z | &lt; &epsilon;  the problem admits solutions.
+			
+			</div>
+			<br> <br>
+
+			<div class="codice_example">
+				<pre class="brush: java;">
+
+import it.ssc.log.SscLogger;
+import it.ssc.pl.milp.*;
+import java.util.ArrayList;
+import java.util.Random;
+ 
+public class Example {
+    public static void main(String arg[]) throws Exception {
+         
+        final int M = 445;  // rows
+        final int N = 345;  // cols
+         
+        Random random = new Random();
+         
+        double[] c = new double[N];
+        double[] b = new double[M];
+        double[][] A = new double[M][N];
+        for (int j = 0; j < N; j++)      c[j] = (double) (random.nextInt(20));
+        for (int i = 0; i < M; i++)      b[i] = (double) random.nextInt(100000000);
+        for (int i = 0; i < M; i++)
+            for (int j = 0; j < N; j++)  A[i][j] = (double) random.nextInt(10);
+                 
+ 
+        LinearObjectiveFunction f = new LinearObjectiveFunction(c, GoalType.MAX);
+ 
+        ArrayList< Constraint > constraints = new ArrayList< Constraint >();
+        for(int i=0; i < A.length; i++) {
+            constraints.add(new Constraint(A[i], ConsType.LE, b[i])); 
+        }
+        
+        LP lp = new LP(f,constraints);
+        lp.setCEpsilon(EPSILON._1E_M5);
+        SolutionType solution_type=lp.resolve();
+ 
+        if(solution_type==SolutionType.OPTIMUM) { 
+            Solution solution=lp.getSolution();
+            for(Variable var:solution.getVariables()) {
+                SscLogger.log("Variable :"+var.getName() + " value:"+var.getValue());
+            }
+            SscLogger.log("Value o.f. :"+solution.getOptimumValue());  
+        }
+        else SscLogger.log("no optimal solution. Tipo di soluzione:"+solution_type);
+    }
+}
+ 
+				</pre>
+			</div>
+<div class="commento">
+<br>
+<a title="Back to index" href="#home_indice"><img alt="Back to index" src="images/up.png" /></a>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			<h3 class="paragraph_title">
+				<a id="ese1_14">Esempio 1.14</a>
+			</h3>
+
+			<div class="commento">
+				Consider the following LP problem:  <br> <br>
+<pre>
+	 max  X<sub>1</sub> +   3X<sub>2</sub>
+	 
+	      X<sub>1</sub> +    X<sub>2</sub> &#x2265;-1
+   	      X<sub>1</sub> + 1.4X<sub>2</sub> &#x2264; 6
+   	    -5X<sub>1</sub> +   3X<sub>2</sub> = 5
+   	    
+   	 con X<sub>1</sub>, X<sub>2</sub> &#x2265; 0
+</pre>
+				<br> To solve this problem (identical to problem 1.1) with an implementation 
+				of the parallel simplex, we must add the instruction present in line 24. 
+				With this instruction we specify the number of threads to be used to 
+				execute an instance of the parallel simplex (in this case 4). Among the 
+				selectable values there is also the value LPThreadsNumber.AUTO, 
+				with which the number of threads to be used to execute the parallel simplex 
+				is delegated to the system.
+				It should be remembered that advantages on the time of execution of the method 
+				are obtained with at least 4 or more physical cores.
+			</div>
+			<br> <br>
+
+			<div class="codice_example">
+				<pre class="brush: java;">
+
+import it.ssc.log.SscLogger;
+import it.ssc.pl.milp.LP;
+import it.ssc.pl.milp.Solution;
+import it.ssc.pl.milp.SolutionType;
+import it.ssc.pl.milp.Variable;
+import it.ssc.ref.InputString;
+import it.ssc.pl.milp.util.LPThreadsNumber;
+
+public class Example {
+	
+	public static void main(String[] args) throws Exception {
+
+		String lp_string = 
+			                " 1    3    max      .    \n" +  
+			                " 1    1    ge      -1    \n" +	  
+			                " 1  1.4    le       6    \n" +  
+			                "-5    3    eq       5";
+			
+
+		InputString lp_input = new InputString(lp_string); 
+		lp_input.setInputFormat("X1-X2:double,  TYPE:varstring(3), RHS:double"); 
+
+		LP lp = new LP(lp_input); 
+		lp.setThreadsNumber(LPThreadsNumber.N_4);
+		SolutionType solution_type=lp.resolve();
+		
+		if(solution_type==SolutionType.OPTIMUM) { 
+			Solution solution=lp.getSolution();
+			for(Variable var:solution.getVariables()) {
+				SscLogger.log("Variable name :"+var.getName() + " value:"+var.getValue());
+			}
+			SscLogger.log("optimal value:"+solution.getOptimumValue());
+		}	
+		else SscLogger.log("Not optimal solution:"+solution_type);
+	}
+}
+				</pre>
+							
+
+			</div>
+<div class="commento">
+<br>
+<a title="Back to index" href="#home_indice"><img alt="Back to index" src="images/up.png" /></a>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			<h3 class="paragraph_title"><a id="ese2_1">Example 2.1</h3>
+			<div class="commento">
+				Consider the following problem of mixed integer linear programming
+				(MILP) : <br> <br>
+				<pre>
+	
+   	 min  3X<sub>1</sub> +  X<sub>2</sub> + 4X<sub>3</sub> + 7X<sub>4</sub> + 8X<sub>5</sub>
+   	 
+   	      5X<sub>1</sub> + 2X<sub>2</sub>     <sub> </sub> + 3X<sub>4</sub>     <sub> </sub>  &#x2264;   9
+   	      3X<sub>1</sub> +  X<sub>2</sub> +  X<sub>3</sub>     <sub> </sub> + 5X<sub>5</sub>  &#x2265;  12
+   	      6X<sub>1</sub> + 3X<sub>2</sub> + 4X<sub>3</sub> + 5X<sub>4</sub>     <sub> </sub>  &#x2265; 124
+   	      1X<sub>1</sub> + 3X<sub>2</sub>     <sub> </sub> + 3X<sub>4</sub> + 6X<sub>5</sub>  &#x2265; 854
+   	      
+   	 con X<sub>2</sub>, X<sub>3</sub>, X<sub>4</sub>, X<sub>5 </sub> &#x2208; &#x2124; 
+   	     1 &#x2264; X<sub>2</sub> &#x2264; +6
+   	     1 &#x2264; X<sub>3</sub> &#x2264; +&infin;     
+   	     X<sub>1</sub>, X<sub>4</sub>, X<sub>5</sub> &#x2265; 0
+</pre>
+				<br> 
+				This issue presents the variables X<sub>2</sub>, X<sub>3</sub>,
+				X<sub>4</sub>, X<sub>5 </sub> integer, 
+				while the X<sub>1</sub> variable is not. In SSC to resolve a MILP 
+				problem simply must introduce an additional line in 
+				format coefficients [line 20] to declare integer variables. 
+				Placing 1 on the line of the "integer" the variable is declared 
+				as a integer .
+				
+				<br><br> 
+				
+				Another difference is that in this case must instantiate the 
+				object MILP [line 25] and not the LP object.
+	
+
+			</div>
+			<br> <br>
+
+			<div class="codice_example">
+				<pre class="brush: java;">
+
+
+import it.ssc.log.SscLogger;
+import it.ssc.pl.milp.MILP;
+import it.ssc.pl.milp.Solution;
+import it.ssc.pl.milp.SolutionType;
+import it.ssc.pl.milp.Variable;
+import it.ssc.ref.InputString;
+
+public class Example {
+	public static void main(String[] args) throws Exception {
+
+		String milp_string=
+				
+						"3 1 4 7 8 min      . "  +"\n"+
+						"5 2 0 3 0 le       9 "  +"\n"+
+						"3 1 1 0 5 ge       12"  +"\n"+
+						"6 3 4 5 0 ge       124" +"\n"+
+						"1 3 0 3 6 ge       854" +"\n"+
+						"0 1 1 0 0 lower    . "  +"\n"+
+						". 6 . . . upper    . "  +"\n"+
+						"0 1 1 1 1 integer  . "  +"\n" ;  
+
+		InputString milp_input = new InputString(milp_string);
+		milp_input.setInputFormat("X1-X5:double, TYPE:varstring(20),  RHS:double");
+
+		MILP milp=new MILP(milp_input);
+		SolutionType solution_type= milp.resolve();
+
+		if(solution_type==SolutionType.OPTIMUM) { 
+			Solution solution=milp.getSolution();
+			for(Variable var:solution.getVariables()) {
+				SscLogger.log("Variable :"+var.getName() + " value:"+var.getValue());
+			}
+			SscLogger.log("o.f. value:"+solution.getOptimumValue());
+		}	
+	}
+}
+				</pre>
+			</div>
+<div class="commento">
+<br>
+<a title="Back to index" href="#home_indice"><img alt="Back to index" src="images/up.png" /></a>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			<h3 class="paragraph_title">
+				<a id="ese2_2">Example 2.2</a>
+			</h3>
+			<div class="commento">
+				Consider the following problem MILP given by:<br> <br>
+				<pre>
+	 max  X<sub>1</sub> + 3.0X<sub>2</sub>
+	 
+	      X<sub>1</sub> +    X<sub>2</sub> &#x2265; 1
+   	      X<sub>1</sub> + 1.4X<sub>2</sub> &#x2264; 6
+   	    -5X<sub>1</sub> + 3.0X<sub>2</sub> &#x2264; 5
+   	    
+   	 con  X<sub>1</sub>, X<sub>2</sub> &#x2265; 0
+   	      X<sub>1</sub>, X<sub>2</sub> &#x2208; &#x2124; 
+</pre>
+				<br>
+				We want to solve this problem of integer linear programming 
+				using the matrix notation. To do this just add to the matrix 
+				of the coefficients a line to express what are the integer 
+				variables [line 21]. With the value 1 is declared integer 
+				variable, with 0 it is considered non-integer. Should also 
+				be declared to SSC that further added to line A is not related 
+				to constraints GE , LE, EQ, but the declaration of integer 
+				variables; this is accomplished by adding to the vector expressing 
+				the type of constraint rel[] the ConsType.INT value [line 26]. 
+				Finally it should be added to the vector b to a NaN value [line 23], 
+				to adapt the size of A with that of b as the size of b must coincide
+				with the number of lines of the matrix A.
+				
+			</div>
+			<br> <br>
+
+			<div class="codice_example">
+				<pre class="brush: java;">
+
+import it.ssc.log.SscLogger;
+import it.ssc.pl.milp.ConsType;
+import it.ssc.pl.milp.Constraint;
+import it.ssc.pl.milp.GoalType;
+import it.ssc.pl.milp.LinearObjectiveFunction;
+import it.ssc.pl.milp.MILP;
+import it.ssc.pl.milp.Solution;
+import it.ssc.pl.milp.SolutionType;
+import it.ssc.pl.milp.Variable;
+import static it.ssc.pl.milp.LP.NaN;
+import java.util.ArrayList;
+
+public class Example {
+	
+	public static void main(String[] args) throws Exception {
+
+		double A[][]={ 
+				{ 1.0 , 1.0 },
+				{ 1.0 , 1.4 },
+				{-5.0 , 3.0 }, 
+				{ 1.0 , 1.0 },  //rigo della matrice per la definizione degli integer
+				} ;
+		double b[]= { 1.0, 6.0 ,5.0, NaN};
+		double c[]= { 1.0, 3.0  };	
+
+		ConsType[] rel= {ConsType.GE, ConsType.LE, ConsType.LE, ConsType.INT};
+
+		LinearObjectiveFunction f = new LinearObjectiveFunction(c, GoalType.MAX);
+
+		ArrayList< Constraint > constraints = new ArrayList< Constraint >();
+		for(int i=0; i < A.length; i++) {
+			constraints.add(new Constraint(A[i], rel[i], b[i]));
+		}
+
+		MILP lp = new MILP(f,constraints); 
+		SolutionType solution_type=lp.resolve();
+
+		if(solution_type==SolutionType.OPTIMUM) { 
+			Solution solution=lp.getSolution();
+			for(Variable var:solution.getVariables()) {
+				SscLogger.log("Variable name :"+var.getName() + " value:"+var.getValue());
+			}
+			SscLogger.log("o.f. value:"+solution.getOptimumValue());
+		}	
+	}
+}
+			</pre>
+			</div>
+<div class="commento">
+<br>
+<a title="Back to index" href="#home_indice"><img alt="Back to index" src="images/up.png" /></a>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			<h3 class="paragraph_title">
+				<a id="ese2_3">Example 2.3</a>
+			</h3>
+			<div class="commento">
+				Consider the following MILP problem : <br> <br>
+				<pre>
+	 max  Y<sub>1</sub> + 3.0Y<sub>2</sub>
+	 
+	      Y<sub>1</sub> +    Y<sub>2</sub> &#x2265; 1
+   	      Y<sub>1</sub> + 1.4Y<sub>2</sub> &#x2264; 6
+   	    -5Y<sub>1</sub> + 3.0Y<sub>2</sub> = 5
+   	    
+   	 with  Y<sub>2</sub> &#x2208; &#x2124;
+   	     -1 &#x2264; Y<sub>1</sub> &#x2264; +1
+   	     -&infin; &#x2264; Y<sub>2</sub> &#x2264; +&infin;  
+</pre>
+				<br> 
+				
+				
+				We want to solve this problem of linear programming using the 
+				integer mixed sparse notation. To indicate that the variable 
+				Y<sub>2</sub> is integer just add in the column of ROW_ a value 
+				to indicate what will be the marker that defines them. 
+				This marker (which we call "var_int", but may have any other name) 
+				must have an associated type INTEGER TYPE [line 23].
+				
+				
+				<br><br> 
+				
+				Once declared the marker of integer variables,, 
+				just declare [line 38] that the Y<sub>2</sub> variable is var_int (ie INTEGER) 
+				placing in the column of COEF the value 1. If, however, a variable 
+				is not integer you must set the COEF column with 0 or, more briefly, 
+				neglecting the declaration. In fact, in the following formulation, Y<sub>1</sub> 
+				variable is not integer and therefore it is not necessary to make the lack 
+				of association between the variable and the marker var_int placing the 
+				value 0 in COEF.
+
+			</div>
+			<br> <br>
+
+			<div class="codice_example">
+				<pre class="brush: java;">
+
+import it.ssc.log.SscLogger;
+import it.ssc.pl.milp.FormatTypeInput.FormatType;
+import it.ssc.pl.milp.MILP;
+import it.ssc.pl.milp.Solution;
+import it.ssc.pl.milp.SolutionType;
+import it.ssc.pl.milp.Variable;
+import it.ssc.ref.InputString;
+
+public class Example {
+	public static void main(String[] args) throws Exception {
+
+		String lp_sparse = 
+		
+		
+			//    TYPE   COL_   ROW_    COEF 
+				 
+				" MAX     .    costo      .    \n" +   
+                " GE      .    row1       .    \n" +	  
+                " LE      .    row2       .    \n" +  
+                " EQ      .    row3       .    \n" +
+                " UPPER   .    lim_sup    .    \n" +
+                " LOWER   .    lim_inf    .    \n" +    
+                " INTEGER .    var_int    .    \n" +  
+		
+				" .      Y1    costo      1    \n" +
+				" .      Y1    row1       1    \n" +	  
+		        " .      Y1    row2       1    \n" +  
+		        " .      Y1    row3      -5    \n" +
+		        " .      Y1    lim_sup    1    \n" +
+		        " .      Y1    lim_inf   -1    \n" +		       
+				 
+				" .      Y2    costo      3    \n" +
+				" .      Y2    row1       1    \n" +	  
+		        " .      Y2    row2     1.4    \n" +  
+		        " .      Y2    row3       3    \n" +
+		        " .      Y2    lim_sup    .    \n" +
+		        " .      Y2    lim_inf    .    \n" +	
+		        " .      Y2    var_int    1    \n" +
+		         
+				" .     RHS    row1       1    \n" +	  
+				" .     RHS    row2       6    \n" +  
+				" .     RHS    row3       5    \n"   ;
+			
+
+		InputString lp_input = new InputString(lp_sparse); 
+		lp_input.setInputFormat("TYPE:varstring(7), COL_:varstring(3) , ROW_:varstring(7), COEF:double"); 
+
+		MILP lp = new MILP(lp_input,FormatType.SPARSE); 
+		SolutionType solution_type=lp.resolve();
+		
+		if(solution_type==SolutionType.OPTIMUM) { 
+			Solution solution=lp.getSolution();
+			for(Variable var:solution.getVariables()) {
+				SscLogger.log("Variable :"+var.getName() + " value:"+var.getValue());
+			}
+			SscLogger.log("o.f. value:"+solution.getOptimumValue());
+		}	
+	}
+}
+			</pre>
+			</div>
+<div class="commento">
+<br>
+<a title="Back to index" href="#home_indice"><img alt="Back to index" src="images/up.png" /></a>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			<h3 class="paragraph_title">
+				<a id="ese2_4">Example 2.4</a>
+			</h3>
+			<div class="commento">
+				Consider the following problem of mixed integer linear programming (MILP) 
+				with some binary variables: <br> <br>
+				<pre>
+	
+   	 min  3K<sub>1</sub> +  K<sub>2</sub> + 4K<sub>3</sub> + 7K<sub>4</sub> + 8K<sub>5</sub>
+   	 
+   	      5K<sub>1</sub> + 2K<sub>2</sub>     <sub> </sub> + 3K<sub>4</sub>     <sub> </sub>  &#x2264;   9
+   	      3K<sub>1</sub> +  K<sub>2</sub> +  K<sub>3</sub>     <sub> </sub> + 5K<sub>5</sub>  &#x2265;  12
+   	      6K<sub>1</sub> + 3K<sub>2</sub> + 4K<sub>3</sub> + 5K<sub>4</sub>     <sub> </sub>  &#x2265; 124
+   	      1K<sub>1</sub> + 3K<sub>2</sub>     <sub> </sub> + 3K<sub>4</sub> + 6K<sub>5</sub>  &#x2265; 854 
+   	      
+   	 with K<sub>2</sub>, K<sub>5</sub> &#x2208; &#x2124; 
+   	     K<sub>1</sub>, K<sub>4</sub> &#x2208; {0,1}
+   	     1 &#x2264; K<sub>2</sub> &#x2264; +6
+   	     1 &#x2264; K<sub>3</sub> &#x2264; +&infin;     
+   	     con K<sub>1</sub>, K<sub>4</sub>, K<sub>5</sub> &#x2265; 0
+</pre>
+				<br> 
+				This problem has integer variables, and binary. while K<sub>3</sub> 
+				variable is not subject to any constraint of entirety. To declare 
+				a binary variable simply add a line with TYPE "binary" [line 22]. 
+				If the i-th variable is binary just put one in the corresponding line 
+				of the binary. It is recalled that a variable can not be simultaneously 
+				both binary that integer. In our case the variables K<sub>1</sub> and K<sub>4</sub> are binary 
+				while K<sub>2</sub> and K<sub>5</sub> variables are integer.
+				
+			
+			</div>
+			<br> <br>
+
+			<div class="codice_example">
+				<pre class="brush: java;">
+
+
+import it.ssc.log.SscLogger;
+import it.ssc.pl.milp.MILP;
+import it.ssc.pl.milp.Solution;
+import it.ssc.pl.milp.SolutionType;
+import it.ssc.pl.milp.Variable;
+import it.ssc.ref.InputString;
+
+public class Example {
+
+	public static void main(String[] args) throws Exception {
+
+		String milp_string=
+
+						"3 1 4 7 8 min      . "  +"\n"+
+						"5 2 0 3 0 le       9 "  +"\n"+
+						"3 1 1 0 5 ge       12"  +"\n"+
+						"6 3 4 5 0 ge       124" +"\n"+
+						"1 3 0 3 6 ge       854" +"\n"+
+						"0 1 1 0 0 lower    . "  +"\n"+
+						". 6 . . . upper    . "  +"\n"+
+						"0 1 0 0 1 integer  . "  +"\n"+
+						"1 0 0 1 0 binary   . "  +"\n";  
+
+		InputString milp_input = new InputString(milp_string);
+		milp_input.setInputFormat("K1-K5:double, TYPE:varstring(20),  RHS:double");
+
+		MILP milp=new MILP(milp_input);
+		SolutionType solution_type= milp.resolve();
+
+		if(solution_type==SolutionType.OPTIMUM) { 
+			Solution solution=milp.getSolution();
+			for(Variable var:solution.getVariables()) {
+				SscLogger.log("Variable :"+var.getName() + " value:"+var.getValue());
+			}
+			SscLogger.log("o.f. value:"+solution.getOptimumValue());
+		}	
+	}
+}
+
+				</pre>
+			</div>
+<div class="commento">
+<br>
+<a title="Back to index" href="#home_indice"><img alt="Back to index" src="images/up.png" /></a>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			<h3 class="paragraph_title">
+				<a id="ese2_5">Example 2.5</a>
+			</h3>
+			<div class="commento">
+				Consider the following MILP problem given by: <br> <br>
+				<pre>
+	 max  X<sub>1</sub> + 3.0X<sub>2</sub>
+	 
+	      X<sub>1</sub> +    X<sub>2</sub> &#x2265; 1
+   	      X<sub>1</sub> + 1.4X<sub>2</sub> &#x2264; 6
+   	    -5X<sub>1</sub> + 3.0X<sub>2</sub> &#x2264; 5
+   	    
+   	 with  X<sub>1</sub>, X<sub>2</sub> &#x2265; 0
+   	      X<sub>1</sub> &#x2208; &#x2124; 
+   	      X<sub>2</sub> &#x2208; {0,1}
+</pre>
+				<br> 
+				We want to solve this problem of integer linear programming, 
+				which also has binary variables, using the matrix notation. 
+				In this notation, to represent the binary variables, just add to 
+				the matrix of the coefficients a line [line 15]. With 
+				the value 1 is declared binary variable, with 0 it is considered 
+				non-binary. The  ConsType.BIN value [line 20] should also be 
+				added to state that the last line of the matrix A is related to 
+				the definition of binary variables.
+				
+			</div>
+			<br> <br>
+
+			<div class="codice_example">
+				<pre class="brush: java;">
+import it.ssc.log.SscLogger;
+import it.ssc.pl.milp.*;
+import java.util.ArrayList;
+import static it.ssc.pl.milp.LP.NaN;  
+
+public class Example {
+	
+	public static void main(String[] args) throws Exception {
+
+		double A[][]={ 
+				{ 1.0 , 1.0 },
+				{ 1.0 , 1.4 },
+				{-5.0 , 3.0 }, 
+				{ 1.0 , 0.0 },  //definizione degli integer
+				{ 0.0 , 1.0 },  //definizione dei binary
+				} ;
+		double b[]= { 1.0, 6.0 ,5.0, NaN, NaN};
+		double c[]= { 1.0, 3.0  };	
+
+		ConsType[] rel= {ConsType.GE, ConsType.LE, ConsType.LE, ConsType.INT , ConsType.BIN};
+
+		LinearObjectiveFunction f = new LinearObjectiveFunction(c, GoalType.MAX);
+
+		ArrayList< Constraint > constraints = new ArrayList< Constraint >();
+		for(int i=0; i < A.length; i++) {
+			constraints.add(new Constraint(A[i], rel[i], b[i]));
+		}
+
+		MILP lp = new MILP(f,constraints); 
+		SolutionType solution_type=lp.resolve();
+
+		if(solution_type==SolutionType.OPTIMUM) { 
+			Solution solution=lp.getSolution();
+			for(Variable var:solution.getVariables()) {
+				SscLogger.log("Variable :"+var.getName() + " value:"+var.getValue());
+			}
+			SscLogger.log("o.f. value:"+solution.getOptimumValue());
+		}	
+	}
+}
+			</pre>
+			</div>
+<div class="commento">
+<br>
+<a title="Back to index" href="#home_indice"><img alt="Back to index" src="images/up.png" /></a>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			<h3 class="paragraph_title">
+				<a id="ese2_6">Example 2.6</a>
+			</h3>
+			<div class="commento">
+				Consider the following MILP problem  <br> <br>
+				<pre>
+	 max  Y<sub>1</sub> + 3.0Y<sub>2</sub>
+	 
+	      Y<sub>1</sub> +    Y<sub>2</sub> &#x2265; 1
+   	      Y<sub>1</sub> + 1.4Y<sub>2</sub> &#x2264; 6
+   	    -5Y<sub>1</sub> + 3.0Y<sub>2</sub> &#x2264; 5
+   	    
+   	 con  Y<sub>1</sub> &#x2208; {0,1}  
+   	      Y<sub>2</sub> &#x2208; &#x2124;
+   	     -1 &#x2264; Y<sub>1</sub> &#x2264; +1
+   	     -&infin; &#x2264; Y<sub>2</sub> &#x2264; +&infin;  
+</pre>
+				<br> 
+				We want to solve this problem of linear programming,  
+				which also presents binary variables, using the sparse 
+				notation. To indicate that the Y<sub>1</sub> variable is binary just add in 
+				the ROW_ column the marker that defines. This marker (which we call 
+				"var_bin", but may have any other name) must have an associated 
+				BINARY type TYPE [line 24].
+				
+				
+				<br><br> 
+				
+				Once the marker of binary variables, just declare [line 32] 
+				that the Y<sub>1</sub> variable is var_bin (or BINARY) placing in the column 
+				of the value COEF 1.
+
+
+			</div>
+			<br> <br>
+
+			<div class="codice_example">
+				<pre class="brush: java;">
+
+import it.ssc.log.SscLogger;
+import it.ssc.pl.milp.FormatTypeInput.FormatType;
+import it.ssc.pl.milp.MILP;
+import it.ssc.pl.milp.Solution;
+import it.ssc.pl.milp.SolutionType;
+import it.ssc.pl.milp.Variable;
+import it.ssc.ref.InputString;
+
+public class Example {
+	
+	public static void main(String[] args) throws Exception {
+	
+		String lp_sparse = 
+		
+			//    TYPE   COL_   ROW_    COEF 
+				 
+				" MAX     .    costo      .    \n" +   
+                " GE      .    row1       .    \n" +	  
+                " LE      .    row2       .    \n" +  
+                " LE      .    row3       .    \n" +
+                " UPPER   .    lim_sup    .    \n" +
+                " LOWER   .    lim_inf    .    \n" +    
+                " INTEGER .    var_int    .    \n" + 
+                " BINARY  .    var_bin    .    \n" + 
+		
+				" .      Y1    costo      1    \n" +
+				" .      Y1    row1       1    \n" +	  
+		        " .      Y1    row2       1    \n" +  
+		        " .      Y1    row3      -5    \n" +
+		        " .      Y1    lim_sup    1    \n" +
+		        " .      Y1    lim_inf   -1    \n" +	
+		        " .      Y1    var_bin    1    \n" +	
+				 
+				" .      Y2    costo      3    \n" +
+				" .      Y2    row1       1    \n" +	  
+		        " .      Y2    row2     1.4    \n" +  
+		        " .      Y2    row3       3    \n" +
+		        " .      Y2    lim_sup    .    \n" +
+		        " .      Y2    lim_inf    .    \n" +	
+		        " .      Y2    var_int    1    \n" +
+		         
+				" .     RHS    row1       1    \n" +	  
+				" .     RHS    row2       6    \n" +  
+				" .     RHS    row3       5    \n"   ;
+			
+
+		InputString lp_input = new InputString(lp_sparse); 
+		lp_input.setInputFormat("TYPE:varstring(7), COL_:varstring(3) , ROW_:varstring(7), COEF:double"); 
+
+		MILP milp = new MILP(lp_input,FormatType.SPARSE); 
+		SolutionType solution_type=milp.resolve();
+		
+		if(solution_type==SolutionType.OPTIMUM) { 
+			Solution solution=milp.getSolution();
+			for(Variable var:solution.getVariables()) {
+				SscLogger.log("Variable :"+var.getName() + " value:"+var.getValue());
+			}
+			SscLogger.log("o.f. value:"+solution.getOptimumValue());
+		}	
+	}
+}
+				</pre>
+			</div>
+<div class="commento">
+<br>
+<a title="Back to index" href="#home_indice"><img alt="Back to index" src="images/up.png" /></a>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<h3 class="paragraph_title">
+				<a id="ese2_7">Example 2.7</a>
+			</h3>
+			<div class="commento">
+				Consider the following  MILP  problem: <br> <br>
+				<pre>
+	
+   	 min  3X<sub>1</sub> +  X<sub>2</sub> + 4X<sub>3</sub> + 7X<sub>4</sub> + 8X<sub>5</sub>
+   	 
+   	      5X<sub>1</sub> + 2X<sub>2</sub>     <sub> </sub> + 3X<sub>4</sub>     <sub> </sub>  &#x2265;    9
+   	      3X<sub>1</sub> +  X<sub>2</sub> +  X<sub>3</sub>     <sub> </sub> + 5X<sub>5</sub>  &#x2265; 12.5
+   	      6X<sub>1</sub> + 3X<sub>2</sub> + 4X<sub>3</sub> + 5X<sub>4</sub>     <sub> </sub>  &#x2264;  124
+   	       X<sub>1</sub> + 3X<sub>2</sub>     <sub> </sub> + 3X<sub>4</sub> + 6X<sub>5</sub>  &#x2264;  854
+   	      
+   	 with  X<sub>1</sub>, X<sub>2</sub>, X<sub>3</sub>, X<sub>4</sub>, X<sub>5</sub> &#x2265; 0
+   	     X<sub>2</sub>, X<sub>3</sub> &#x2208; &#x2124;
+   	        
+				</pre>
+				<br>
+				We want to solve this problem of linear programming 
+				using the inequalities representation format. 
+				In this format, to add the integer limit to the variables X<sub>2</sub> and X<sub>3</sub>, just add a line 
+				[line 16]. In case you want to define binary or semi-continuous variables, the syntax is 
+				the same as that of the declaration of integers, that is, you put the keyword "bin" or "sec" 
+				before you and follow a list of variables separated by commas.
+				
+				
+
+			</div>
+			<br> <br>
+
+			<div class="codice_example">
+				<pre class="brush: java;">
+
+import java.util.ArrayList;
+import it.ssc.log.SscLogger;
+import it.ssc.pl.milp.*;
+
+public class Example {
+	
+	public static void main(String[] args) throws Exception {
+		
+		ArrayList< String > constraints = new ArrayList< String >();
+		
+		constraints.add("min:  3x1 +X2 +4x3 +7x4 +8X5 "); 
+        constraints.add("5x1 +2x2 +3X4       >= 9");
+        constraints.add("3x1 + X2 +X3 +5X5   >= 12.5");
+        constraints.add("6X1+3.0x2 +4X3 +5X4 <= 124");
+        constraints.add(" X1 + 3x2 +3X4 +6X5 <= 854");
+        constraints.add(" int x2, X3 ");
+			
+		MILP milp = new MILP(constraints); 
+		SolutionType solution_type=milp.resolve();
+		
+		if(solution_type==SolutionType.OPTIMUM) {
+			Solution soluzione=milp.getSolution();
+			for(Variable var:soluzione.getVariables()) {
+				SscLogger.log("Variable name :"+var.getName() + " value :"+var.getValue());
+			}
+			SscLogger.log("o.f. value:"+soluzione.getOptimumValue());
+		}
+	}
+}
+			</pre>
+			</div>
+<div class="commento">
+<br>
+<a title="Back to index" href="#home_indice"><img alt="Back to index" src="images/up.png" /></a>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			<h3 class="paragraph_title">
+				<a id="ese2_8">Example 2.8</a>
+			</h3>
+			<div class="commento">
+			<br>
+			This example compares the final optimal solution 
+			integer with that obtained from its relaxation (the values of relaxed 
+			problem are shown in square brackets [46-49 lines])
+				
+			
+
+
+			</div>
+			<br> <br>
+
+			<div class="codice_example">
+				<pre class="brush: java;">
+
+import it.ssc.context.exception.InvalidSessionException;
+import it.ssc.log.SscLogger;
+import it.ssc.pl.milp.*;
+import java.util.ArrayList;
+import static it.ssc.pl.milp.LP.NaN;
+
+public class Example {
+	
+	public static void main(String arg[]) throws InvalidSessionException, Exception {
+
+		double[]   c =  { 2, 2, 2, 2, 2 ,2, 2, 2, 2, 2,2 ,2 ,2 };
+		double[]   b =  {1000, 1234, 1000, 1000, 1000, 1000, 1000, 1000, 1000};
+		
+		double[][] A ={	{ 2., 9. ,7. ,5. ,9. ,6. ,3., 7., 8. ,7. ,5. ,3. ,1. },
+						{ 4. ,1. ,2. ,3. ,6. ,4. ,5. ,2. ,8. ,5. ,3. ,4., 7. },
+						{ 3. ,4. ,2. ,5. ,7. ,6. ,3. ,5. ,7. ,4. ,6. ,8. ,6. },
+						{ 4. ,6. ,9. ,8. ,7. ,6. ,5. ,4. ,3. ,2. ,3. ,5. ,6. },
+						{ 4. ,4. ,7. ,5. ,3. ,8. ,5. ,6. ,3. ,5. ,6. ,4. ,6. },
+						{ 2. ,6. ,4. ,5. ,7. ,5. ,6. ,4. ,6. ,7. ,4. ,4. ,6. },
+						{ 4. ,6. ,9. ,8. ,3. ,6. ,5. ,5. ,3. ,2. ,9. ,5. ,6. },
+						{ 4. ,5. ,7. ,8. ,3. ,8. ,3. ,6. ,3. ,5. ,6. ,1. ,6. },
+						{ 2., 2., 4., 3., 7. ,5. ,9. ,4. ,6. ,7. ,8. ,4., 6. }};
+
+		double[] upper ={ 190.5, NaN, NaN, NaN, NaN ,NaN ,NaN ,NaN ,35.0 ,NaN ,NaN ,NaN, NaN };
+		double[] integer ={ 1.0, 1.0, 1.0, 1.0, 1.0 ,1.0 ,1.0 ,1.0 ,1.0 ,1.0 ,1.0 ,1.0, 1.0 };
+
+		LinearObjectiveFunction f = new LinearObjectiveFunction(c, GoalType.MAX);
+
+		ArrayList< Constraint > constraints = new ArrayList< Constraint >();
+		for(int i=0; i< A.length; i++) {
+			constraints.add(new Constraint(A[i], ConsType.LE, b[i])); 
+		}
+
+		constraints.add(new Constraint(upper,   ConsType.UPPER, NaN)); 
+		constraints.add(new Constraint(integer, ConsType.INT , NaN)); 
+
+		MILP milp = new MILP(f,constraints);
+		SolutionType solution=milp.resolve();
+
+		if(solution==SolutionType.OPTIMUM) { 
+			Solution sol=milp.getSolution();
+			Solution sol_relax=milp.getRelaxedSolution();
+			Variable[] var_int=sol.getVariables();
+			Variable[] var_relax=sol_relax.getVariables();
+			for(int _i=0; _i< var_int.length;_i++) {
+				SscLogger.log("Variable name :"+var_int[_i].getName() + " value:"+var_int[_i].getValue()+ 
+						      " ["+var_relax[_i].getValue()+"]");
+			}
+			SscLogger.log("o.f. value:"+sol.getOptimumValue() +" ["+sol_relax.getOptimumValue()+"]"); 
+		}
+	}
+}
+				</pre>
+			</div>
+<div class="commento">
+<br>
+<a title="Back to index" href="#home_indice"><img alt="Back to index" src="images/up.png" /></a>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<h3 class="paragraph_title">
+				<a id="ese2_9">Example 2.9</a>
+			</h3>
+			<div class="commento">
+				Consider the following MILP problem: <br> <br>
+				<pre>
+	
+   	 min  3X<sub>1</sub> +  X<sub>2</sub> + 4X<sub>3</sub> + 7X<sub>4</sub> + 8X<sub>5</sub>
+   	 
+   	      5X<sub>1</sub> + 2X<sub>2</sub>     <sub> </sub> + 3X<sub>4</sub>     <sub> </sub>  &#x2265;    9
+   	      3X<sub>1</sub> +  X<sub>2</sub> +  X<sub>3</sub>     <sub> </sub> + 5X<sub>5</sub>  &#x2265; 12.5
+   	      6X<sub>1</sub> + 3X<sub>2</sub> + 4X<sub>3</sub> + 5X<sub>4</sub>     <sub> </sub>  &#x2264;  124
+   	       X<sub>1</sub> + 3X<sub>2</sub>     <sub> </sub> + 3X<sub>4</sub> + 6X<sub>5</sub>  &#x2264;  854
+   	      
+   	 con X<sub>1</sub>, X<sub>2</sub>, X<sub>3</sub>, X<sub>4</sub>, X<sub>5</sub> &#x2265; 0
+   	     X<sub>2</sub>, X<sub>3</sub> &#x2208; &#x2124;
+   	        
+				</pre>
+				<br> 
+				This problem is identical to the problem 2.7. In code to its resolution 
+				we have been added lines to retrieve the LHS value that each 
+				constraint (the left part of the constraint) assumes in the optimal 
+				solution. 
+				The LHS value is then compared with the RHS value. 
+				[Lines 32-35].
+				Constraints can be given a name, just place the name before the constraint, 
+				followed by the colon (name: constraint). It should be remembered that in the 
+				case of the definition of the upper and lower bound labels must not be entered 
+				at all (example 1.11).
+
+			</div>
+			<br> <br>
+
+			<div class="codice_example">
+				<pre class="brush: java;">
+import java.util.ArrayList;
+import it.ssc.log.SscLogger;
+import it.ssc.pl.milp.*;
+
+
+public class Example {
+
+	public static void main(String[] args) throws Exception {
+
+		
+		ArrayList< String > constraints = new ArrayList< String >();
+         
+        constraints.add("min:  3x1 +X2 +4x3 +7x4 +8X5 "); 
+        constraints.add("5x1 +2x2 +3X4       >= 9");
+        constraints.add("3x1 + X2 +X3 +5X5   >= 12.5");
+        constraints.add("6X1+3.0x2 +4X3 +5X4 <= 124");
+        constraints.add(" X1 + 3x2 +3X4 +6X5 <= 854");
+        constraints.add(" int x2, X3 ");
+	
+		MILP milp = new MILP(constraints); 
+		SolutionType solution_type=milp.resolve();
+
+		if(solution_type==SolutionType.OPTIMUM) {
+			Solution soluzione=milp.getSolution();
+			for(Variable var:soluzione.getVariables()) {
+				SscLogger.log("Variable name :"+var.getName() + " value :"+var.getValue());
+			}
+			for(SolutionConstraint sol_constraint: soluzione.getSolutionConstraint()) {
+				SscLogger.log("Contraint: "+sol_constraint.getName()+" : value="+sol_constraint.getValue() + 
+						      "[ "+sol_constraint.getRel()+"  "+sol_constraint.getRhs()+" ]" );
+			}
+			SscLogger.log("o.f. value:"+soluzione.getOptimumValue());
+		}
+	}
+}
+
+			</pre>
+			</div>
+<div class="commento">
+<br>
+<a title="Back to index" href="#home_indice"><img alt="Back to index" src="images/up.png" /></a>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			<h3 class="paragraph_title">
+				<a id="ese2_10">Example 2.10</a>
+			</h3>
+			<div class="commento">
+				Consider the following linear programming problem that also has a semi-continuous variable: <br> <br>
+				<pre>
+	
+   	 min  3K<sub>1</sub> +  K<sub>2</sub> + 4K<sub>3</sub> + 7K<sub>4</sub> + 8K<sub>5</sub>
+   	 
+   	      5K<sub>1</sub> + 2K<sub>2</sub>     <sub> </sub> + 3K<sub>4</sub>     <sub> </sub>  &#x2264;   9
+   	      3K<sub>1</sub> +  K<sub>2</sub> +  K<sub>3</sub>     <sub> </sub> + 5K<sub>5</sub>  &#x2265;  12
+   	      6K<sub>1</sub> + 3K<sub>2</sub> + 4K<sub>3</sub> + 5K<sub>4</sub>     <sub> </sub>  &#x2265; 124
+   	      1K<sub>1</sub> + 3K<sub>2</sub>     <sub> </sub> + 3K<sub>4</sub> + 6K<sub>5</sub>  &#x2265; 854 
+   	      
+   	 con K<sub>2</sub>, K<sub>5</sub> &#x2208; &#x2124; 
+   	     K<sub>1</sub>, K<sub>4</sub> &#x2208; {0,1}
+   	     <b>1 &#x2264; K<sub>2</sub> &#x2264; +6 or K<sub>2</sub> =0</b>
+   	     1 &#x2264; K<sub>3</sub> &#x2264; +&infin;     
+   	     con K<sub>1</sub>, K<sub>4</sub>, K<sub>5</sub> &#x2265; 0
+</pre>
+				<br> This problem is identical to the problem 2.4 with the addition of the condition that the variable 
+				K<sub>2</sub> is semicontinuous, it is not tightly constrained to be between the upper and lower values, 
+				but can also assume the value 0.
+			</div>
+			<br> <br>
+
+			<div class="codice_example">
+				<pre class="brush: java;">
+
+
+import it.ssc.log.SscLogger;
+import it.ssc.pl.milp.MILP;
+import it.ssc.pl.milp.Solution;
+import it.ssc.pl.milp.SolutionType;
+import it.ssc.pl.milp.Variable;
+import it.ssc.ref.InputString;
+
+public class Example {
+
+	public static void main(String[] args) throws Exception {
+
+		String milp_string=
+
+						"3 1 4 7 8 min      . "  +"\n"+
+						"5 2 0 3 0 le       9 "  +"\n"+
+						"3 1 1 0 5 ge       12"  +"\n"+
+						"6 3 4 5 0 ge       124" +"\n"+
+						"1 3 0 3 6 ge       854" +"\n"+
+						"0 1 1 0 0 lower    . "  +"\n"+
+						". 6 . . . upper    . "  +"\n"+
+						"0 1 0 0 1 integer  . "  +"\n"+
+						"1 0 0 1 0 binary   . "  +"\n"+
+                        "0 1 0 0 0 semicont . "  +"\n"; 
+
+		InputString milp_input = new InputString(milp_string);
+		milp_input.setInputFormat("K1-K5:double, TYPE:varstring(20),  RHS:double");
+
+		MILP milp=new MILP(milp_input);
+		SolutionType solution_type= milp.resolve();
+
+		if(solution_type==SolutionType.OPTIMUM) { 
+			Solution solution=milp.getSolution();
+			for(Variable var:solution.getVariables()) {
+				SscLogger.log("Variable :"+var.getName() + " value:"+var.getValue());
+			}
+			SscLogger.log("Best value:"+solution.getOptimumValue());
+		}	
+	}
+}
+
+				</pre>
+			</div>
+<div class="commento">
+<br>
+<a title="Back to index" href="#home_indice"><img alt="Back to index" src="images/up.png" /></a>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			<h3 class="paragraph_title">
+				<a id="ese2_11">Example 2.11</a>
+			</h3>
+			<div class="commento">
+				Consider the following linear programming problem that also has a semi-continuous variable: <br> <br>
+				<pre>
+	 max  -X<sub>1</sub> + 3.0X<sub>2</sub>
+	 
+	      X<sub>1</sub> +    X<sub>2</sub> &#x2265; 1
+   	      X<sub>1</sub> + 1.4X<sub>2</sub> &#x2264; 6
+   	    -5X<sub>1</sub> + 3.0X<sub>2</sub> &#x2264; 5
+   	    
+   	 con  X<sub>1</sub>, X<sub>2</sub> &#x2265; 0
+   	      X<sub>1</sub> &#x2208; &#x2124; 
+   	      X<sub>2</sub> &#x2208; {0,1}
+   	      <b>1 &#x2264; X<sub>1</sub> &#x2264; 3 oppure X<sub>1</sub> =0</b>
+</pre>
+				<br> We want to solve this problem of integer linear programming, 
+				which also features semi-continuous variables, using the matrix notation. 
+				
+			</div>
+			<br> <br>
+
+			<div class="codice_example">
+				<pre class="brush: java;">
+				
+import static it.ssc.pl.milp.LP.NaN;
+import it.ssc.log.SscLogger;
+import it.ssc.pl.milp.*;
+import java.util.ArrayList;
+ 
+public class Example {
+     
+    public static void main(String[] args) throws Exception {
+ 
+        double A[][]={ 
+                { 1.0 , 1.0 },
+                { 1.0 , 1.4 },
+                {-5.0 , 3.0 }, 
+                { 1.0 , 0.0 },  //def. integer
+                { 0.0 , 1.0 },  //def.  binary
+                { 1.0 , 0.0 },  //def. semicontinuous
+                { 3.0 , NaN},  //def. upper
+                { 1.0 , 0.0 },  //def. lower
+                } ;
+        double b[]= { 1.0, 6.0 ,5.0, NaN,NaN,NaN,NaN,NaN};
+        double c[]= { -1.0, 3.0  };  
+ 
+        ConsType[] rel= {ConsType.GE, ConsType.LE, ConsType.LE, ConsType.INT, ConsType.BIN,
+        		         ConsType.SEMICONT, ConsType.UPPER, ConsType.LOWER};
+ 
+        LinearObjectiveFunction f = new LinearObjectiveFunction(c, GoalType.MAX);
+ 
+        ArrayList< Constraint > constraints = new ArrayList< Constraint >();
+        for(int i=0; i < A.length; i++) {
+            constraints.add(new Constraint(A[i], rel[i], b[i]));
+        }
+ 
+        MILP lp = new MILP(f,constraints); 
+        SolutionType solution_type=lp.resolve();
+ 
+        if(solution_type==SolutionType.OPTIMUM) { 
+            Solution solution=lp.getSolution();
+            for(Variable var:solution.getVariables()) {
+                SscLogger.log("Variable :"+var.getName() + " value:"+var.getValue());
+            }
+            SscLogger.log("best value:"+solution.getOptimumValue());
+        }   
+    }
+}
+
+
+			</pre>
+			</div>
+<div class="commento">
+<br>
+<a title="Back to index" href="#home_indice"><img alt="Back to index" src="images/up.png" /></a>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			<h3 class="paragraph_title">
+				<a id="ese2_12">Example 2.12</a>
+			</h3>
+			<div class="commento">
+				Consider the following linear programming problem that also has a semi-continuous variable: <br> <br>
+				<pre>
+	 max  Y<sub>1</sub> - 3.0Y<sub>2</sub>
+	 
+	      Y<sub>1</sub> +    Y<sub>2</sub> &#x2265; 1
+   	      Y<sub>1</sub> + 1.4Y<sub>2</sub> &#x2264; 6
+   	    -5Y<sub>1</sub> + 3.0Y<sub>2</sub> &#x2264; 5
+   	    
+   	 con  Y<sub>1</sub> &#x2208; {0,1}  
+   	      Y<sub>2</sub> &#x2208; &#x2124;
+   	     -1 &#x2264; Y<sub>1</sub> &#x2264; +1
+   	      <b>1 &#x2264; Y<sub>2</sub> &#x2264; +&infin;  or Y<sub>2</sub> = 0</b>
+</pre>
+				<br>We want to solve this problem of integer linear programming, 
+				which also features semi-continuous variables, using the sparse notation. 
+
+
+			</div>
+			<br> <br>
+
+			<div class="codice_example">
+				<pre class="brush: java;">
+
+
+import it.ssc.log.SscLogger;
+import it.ssc.pl.milp.FormatTypeInput.FormatType;
+import it.ssc.pl.milp.MILP;
+import it.ssc.pl.milp.Solution;
+import it.ssc.pl.milp.SolutionType;
+import it.ssc.pl.milp.Variable;
+import it.ssc.ref.InputString;
+ 
+public class Example {
+     
+    public static void main(String[] args) throws Exception {
+     
+        String lp_sparse = 
+         
+            //    TYPE   COL_   ROW_    COEF 
+                  
+                " MAX     .    price      .    \n" +   
+                " GE      .    row1       .    \n" +      
+                " LE      .    row2       .    \n" +  
+                " LE      .    row3       .    \n" +
+                " UPPER   .    lim_sup    .    \n" +
+                " LOWER   .    lim_inf    .    \n" +    
+                " INTEGER .    var_int    .    \n" + 
+                " BINARY  .    var_bin    .    \n" + 
+                " SEMICONT .   var_sc     .    \n" + 
+         
+                " .      Y1    price      1    \n" +
+                " .      Y1    row1       1    \n" +      
+                " .      Y1    row2       1    \n" +  
+                " .      Y1    row3      -5    \n" +
+                " .      Y1    lim_sup    1    \n" +
+                " .      Y1    lim_inf   -1    \n" +    
+                " .      Y1    var_bin    1    \n" +    
+                  
+                " .      Y2    price     -3    \n" +
+                " .      Y2    row1       1    \n" +      
+                " .      Y2    row2     1.4    \n" +  
+                " .      Y2    row3       3    \n" +
+                " .      Y2    lim_sup    .    \n" +
+                " .      Y2    lim_inf    1    \n" +    
+                " .      Y2    var_int    1    \n" +
+                " .      Y2    var_sc     1    \n" +
+                  
+                " .     RHS    row1       1    \n" +      
+                " .     RHS    row2       6    \n" +  
+                " .     RHS    row3       5    \n"   ;
+             
+ 
+        InputString lp_input = new InputString(lp_sparse); 
+        lp_input.setInputFormat("TYPE:varstring(8), COL_:varstring(3) , ROW_:varstring(7), COEF:double"); 
+ 
+        MILP milp = new MILP(lp_input,FormatType.SPARSE);  
+        SolutionType solution_type=milp.resolve();
+         
+        if(solution_type==SolutionType.OPTIMUM) { 
+            Solution solution=milp.getSolution();
+            for(Variable var:solution.getVariables()) {
+                SscLogger.log("Name variable :"+var.getName() + " value :"+var.getValue());
+            }
+            SscLogger.log("o.f. value:"+solution.getOptimumValue());
+        }   
+    }
+}
+
+				</pre>
+			</div>
+<div class="commento">
+<br>
+<a title="Back to index" href="#home_indice"><img alt="Back to index" src="images/up.png" /></a>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h3 class="paragraph_title">
+				<a id="ese2_13">Example 2.13</a>
+			</h3>
+			<div class="commento">
+				
+				<br> Consider the whole linear programming problem reported in the section below. 
+				We want to solve this problem by using a parallel B & B implementation. 
+				To do this, simply add the instruction to line [39], which declares the number of threads 
+				(in this case 4) to be used to execute a parallel B & B. 
+
+			</div>
+			<br> <br>
+
+			<div class="codice_example">
+				<pre class="brush: java;">
+
+
+import it.ssc.context.exception.InvalidSessionException;
+import it.ssc.log.SscLogger;
+import it.ssc.pl.milp.*;
+import it.ssc.pl.milp.util.MILPThreadsNumber;
+import static it.ssc.pl.milp.LP.NaN; 
+import java.util.ArrayList;
+ 
+ 
+public class Example {
+     
+    public static void main(String arg[]) throws InvalidSessionException, Exception {
+ 
+        double[]   c =  { 2, 2, 2, 2, 2 , 2, 2, 2, 2, 2, 2 ,2 , 2 };
+        double[]   b =  {1000, 1234, 1000, 1000, 1000, 1000, 1000, 1000, 1000};
+         
+        double[][] A ={ { 2., 9. ,7. ,5. ,9. ,6. ,3., 7., 8. ,7. ,5. ,3. ,1. },
+                        { 4. ,1. ,2. ,3. ,6. ,4. ,5. ,2. ,8. ,5. ,3. ,4., 7. },
+                        { 3. ,4. ,2. ,5. ,7. ,6. ,3. ,5. ,7. ,4. ,6. ,8. ,6. },
+                        { 4. ,6. ,9. ,8. ,7. ,6. ,5. ,4. ,3. ,2. ,3. ,5. ,6. },
+                        { 4. ,4. ,7. ,5. ,3. ,8. ,5. ,6. ,3. ,5. ,6. ,4. ,6. },
+                        { 2. ,6. ,4. ,5. ,7. ,5. ,6. ,4. ,6. ,7. ,4. ,4. ,6. },
+                        { 4. ,6. ,9. ,8. ,3. ,6. ,5. ,5. ,3. ,2. ,9. ,5. ,6. },
+                        { 4. ,5. ,7. ,8. ,3. ,8. ,3. ,6. ,3. ,5. ,6. ,1. ,6. },
+                        { 2., 2., 4., 3., 7. ,5. ,9. ,4. ,6. ,7. ,8. ,4., 6. }};
+ 
+         
+        double[] integer ={ 1.0, 1.0, 1.0, 1.0, 1.0 ,1.0 ,1.0 ,1.0 ,1.0 ,1.0 ,1.0 ,1.0, 1.0 };
+ 
+        LinearObjectiveFunction f = new LinearObjectiveFunction(c, GoalType.MAX);
+ 
+        ArrayList< Constraint > constraints = new ArrayList< Constraint >();
+        for(int i=0; i< A.length; i++) {
+            constraints.add(new Constraint(A[i], ConsType.LE, b[i])); 
+        }
+ 
+        constraints.add(new Constraint(integer, ConsType.INT , NaN)); 
+ 
+        MILP milp = new MILP(f,constraints);
+        milp.setThreadNumber(MILPThreadsNumber.N_4);
+        SolutionType solutionType=milp.resolve();
+ 
+        if(solutionType==SolutionType.OPTIMUM) { 
+            Solution solution=milp.getSolution();
+            for(Variable var:solution.getVariables()) {
+                SscLogger.log("Variable name :"+var.getName() + " value:"+var.getValue());
+            }
+            SscLogger.log("Best value:"+solution.getOptimumValue());
+        }  
+    }
+}
+
+				</pre>
+			</div>
+<div class="commento">
+<br>
+<a title="Back to index" href="#home_indice"><img alt="Back to index" src="images/up.png" /></a>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h3 class="paragraph_title">
+				<a id="ese2_14">Esempio 2.14</a>
+			</h3>
+			<div class="commento">
+				
+				
+				<br> 
+				
+				If the requirement is to obtain a feasible solution that is not necessarily optimal, 
+				just invoke the setJustTakeFeasibleSolution () method, passing it the "true" value 
+				(line 24). This option allows the B&B to be executed in order to obtain a feasible 
+				solution. In this case the value returned by resolve() 
+				(if a feasible solution exists) will be SolutionType.FEASIBLE. 
+				In our example the integer feasible solution obtained (X<sub>1</sub>=2,X<sub>2</sub>=2)
+				has value on o.f. -6, while the optimal solution (X<sub>1</sub>=3,X<sub>2</sub>=1) has a value of -7.
+				
+				
+
+			</div>
+			<br> <br>
+
+			<div class="codice_example">
+				<pre class="brush: java;">
+
+
+import it.ssc.log.SscLogger;
+import it.ssc.pl.milp.MILP;
+import it.ssc.pl.milp.Solution;
+import it.ssc.pl.milp.SolutionType;
+import it.ssc.pl.milp.Variable;
+import it.ssc.ref.InputString;
+ 
+public class Example {
+    public static void main(String[] args) throws Exception {
+ 
+        String milp_string=
+                 
+                        "-2 -1   min        ."   +"\n"+
+                        "-1 -1   ge        -5"   +"\n"+
+                        "1  -1   ge         0"   +"\n"+
+                        "-6 -2   ge       -21"   +"\n"+
+                        "4   3  upper       ."   +"\n"+
+                        "1   1  integer     ."   +"\n" ;  
+ 
+        InputString milp_input = new InputString(milp_string);
+        milp_input.setInputFormat("X1-X2:double, TYPE:varstring(20),  RHS:double");
+ 
+        MILP milp=new MILP(milp_input);
+        milp.setJustTakeFeasibleSolution(true);
+        SolutionType solution_type= milp.resolve();
+ 
+        if(solution_type==SolutionType.FEASIBLE) { 
+            Solution solution=milp.getSolution();
+            for(Variable var:solution.getVariables()) {
+                SscLogger.log("Variable name :"+var.getName() + " Value:"+var.getValue());
+            }
+            SscLogger.log("O.F. Value:"+solution.getOptimumValue());
+        }   
+    }
+}
+				</pre>
+			</div>
+<div class="commento">
+<br>
+<a title="Back to index" href="#home_indice"><img alt="Back to index" src="images/up.png" /></a>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		</div>
+	</div>
+</body>
