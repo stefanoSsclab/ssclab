@@ -15,7 +15,7 @@ public static void main(String [] args) {
 
 	//Print free memory
 	System.out.println("Free Memory:" 
-		+ runtime.freeMemory() / mb);
+		+ runtime.freeMemory() / mb); 
 	
 	//Print total available memory
 	/*
@@ -23,6 +23,7 @@ public static void main(String [] args) {
 	Il valore restituito da questo metodo puo variare nel tempo, a seconda dell'ambiente host. 
 	Si noti che la quantita di memoria richiesta per contenere un oggetto di un 
 	determinato tipo puo dipendere dall'implementazione.
+	Fatta
 	 * 
 	 */
 	
