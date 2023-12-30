@@ -6,6 +6,8 @@ public static void main(String [] args) {
 	
 	//Getting the runtime reference from system
 	Runtime runtime = Runtime.getRuntime();
+	/*aggiunto commento amemori e altro*/
+	  
 	
 	System.out.println("##### Heap utilization statistics [MB] #####");
 	

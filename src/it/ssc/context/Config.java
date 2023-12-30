@@ -16,7 +16,7 @@ public interface Config {
 	public String getPathWorkArea(); 
 	
 	/**
-	 * Questa chiamata setta il path dell'area di work  per 
+	 * Questa chiamata setta il path dell'area di work  per le 
 	 * le nuove sessioni SSC che verranno create a partire da tale configurazione.  
 	 * Quelle create antecedentemente a tale chiamata mantengono la work 
 	 * precedentemente definita. 

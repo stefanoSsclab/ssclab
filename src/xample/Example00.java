@@ -22,6 +22,7 @@ public class Example00 {
 
 		//Context.getConfig().setPathWorkArea("C:\\ssc\\area_work");
 		//Context.getConfig().setPathLocalDb("C:\\ssc\\area_work");
+		//chiamo
 	
 		Session session = Context.createNewSession();
 		//session.startLocalDB();

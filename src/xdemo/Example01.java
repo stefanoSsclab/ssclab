@@ -6,7 +6,7 @@ import it.ssc.step.DataStep;
 import it.ssc.step.FileStep;
 
 /**
- * Parole chiave : 
+ * Parole chiave : g
  * 
  * 1) SESSIONE DI LAVORO
  * 2) INPUT FILE IN FORMATO TESTO
