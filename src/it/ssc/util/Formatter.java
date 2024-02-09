@@ -4,6 +4,7 @@ package it.ssc.util;
 import java.io.BufferedWriter;
 import java.util.Locale;
 
+@Deprecated
 public class Formatter {
 	
 	 public  Formatter(BufferedWriter a, Locale l) {

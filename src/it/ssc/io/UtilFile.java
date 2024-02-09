@@ -49,7 +49,7 @@ public class UtilFile {
 			}
 		}
 		else {
-			throw new DirectoryNotFound("ERRORE. Directory non trovata");
+			throw new DirectoryNotFound("ERRORE. Directory non trovata:"+path);
 		}
 		return new_path;
 	}

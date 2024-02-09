@@ -9,10 +9,9 @@ import it.ssc.ref.OutputRefFile;
 import it.ssc.ref.OutputRefInterface;
 import it.ssc.step.RFileProcess;
 import it.ssc.step.exception.InvalidDichiarationOptions;
-import it.ssc.util.Formatter;
+import it.ssc.util.Formatter2;
 
 import java.io.*;
-import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,7 +20,7 @@ final  class WriteDataToFile implements WriteDataInterface {
 	private static final Logger logger=SscLogger.getLogger();
 	
 	private OutputRefFile output_ref;
-	private Formatter pwriter_out;
+	private Formatter2 pwriter_out;
 	private long obs=0;
 	private String[] var_to_print;
 	private String format_print;
@@ -38,8 +37,8 @@ final  class WriteDataToFile implements WriteDataInterface {
 		append=opt_write.isAppendOutput(); 
 		
 		BufferedWriter buff=new BufferedWriter(new FileWriter(output_ref.getFile(),append));
-		if(opt_write.getLocale()!=null) this.pwriter_out = new Formatter(buff,opt_write.getLocale());
-		else this.pwriter_out = new Formatter(buff);
+		if(opt_write.getLocale()!=null) this.pwriter_out = new Formatter2(buff,opt_write.getLocale());
+		else this.pwriter_out = new Formatter2(buff);
 		this.pwriter_out.setNullPrintable(opt_write.getOutputTokenMissing());
 		
 		this.var_to_print=opt_write.getVarToPrint();
