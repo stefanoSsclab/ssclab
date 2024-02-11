@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.Random;
 
 import it.ssc.dynamic_source.DynamicClassSortInterface;
+import java.lang.reflect.Constructor;
 
 class FileRecordSorted {
 	
@@ -28,8 +29,9 @@ class FileRecordSorted {
 	FileRecordSorted(DynamicClassSortInterface[] array, String path_sort,Class<DynamicClassSortInterface> class_record) throws Exception { 
 		 file_sorted=createFileSorted(path_sort);
 		 saveArray(array);
-		 first1= (DynamicClassSortInterface)class_record.newInstance();
-		 first2= (DynamicClassSortInterface)class_record.newInstance();
+		 Constructor<DynamicClassSortInterface> constructor = class_record.getDeclaredConstructor();
+		 first1= (DynamicClassSortInterface)constructor.newInstance();
+		 first2= (DynamicClassSortInterface)constructor.newInstance();
 	}
 	
 	

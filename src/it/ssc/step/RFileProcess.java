@@ -46,8 +46,9 @@ public class RFileProcess extends CoreProcess implements FileStep {
 		opt_trasf.setParameterStep( obj);
 	}
 	
-	public void setOutputMissing(String token_miss) {
+	public FileStep setOutputMissing(String token_miss) {
 		this.opt_write.setOutputTokenMissing(token_miss);
+		return this;
 	}
 	
 	public FileStep printf(String string_of_record, String... var) {

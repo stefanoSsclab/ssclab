@@ -1,7 +1,6 @@
 package it.ssc.pdv;
 
 import it.ssc.parser.exception.InvalidDateFormatException;
-import it.ssc.pdv.PDVField;
 
 public class MergePDV {
 	
@@ -13,8 +12,8 @@ public class MergePDV {
 
 			int num = pdv.getSize();
 			for (int _a=0;_a<num;_a++) {
-				PDVField pdv_field_old=pdv.getField(_a);
-				PDVField pdv_field_new = pdv_new.addNewField(pdv_field_old.getName(), pdv_field_old.type);
+				PDVField<?> pdv_field_old=pdv.getField(_a);
+				PDVField<?> pdv_field_new = pdv_new.addNewField(pdv_field_old.getName(), pdv_field_old.type);
 				pdv_field_new.lentgh_field = pdv_field_old.lentgh_field;
 				pdv_field_new.precision = pdv_field_old.precision;
 				pdv_field_new.scale = pdv_field_old.scale ;

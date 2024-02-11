@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Arrays;
@@ -38,7 +40,7 @@ public class CreateDynamicObject {
 	}
 
 	public Object createObject() throws IOException, ClassNotFoundException, InstantiationException, 
-	                                                 IllegalAccessException, JavaCompilerError {
+	                                                 IllegalAccessException, JavaCompilerError, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException {
 		//File file_java = createFileJava();
 		File file_java = createFileJava2(name_class,dyn_source, path_compiler);
 		return createObjectClass(file_java);
@@ -46,7 +48,7 @@ public class CreateDynamicObject {
 
 	//public DynamicClassInterface createObjectClass(File java_file)
 	public Object createObjectClass(File java_file)
-			throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException, JavaCompilerError {
+			throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException, JavaCompilerError, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException {
 
 		JavaCompiler jc = ToolProvider.getSystemJavaCompiler();
 
@@ -81,7 +83,8 @@ public class CreateDynamicObject {
 		ClassLoader ucl = new URLClassLoader(urls, cl_old);
 	
 		Class<?> clazz = ucl.loadClass(this.name_class.toString());
-		Object object =  clazz.newInstance();
+		Constructor<?> constructor = clazz.getDeclaredConstructor();
+		Object object =  constructor.newInstance();
 		
 		//return (DynamicClassInterface) object;
 		return object;

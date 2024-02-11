@@ -25,7 +25,7 @@ public interface FileStep  extends Parallelizable {
 
 	public void setMaxObsRead(long obs_read) throws InvalidDichiarationOptions;
 	
-	public void setOutputMissing(String token_miss) ;
+	public FileStep setOutputMissing(String token_miss) ;
 	
 	public void declareNewVar(String informat_declare);
 	

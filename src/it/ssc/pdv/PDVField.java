@@ -81,7 +81,7 @@ public final class PDVField<T> {
 		}
 		
 		else if(value_db instanceof BigDecimal && type==Double.class)   {
-			value_generics=(T) new Double( ((BigDecimal)value_db).doubleValue());
+			value_generics=(T) Double.valueOf( ((BigDecimal)value_db).doubleValue());
 			return true;
 			
 		}
