@@ -1,0 +1,62 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.ssclab</groupId>
+	<artifactId>milp</artifactId>
+	<version>3.0.2</version>
+	<name>SSCLab MILP Solver</name>
+	<description>Library for linear programming</description>
+	<build>
+		<sourceDirectory>src</sourceDirectory>
+		<resources>
+			<resource>
+				<directory>src</directory>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
+				<configuration>
+					<compilerArgs>
+						<arg>-Xlint:unchecked</arg> <!-- Aggiungi l'opzione
+						-Xlint:unchecked -->
+					</compilerArgs>
+					<excludes>
+						<!--
+						<exclude>xample/**</exclude>
+						<exclude>xdemo/**</exclude>
+						<exclude>xxmilp/**</exclude>
+						<exclude>ssc/sito/**</exclude> 
+						 -->
+						
+						<!-- Puoi aggiungere ulteriori directory
+						da escludere qui -->
+										
+					</excludes>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+			
+		
+
+		</plugins>
+	</build>
+
+	<distributionManagement>
+		<repository>
+			<id>remote-repository</id> <!-- Identificatore del repository -->
+			<name>Remote Repository</name> <!-- Nome del repository -->
+			<url>https://s01.oss.sonatype.org/content/repositories/snapshots</url> 
+			<!--
+			     https://oss.sonatype.org/content/repositories/snapshots
+			     https://oss.sonatype.org/service/local/staging/deploy/maven2
+			URL del repository remoto -->
+		</repository>
+	</distributionManagement>
+</project>
