@@ -19,7 +19,7 @@ public interface Config {
 	 * Questa chiamata setta il path dell'area di work  per le 
 	 * le nuove sessioni SSC che verranno create a partire da tale configurazione.  
 	 * Quelle create antecedentemente a tale chiamata mantengono la work 
-	 * precedentemente definita. 
+	 * precedentemente definita.  
 	 * 
 	 * @param path_work
 	 */
