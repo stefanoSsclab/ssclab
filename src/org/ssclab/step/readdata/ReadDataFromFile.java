@@ -63,7 +63,7 @@ class ReadDataFromFile implements ReadDataInterface {
 	    pdv.setTokenMissing(this.ref_file.getMissingValue());
 		for (int _a = 0; _a < num_var; _a++) {
 			String name_var = info_input_step.getDichiarationVar(_a + 1).getNameVar();
-			Class type_var=info_input_step.getDichiarationVar(_a + 1).getTypeVar();
+			Class<?> type_var=info_input_step.getDichiarationVar(_a + 1).getTypeVar();
 			PDVField pdv_field = pdv.addNewField(name_var,type_var);
 			pdv_field.lentgh_field = info_input_step.getDichiarationVar(_a + 1).getLengthVar();
 			pdv_field.date_format_input = info_input_step.getDichiarationVar(_a + 1).getFormatDate();
