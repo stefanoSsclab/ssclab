@@ -1,6 +1,7 @@
 package org.ssclab.pl.milp;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 final class SolutionImpl implements Solution {
 	
@@ -108,6 +109,14 @@ final class SolutionImpl implements Solution {
 	public Var[] getVariables() {
 		return this.variables;
 	}
+	
+	public double[] getValuesSolution() {
+		return Arrays.stream(this.variables)
+              .mapToDouble(Var::getValue) // Metodo di riferimento
+              .toArray();
+	}
+	
+	
 	
 	private int  getIndexInBase( int basis[],int index) {
 		for (int i = 0; i < basis.length; i++) {

@@ -554,7 +554,18 @@ public final class MILP implements FormatTypeInput {
 	public Solution getSolution()  {
 		if(lb.milp!=null) return lb.milp.getSolution();
 		else return null;
-		
+	}
+	
+	/**
+	 * Se il problema ammette soluzione ottima , questo metodo ritorna tale soluzione ottima sotto forma 
+	 * array con i valori delle variabili 
+	 * @return La soluzione ottima del problema come array di valori
+	 * @throws SimplexException Se la soluzione ottima non &egrave; presente 
+	 */
+	
+	public double[] getValuesSolution() throws SimplexException  {
+		if(lb.milp!=null) return lb.milp.getSolution().getValuesSolution();
+		else return null;
 	}
 	
 	/**

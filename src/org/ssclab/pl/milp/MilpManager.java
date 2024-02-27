@@ -198,12 +198,15 @@ import org.ssclab.vector_spaces.MatrixException;
 		
 		InternalConstraint constraint=null;
 		if(versus==VERSUS_SEPARATION.MINOR)  {
+			//5 =Math.floor(5.2);
 			value=Math.floor(value);
 			//System.out.println(index_var+":MINOR:"+value +"   ID_CLONE"+clone_separation.getId() );
+			//PERCHE' HO CREATO UN VINCOLO E NON UN UPPER-LOWER BOUND ? COSA CHE HO FATTO CON LE SEMICONTINUE ?
 			constraint=InternalConstraint.createConstraintFromVar( 
 					num_tot_var, index_var, value, InternalConstraint.TYPE_CONSTR.LE);
 		}
 		else {
+			//6 =Math.floor(5.2);
 			value=Math.ceil(value);
 			//System.out.println(index_var+":MAIOR"+value+"   ID_CLONE"+clone_separation.getId());
 			constraint=InternalConstraint.createConstraintFromVar(

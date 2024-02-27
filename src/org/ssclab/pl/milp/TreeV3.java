@@ -14,7 +14,7 @@ import org.ssclab.pl.milp.util.MILPThreadsNumber;
 	public TreeV3(TARGET_FO target) {
 		this.target=target;
 		if (target==TARGET_FO.MAX) queue = new PriorityQueue<MilpManager>((e,o) ->  e.compareTo(o));
-		else queue = new PriorityQueue<MilpManager>((e,o) ->  -e.compareTo(o));
+		else                       queue = new PriorityQueue<MilpManager>((e,o) ->  -e.compareTo(o));
 	}
 	
 	public MilpManager getMilpBestUP() { 

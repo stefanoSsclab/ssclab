@@ -45,4 +45,10 @@ public interface Solution {
 	 */
 	public double getValue();
 	
+	/**
+	 * 
+	 * @return I valori delle variabili in un array. 
+	 */
+	public double[] getValuesSolution();
+	
 }

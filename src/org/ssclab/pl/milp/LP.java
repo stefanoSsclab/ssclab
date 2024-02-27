@@ -479,6 +479,20 @@ public final class LP implements FormatTypeInput {
 		return this.solution_pl;
 	}
 	
+	
+	/**
+	 * Se il problema ammette soluzione ottima , questo metodo ritorna tale soluzione ottima sotto forma 
+	 * array con i valori delle variabili 
+	 * @return La soluzione ottima del problema come array di valori
+	 * @throws SimplexException Se la soluzione ottima non &egrave; presente 
+	 */
+	
+	public double[] getValuesSolution() throws SimplexException  {
+		if(this.solution_pl==null)  throw new SimplexException(RB.getString("it.ssc.pl.milp.LP.msg10"));
+		return this.solution_pl.getValuesSolution();
+	}
+	
+	
 	/**
 	 * 
 	 * @return vero se la parallelizzazione del simplesso &egrave; attiva. 
