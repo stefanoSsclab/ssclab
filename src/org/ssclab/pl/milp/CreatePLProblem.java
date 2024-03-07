@@ -3,6 +3,7 @@ package org.ssclab.pl.milp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeSet;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.ssclab.datasource.DataSource;
@@ -10,6 +11,7 @@ import org.ssclab.datasource.DataSourceException;
 import org.ssclab.i18n.RB;
 import org.ssclab.log.SscLevel;
 import org.ssclab.log.SscLogger;
+import static org.ssclab.pl.milp.InternalConstraint.TYPE_CONSTR;
 
  final class CreatePLProblem implements Costant  {
 	 
@@ -217,9 +219,10 @@ import org.ssclab.log.SscLogger;
 	
 	//ATTENZIONE FARE TUTTI i CONTROLLI 
 	
-	public static PLProblem create(DataSource milp_data_source,boolean isMilp) throws Exception  {
+	public static PLProblem create(DataSource lp_data_source,boolean isMilp) throws Exception  {
 		
 		boolean exist_integer_var=false;
+		//per verificare che venga inserita nel problema solo una riga relativa alla f.o. (max/min)
 		boolean is_set_row_obj_function=false;
 		boolean is_set_row_upper=false;
 		boolean is_set_row_lower=false;
@@ -227,61 +230,60 @@ import org.ssclab.log.SscLogger;
 		boolean is_set_row_integer=false;
 		boolean is_set_row_semicont=false;
 		
-		int size=milp_data_source.getNumColunm();
+		int num_col_datasource=lp_data_source.getNumColunm();
 		/*Calcola il numero delle variabili del problema, numero colonne -2 */
-		int N=size-2;
+		int N=num_col_datasource-2;
+		logger.log(Level.INFO, "Numero var dichiarate:"+N);
 		/*Crea un problema con N variabili */
-		PLProblem milp_original=new PLProblem(N);
+		PLProblem lp_original=new PLProblem(N);
 		
 		boolean exist_column_type=false; 
 		boolean exist_column_rhs=false;  
-		for(int _a=0;_a<size; _a++)  {
-			String name=milp_data_source.getNameColunm(_a);
-			//System.out.println("NAMME:"+name);
-			
+		for(int _a=0;_a<num_col_datasource; _a++)  {
+			String name=lp_data_source.getNameColunm(_a);
 			if(name.equalsIgnoreCase("TYPE")) {
 				exist_column_type=true;
 			}
-			if(name.equalsIgnoreCase("RHS")) {  
+			else if(name.equalsIgnoreCase("RHS")) {  
 				exist_column_rhs=true;
 			}
 		}
 		if(!exist_column_type) throw  new LPException(RB.getString("it.ssc.pl.milp.CreateMilpProblem.msg16"));
 		if(!exist_column_rhs)  throw  new LPException(RB.getString("it.ssc.pl.milp.CreateMilpProblem.msg17"));
 		
-		
-		for(int _a=0,_j=0;_a<size; _a++)  {
-			String name=milp_data_source.getNameColunm(_a);
-			
-			if(!(name.equalsIgnoreCase("TYPE") || name.equalsIgnoreCase("RHS"))) { 
-				milp_original.setNameVar(_j, name);
+		/*le colonne TYPE e RHS possono trovarsi anche prima della dichiarzione delle variabili*/
+		for(int _a=0,_j=0;_a<num_col_datasource; _a++)  {
+			String name=lp_data_source.getNameColunm(_a);
+			if(!(name.equalsIgnoreCase("NAME_CONST") || name.equalsIgnoreCase("TYPE") || name.equalsIgnoreCase("RHS"))) { 
+				lp_original.setNameVar(_j, name);
 				_j++;
 			}
 		}
-	
-		/*Inserire la riga di errore !!!!!!!!! */
 		
-		
-	
-		while(milp_data_source.next()) { 
-			String type=milp_data_source.getString("TYPE");
+		//leggo i record del datasource
+		while(lp_data_source.next()) { 
+			/*La riga con TYPE = max/min non deve essere necessariamente ESSERE la prima, 
+			 ma la elaboro appena la incontro*/
+			String type=lp_data_source.getString("TYPE");
 			//System.out.println("TYPE"+type);
+			// il type deve essere sempre valorizzato 
 			if(type==null) throw new LPException(RB.getString("it.ssc.pl.milp.CreateMilpProblem.msg18"));
 			//OBLIGATORIO, UNA SOLA VOLTA
-			if(type.equalsIgnoreCase(MAX)|| type.equalsIgnoreCase(MIN)) {
+			//se e' la riga della fo
+			if(type.equalsIgnoreCase(MAX) || type.equalsIgnoreCase(MIN)) {
 				if(is_set_row_obj_function) {
 					throw new LPException(RB.getString("it.ssc.pl.milp.CreateMilpProblem.msg19")+type );
 				}
+				//per 
 				is_set_row_obj_function=true;
-				
-				milp_original.setTargetObjFunction(type);
-				for(int _a=0,_j=0;_a<size; _a++)  {
-					
-					String name=milp_data_source.getNameColunm(_a);
-					if(!(name.equalsIgnoreCase("TYPE") || name.equalsIgnoreCase("RHS"))) {
-						Double double_val=milp_data_source.getDouble(_a);
+				lp_original.setTargetObjFunction(type);
+				//leggo gli N valori (size-2) dei cj
+				for(int _a=0,_j=0;_a<num_col_datasource; _a++)  {
+					String name=lp_data_source.getNameColunm(_a);
+					if(!(name.equalsIgnoreCase("NAME_CONST") || name.equalsIgnoreCase("TYPE") || name.equalsIgnoreCase("RHS"))) {
+						Double double_val=lp_data_source.getDouble(_a);
 						if(double_val==null) throw new LPException(RB.getString("it.ssc.pl.milp.CreateMilpProblem.msg20"));
-						milp_original.setCjOF(_j, double_val);
+						lp_original.setCjOF(_j, double_val);
 						_j++;
 					}
 				}
@@ -292,53 +294,61 @@ import org.ssclab.log.SscLogger;
 				
 				InternalConstraint constraint_i=new InternalConstraint(N) ;
 				Double double_val;
-				for(int _a=0,_j=0;_a<size; _a++)  {
+				for(int _a=0,_j=0;_a<num_col_datasource; _a++)  {
+					String name=lp_data_source.getNameColunm(_a);
 					
-					String name=milp_data_source.getNameColunm(_a);
-					if(!name.equalsIgnoreCase("TYPE") ) {
-						if(name.equalsIgnoreCase("RHS")) {
-							double_val=milp_data_source.getDouble(_a);
-							if(double_val==null) throw new LPException(RB.getString("it.ssc.pl.milp.CreateMilpProblem.msg1"));
-							constraint_i.setBi(double_val);
-						}
-						else {
-							double_val=milp_data_source.getDouble(_a);
-							if(double_val==null) throw new LPException(RB.getString("it.ssc.pl.milp.CreateMilpProblem.msg21"));
-							constraint_i.setAij(_j, double_val);
-						}
-						_j++;
+					//se la variabile letta e' type ('LE','GE','EQ') 
+					if(name.equalsIgnoreCase("TYPE") ) {
+						if(type.equalsIgnoreCase(LE)) constraint_i.setType(TYPE_CONSTR.LE);
+						else if(type.equalsIgnoreCase(GE)) constraint_i.setType(TYPE_CONSTR.GE);
+						else if(type.equalsIgnoreCase(EQ)) constraint_i.setType(TYPE_CONSTR.EQ);
+					}
+					else if(name.equalsIgnoreCase("RHS")) {
+						double_val=lp_data_source.getDouble(_a);
+						if(double_val==null) throw new LPException(RB.getString("it.ssc.pl.milp.CreateMilpProblem.msg1"));
+						constraint_i.setBi(double_val);
+					}
+					else if(name.equalsIgnoreCase("NAME_CONST")) {
+						String name_cont=lp_data_source.getString(_a);
+						constraint_i.setName(name_cont);
 					}
 					else {
-						if(type.equalsIgnoreCase(LE)) constraint_i.setType(InternalConstraint.TYPE_CONSTR.LE);
-						else if(type.equalsIgnoreCase(GE)) constraint_i.setType(InternalConstraint.TYPE_CONSTR.GE);
-						else if(type.equalsIgnoreCase(EQ)) constraint_i.setType(InternalConstraint.TYPE_CONSTR.EQ);
+						double_val=lp_data_source.getDouble(_a);
+						if(double_val==null) throw new LPException(RB.getString("it.ssc.pl.milp.CreateMilpProblem.msg21"));
+						constraint_i.setAij(_j, double_val);
+						_j++;
 					}
 				}
-				milp_original.addConstraint(constraint_i);
+				lp_original.addConstraint(constraint_i);
 			}
 			
-			//FACOLTATIVO, UNA SOLA VOLTA
+			//ARRIVATO QUA
+			//riga upper / lower
 			else if(type.equalsIgnoreCase(UPPER)|| type.equalsIgnoreCase(LOWER)) {
-				
+				//FACOLTATIVO, UNA SOLA VOLTA
+				//UPPER
 				if(type.equalsIgnoreCase(UPPER) ) { 
 					if(is_set_row_upper) throw new LPException(RB.getString("it.ssc.pl.milp.CreateMilpProblem.msg3"));
 					else is_set_row_upper=true;
 				}
-				if(type.equalsIgnoreCase(LOWER) ) { 
+				else  { //LOWER 
 					if(is_set_row_lower) throw new LPException(RB.getString("it.ssc.pl.milp.CreateMilpProblem.msg4"));
 					else is_set_row_lower=true;
 				}
-				
 				Var xj;
 				Double bound_val;
-				for(int _a=0,_j=0;_a<size; _a++)  {
-					String name=milp_data_source.getNameColunm(_a);
-					if(!(name.equalsIgnoreCase("TYPE") || name.equalsIgnoreCase("RHS"))) {
-						xj=milp_original.getVar(_j);
-						bound_val=milp_data_source.getDouble(_a);
+				for(int _a=0,_j=0;_a<num_col_datasource; _a++)  {
+					String name=lp_data_source.getNameColunm(_a);
+					if(!(name.equalsIgnoreCase("NAME_CONST") || name.equalsIgnoreCase("TYPE") || name.equalsIgnoreCase("RHS"))) {
+						xj=lp_original.getVar(_j);
+						bound_val=lp_data_source.getDouble(_a);
+						//IMPORTANTE SE UPPER O LOWER = NULL -> Double.NaN
+						//IL CHE VUOL DIRE CHE SONO +INF E -INF 
+						// perche non mettere INFINITO ?
 						if(bound_val==null) bound_val=Double.NaN;
+						//CHIAMATE A SETlOWER E SETuPPER, NON SETTA SOLO VALORI MA FA CONTROLLI
 						if(type.equalsIgnoreCase(UPPER)) xj.setUpper(bound_val);
-						else if(type.equalsIgnoreCase(LOWER)) xj.setLower(bound_val);
+						else xj.setLower(bound_val);
 						_j++;
 					}
 				}
@@ -363,11 +373,11 @@ import org.ssclab.log.SscLogger;
 				}
 				
 				
-				for(int _a=0,_j=0;_a<size; _a++)  {
-					String name=milp_data_source.getNameColunm(_a);
-					if(!(name.equalsIgnoreCase("TYPE") || name.equalsIgnoreCase("RHS"))) {
-						Var xj=milp_original.getVar(_j);
-						Double type_var=milp_data_source.getDouble(_a);
+				for(int _a=0,_j=0;_a<num_col_datasource; _a++)  {
+					String name=lp_data_source.getNameColunm(_a);
+					if(!(name.equalsIgnoreCase("NAME_CONST") ||name.equalsIgnoreCase("TYPE") || name.equalsIgnoreCase("RHS"))) {
+						Var xj=lp_original.getVar(_j);
+						Double type_var=lp_data_source.getDouble(_a);
 						if(type_var!=null && type_var==1.0) {
 							//System.out.println("VAR  "+_j +"  "+type);
 							if(type.equalsIgnoreCase(INTEGER)) { 
@@ -399,10 +409,11 @@ import org.ssclab.log.SscLogger;
 				throw new LPException(RB.getString("it.ssc.pl.milp.CreateMilpProblem.msg26")+type); 
 			}
 		}
-		milp_data_source.close();
+		lp_data_source.close();
 		
+		if(!is_set_row_obj_function) throw new LPException(RB.getString("it.ssc.pl.milp.CreateMilpProblem.msg50"));
 		if(isMilp && !exist_integer_var) logger.log(SscLevel.WARNING,RB.getString("it.ssc.pl.milp.CreateMilpProblem.msg15"));
-		return milp_original;
+		return lp_original;
 	}
 	
 	

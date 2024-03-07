@@ -13,7 +13,7 @@ final class SolutionImpl implements Solution {
 	SolutionImpl(SolutionType type_solution,PLProblem milp_originall,  int basis[],double values[], Var[] variables_deep) {
 		this.type_solution=type_solution;
 		this.milp_original=milp_originall;
-		this.variables= milp_original.getVariables();
+		this.variables= milp_original.getVariablesClone();
 		passaZeroSemicontVar(variables_deep);
 		int index_var=0;
 		int index_base=0,index_p1_base=0;

@@ -155,7 +155,7 @@ import org.ssclab.vector_spaces.MatrixException;
 		if(this.solutionType==SolutionType.OPTIMUM) { 
 			this.solutionType =simplex.runPhaseTwo();
 			this.solution_pl=new SolutionImpl(this.solutionType,
-											  pl_original_zero.clone(), //devo passare un clone in quanto modifiva l'array di Var
+											  pl_original_zero, //devo passare un clone in quanto modifiva l'array di Var
 											  simplex.getFinalBasis(),
 											  simplex.getFinalValuesBasis(),
 											  pl_current.getVariables());

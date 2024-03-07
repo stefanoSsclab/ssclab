@@ -21,7 +21,6 @@ import org.ssclab.log.SscLogger;
 	}
 	
 	public void setCj(int j, double cj) {
-		//System.out.println("VALUE Cj "+cj);
 		C[j]=cj;
 	}
 	

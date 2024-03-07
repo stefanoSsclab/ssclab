@@ -15,7 +15,7 @@ final class InternalConstraint implements Cloneable,Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger=SscLogger.getLogger();
-	public enum TYPE_CONSTR {EQ, LE, GE}; 
+	public static enum TYPE_CONSTR {EQ, LE, GE}; 
 	private double[] Ai;
 	private double bi;
 	private TYPE_CONSTR type;
@@ -30,7 +30,7 @@ final class InternalConstraint implements Cloneable,Serializable {
 		return Ai;
 	}
 	
-	public void setAij(int j, Double aij) {
+	public void setAij(int j, double aij) {
 		Ai[j]=aij;
 	}
 	

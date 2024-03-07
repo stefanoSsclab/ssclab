@@ -28,8 +28,6 @@ final class Var implements Cloneable, Variable, Serializable {
 	public boolean isZeroSemicontVar() {
 		return isZeroSemicontVar;
 	}
-
-
 	public void setZeroSemicontVar(boolean isZeroSemicontVar) {
 		this.isZeroSemicontVar = isZeroSemicontVar;
 	}
@@ -101,8 +99,21 @@ final class Var implements Cloneable, Variable, Serializable {
 	public boolean getUpperIsNaN() {
 		return Double.isNaN(upper);
 	}
+	
+	public void setLower(double lower) throws LPException {
+		//if(lower==null || lower < 0.0) is_free=true;   __OLDDD
+		if(Double.isNaN(lower) ) is_free=true;  //solo se lower = -infinito -> free. Altrimentio facccio trasformazione con x-l >=0  
+		else is_free=false;
+		if(!Double.isNaN(upper) && !Double.isNaN(lower))  {
+			if(lower > upper) throw new LPException("Errore definizione degli upper e lower bound. Il lower ("+lower+") non puo' essere maggiore dell'upper ("+upper+")");
+		}
+		this.lower = lower;
+		this.is_lower_modified=true;
+	}
+	
 
 	public void setUpper(double upper) throws LPException {
+		//CASO UPPER < 0
 		if(!Double.isNaN(upper) && upper < 0.0) {
 			//se l'upper bound e' minore di zero la variabile e' libera
 			this.is_free=true;
@@ -132,16 +143,6 @@ final class Var implements Cloneable, Variable, Serializable {
 	}
 	
 
-	public void setLower(double lower) throws LPException {
-		//if(lower==null || lower < 0.0) is_free=true;   __OLDDD
-		if(Double.isNaN(lower) ) is_free=true;  //solo se lower = -infinito -> free. Altrimentio facccio trasformazione con x-l >=0  
-		else is_free=false;
-		if(!Double.isNaN(upper) && !Double.isNaN(lower))  {
-			if(lower > upper) throw new LPException("Errore definizione degli upper e lower bound. Il lower ("+lower+") non puo' essere maggiore dell'upper ("+upper+")");
-		}
-		this.lower = lower;
-		this.is_lower_modified=true;
-	}
 	
 	
 	public boolean isFree() {

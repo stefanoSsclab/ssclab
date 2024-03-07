@@ -285,7 +285,9 @@ public final class LP implements FormatTypeInput {
 		this.session=session;
 		this.toCloseSessionInternal=false;
 		DataSource milp_data_source=session.createDataSource(input_natural);
+		/*Crea im problema puro , cosi come dichiarato dall'utente A <=> b , f=C*/
 		PLProblem pl_original=CreatePLProblem.create(milp_data_source, isMilp);
+		
 		createStandartProblem(pl_original); 
 	}
 	

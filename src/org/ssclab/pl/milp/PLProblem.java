@@ -28,12 +28,35 @@ import org.ssclab.pl.milp.ObjectiveFunction.TARGET_FO;
 	public ObjectiveFunctionImpl getObjFunction() {
 		return fo;                                
 	}
+	
+	/**
+	 * Crea un oggetto PLProblem, questo è costituito da vincoli (InternalConstraint) intesi come 
+	 * rappresentanti delle disequazioni/equazioni del problema (Aj,bj), un f.o.
+	 * che rappresenta anche i coefficienti Ci, e degli oggetti Var che 
+	 * rappresentano le caratteristiche delle variabili del problema.
+	 * 
+	 * @param dimension La dimensione iniziale N del problema intesa come numero di variabili 
+	 * definite nel problema iniziale , ovvero numero delle variabili legittime dichiarate. 
+	 * 
+	 * */
 
 	public PLProblem(int dimension) {
 		list_constraint=new ArrayList<InternalConstraint>(); 
 		initArrayVar(dimension);
+		// il vettore C dei costi ha sempre dimensione N
 		fo=new ObjectiveFunctionImpl(dimension);
 	}
+	
+	/**
+	 *Inizializza gli oggetti oggetti Var che 
+	 * rappresentano le caratteristiche delle variabili del problema. Tante Var quanto 
+	 * e' la dimensione N iniziale del problema. L'array Var verra' valorizzato in ordine come sono state 
+	 * dichiarate le variabili nel problema iniziale 
+	 * 
+	 * @param dimension La dimensione iniziale N del problema intesa come numero di variabili 
+	 * definite nel problema iniziale , ovvero numero delle variabili legittime dichiarate. 
+	 * 
+	 * */
 	
 	private void initArrayVar(int dimension) {
 		array_var=new Var[dimension] ;
@@ -71,6 +94,14 @@ import org.ssclab.pl.milp.ObjectiveFunction.TARGET_FO;
 	
 	public Var[] getVariables() {
 		return array_var; 
+	}
+	
+	public Var[] getVariablesClone() {
+		Var[]  clone_array_var=new 	Var[array_var.length];
+		for(int _a=0;_a<clone_array_var.length;_a++) {
+			clone_array_var[_a]=array_var[_a].clone();
+		}
+		return clone_array_var; 
 	}
 
 	public void addConstraint(InternalConstraint constraint) {
