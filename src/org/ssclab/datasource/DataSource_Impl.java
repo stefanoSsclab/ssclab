@@ -68,6 +68,8 @@ public class DataSource_Impl implements DataSource {
 	}
 	
 	public Object getObject(String name) throws DataSourceException {
+		if(name==null) throw new DataSourceException("ERRORE ! Il nome della variabile e' a null ");
+		name=name.toUpperCase();
 		pdv_field=pdv.getField(name);
 		if(pdv_field==null)  throw new DataSourceException("ERRORE ! La variabile "+name +" non esiste nel DataSource");
 		if(pdv_field.is_null)  {
@@ -89,6 +91,14 @@ public class DataSource_Impl implements DataSource {
 			 list_var.add(field.getName());
 		 }
 		 return list_var;
+	}
+	
+	public boolean existVar(String name) throws DataSourceException {
+		if(name==null) throw new DataSourceException("ERRORE ! Il nome della variabile e' a null ");
+		name=name.toUpperCase();
+		Object pdv_field=pdv.getField(name);
+		if(pdv_field==null) return false;
+		return true; 
 	}
 	
 	

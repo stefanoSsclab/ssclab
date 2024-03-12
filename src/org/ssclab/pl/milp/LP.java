@@ -54,10 +54,13 @@ public final class LP implements FormatTypeInput {
 	private EPSILON epsilon=EPSILON._1E_M10;
 	private EPSILON cepsilon=EPSILON._1E_M8;
 	
-	{
+	
+	static {
+		logger.log(Level.INFO,  " ");
 		logger.log(Level.INFO,  "##############################################");
 		logger.log(Level.INFO,  RB.getString("it.ssc.context.Session_Impl.msg0"));
 		logger.log(Level.INFO,  "##############################################");
+		logger.log(Level.INFO,  " ");
 	}
 	
 	
@@ -266,6 +269,7 @@ public final class LP implements FormatTypeInput {
 
 	public LP(Input input_natural) throws Exception {
 		
+		
 		this(input_natural, Context.createNewSession());
 		this.toCloseSessionInternal=true;
 		//logger.log(Level.INFO,RB.getString("it.ssc.pl.milp.LP.msg1")); 
@@ -287,7 +291,6 @@ public final class LP implements FormatTypeInput {
 		DataSource milp_data_source=session.createDataSource(input_natural);
 		/*Crea im problema puro , cosi come dichiarato dall'utente A <=> b , f=C*/
 		PLProblem pl_original=CreatePLProblem.create(milp_data_source, isMilp);
-		
 		createStandartProblem(pl_original); 
 	}
 	
@@ -353,6 +356,8 @@ public final class LP implements FormatTypeInput {
 				
 		B=pl_original.getVectorB();
 		C=pl_original.getVectorC();
+		//for(double c:C) System.out.println("->"+c);
+		
 		//ho messo la creazione della matrice per ultima per svuotare gli internal constraint
 		A=pl_original.getMatrixA();  
 	

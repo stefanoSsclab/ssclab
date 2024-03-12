@@ -3,6 +3,7 @@ package org.ssclab.pl.milp;
 import java.util.ArrayList;
 
 public final class ListConstraints {
+	
 	private ArrayList<Constraint> listConstraint;
 	
 	public ListConstraints() {
@@ -16,4 +17,5 @@ public final class ListConstraints {
 	public ArrayList<Constraint> getListConstraint() {
 		return listConstraint;
 	}
+	
 }

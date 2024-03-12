@@ -76,7 +76,7 @@ final class InternalConstraint implements Cloneable,Serializable {
 		this.type = type;
 	}
 	
-	public void standardize_b() {
+	public void standardize_b_positive() {
 		if(bi < 0.0) {
 			bi=-bi;
 			for(int j=0;j<Ai.length;j++) {

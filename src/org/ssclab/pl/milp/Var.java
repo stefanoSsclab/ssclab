@@ -13,17 +13,34 @@ final class Var implements Cloneable, Variable, Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
+	//QUESTA NON VA SERIALIZZATA ... VERIFICARE
 	private static final Logger logger=SscLogger.getLogger();
-	
 	private String name;
 	private TYPE_VAR type=TYPE_VAR.REAL;
 	private double upper;
 	private double lower;
 	private boolean is_free;
 	private double value;
-	private boolean is_lower_modified=false;
-	private boolean isZeroSemicontVar=false;
+	//Questa variabile mi serve per capire se il lower e stato modificato, 
+	//ovvero se esiste un valore lower definito dall'utente pwer questa variabile
+	//in quanto se lower non è stato definito e upper viene settato a  < 0 -> variabile libera 
+	//e lower = -INFINITO
+	private boolean is_lower_modified;
+	private boolean isZeroSemicontVar;
+	
+	//parte per variabili semi-continue
+	private double upperSemicon; 
+	private double lowerSemicon; 
+	private boolean isSemicon;
+	
+	public Var() {
+		lower=0.0;   
+		upper=Double.POSITIVE_INFINITY;
+		lowerSemicon=0.0;
+		is_lower_modified=false;
+		isZeroSemicontVar=false;
+		is_free=false;
+	}
 	
 	public boolean isZeroSemicontVar() {
 		return isZeroSemicontVar;
@@ -31,23 +48,11 @@ final class Var implements Cloneable, Variable, Serializable {
 	public void setZeroSemicontVar(boolean isZeroSemicontVar) {
 		this.isZeroSemicontVar = isZeroSemicontVar;
 	}
-
-	//parte per variabili semi-continue
-	private double upperSemicon; 
-	private double lowerSemicon; 
-	private boolean   isSemicon;
-	
-	public Var() {
-		lower=0.0;   //IMPORTANTE
-		upper=Double.NaN;
-		lowerSemicon=0.0;
-		is_free=false;
-	}
 	
 	
 	public void resetUpperLower() {
-		lower=0.0;   //IMPORTANTE
-		upper=Double.NaN;
+		lower=0.0;   
+		upper=Double.POSITIVE_INFINITY;
 		is_free=false;
 		is_lower_modified=false;
 	}
@@ -96,53 +101,47 @@ final class Var implements Cloneable, Variable, Serializable {
 		return upper;
 	}
 	
-	public boolean getUpperIsNaN() {
-		return Double.isNaN(upper);
+	public boolean isUpperInfinite() {
+		return Double.isInfinite(upper);
 	}
 	
-	public void setLower(double lower) throws LPException {
-		//if(lower==null || lower < 0.0) is_free=true;   __OLDDD
-		if(Double.isNaN(lower) ) is_free=true;  //solo se lower = -infinito -> free. Altrimentio facccio trasformazione con x-l >=0  
-		else is_free=false;
-		if(!Double.isNaN(upper) && !Double.isNaN(lower))  {
-			if(lower > upper) throw new LPException("Errore definizione degli upper e lower bound. Il lower ("+lower+") non puo' essere maggiore dell'upper ("+upper+")");
-		}
+	public boolean isLowerInfinite() {
+		return Double.isInfinite(lower);
+	}
+	
+	public void setLower(Double lower) throws LPException {
+		
+		if(lower==null || Double.isNaN(lower)) lower=Double.NEGATIVE_INFINITY;
 		this.lower = lower;
+		//per verificare che se upper < 0 , e l'utente ha definito un lower questo deve essere 
+		//minore dell'upper, altrimenti, se non ha definito nulla, lower = -INFINITO
 		this.is_lower_modified=true;
 	}
 	
 
-	public void setUpper(double upper) throws LPException {
-		//CASO UPPER < 0
-		if(!Double.isNaN(upper) && upper < 0.0) {
-			//se l'upper bound e' minore di zero la variabile e' libera
-			this.is_free=true;
-			if(is_lower_modified) {
-				if(!Double.isNaN(lower) && lower > upper) {
-					throw new LPException(RB.format("it.ssc.pl.milp.Var.msg1", lower,upper));
-				}
-				//Modificato per considerare non più i lower come un vincolo ma sostituiti da una nuova variabile X =Xi -lower
-				if(!Double.isNaN(lower)) this.is_free=false;
-			}
-		}
-		
-		else if(!Double.isNaN(upper) && !Double.isNaN(lower))  {
-			if(lower > upper) throw new LPException(RB.format("it.ssc.pl.milp.Var.msg1", lower,upper));
-		}
+	public void setUpper(Double upper) throws LPException {
+		if(upper==null || Double.isNaN(upper)) upper=Double.POSITIVE_INFINITY;
 		this.upper = upper;
 	}
 	
+	public void configureFree() throws LPException {
+		//se si dichiara solo l'upper, e questo è < 0 , automaticamente la variabile e' 
+		//libera e lower = -inf (vedi quattro righe sotto)
+		if(this.is_lower_modified) {
+			if(this.lower > this.upper) throw new LPException(RB.format("it.ssc.pl.milp.Var.msg1", lower,upper));
+		}
+		else {
+			if(this.upper < 0.0) {
+				//imposto il lower a -inf
+				this.lower=Double.NEGATIVE_INFINITY;
+			}
+		}
+		if(Double.isInfinite(this.lower)) this.is_free=true; 
+	}
 
 	public double getLower() {
-		return lower;
+		return this.lower;
 	}
-	
-	
-	public boolean getLowerIsNaN() {
-		return Double.isNaN(lower);
-	}
-	
-
 	
 	
 	public boolean isFree() {

@@ -9,6 +9,8 @@ public interface DataSource {
 	
 	public int getNumColunm();
 	
+	public boolean existVar(String name) throws DataSourceException;
+	
 	public String getNameColunm(int column_index);
 	
 	public boolean next() throws Exception;

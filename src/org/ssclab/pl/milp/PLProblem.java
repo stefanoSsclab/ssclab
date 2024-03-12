@@ -22,6 +22,7 @@ import org.ssclab.pl.milp.ObjectiveFunction.TARGET_FO;
 	private ObjectiveFunctionImpl fo;
 	private ArrayList<InternalConstraint> list_constraint;  
 	private Var[] array_var;
+	//nuova dimensione con N + Var_free + Var_slacks
 	private int new_dimension;
 	private TARGET_FO target_fo= TARGET_FO.MAX;
 		
@@ -110,9 +111,13 @@ import org.ssclab.pl.milp.ObjectiveFunction.TARGET_FO;
 	
 	public void standardize() {
 		
-		fo.standardize(); //standardizza la funzione obiettivo. Se MIN -> MAX
+		//standardizza la funzione obiettivo. Se MIN -> MAX
+		//ma non cambia il valore this.target_fo
+		fo.standardize(); 
 		
 		//Aggiornare i valori di b con gli lower bound
+		// per avere variabili > 0
+		/*
 		double aij;
 		InternalConstraint constrainte ;
 		Iterator<InternalConstraint> itr = list_constraint.iterator();
@@ -128,17 +133,36 @@ import org.ssclab.pl.milp.ObjectiveFunction.TARGET_FO;
 			}
 			constrainte.setBi(constrainte.getBi()+cumulata);
 	    }
-		
+	    */
+		//Aggiorno i valori di b con gli lower bound
+		// per avere variabili > 0
+		//gli upper- lower non sono modificati
+		{
+			double aij,lower,cumulata;
+		    for(InternalConstraint constrainte:list_constraint) {
+		    	cumulata=0;
+				for(int _a=0;_a<array_var.length;_a++) { 
+					aij=constrainte.getAij(_a);
+					lower=array_var[_a].getLower();
+					//System.out.println("name :"+array_var[_a].getName() +" lower:"+lower);
+					if(!Double.isInfinite(lower) && lower!=0.0) {
+						cumulata+= -(lower*aij);
+					}  
+				}
+				constrainte.setBi(constrainte.getBi()+cumulata);
+		    }
+		}
+	    
 		//ciclo sulle variabili 
 		//Se lower o upper != null -> vincoli 
 		for(int _j=0;_j< array_var.length;_j++) {
 			double lower=array_var[_j].getLower();
 			double upper=array_var[_j].getUpper();
 			double appo_lower=0;
-			if(!Double.isNaN(lower) && lower!=0.0) {
+			if(!Double.isInfinite(lower) && lower!=0.0) {
 				appo_lower=lower;
 			}
-			if(!Double.isNaN(upper)) {
+			if(!Double.isInfinite(upper)) {
 				InternalConstraint constraint=InternalConstraint.createConstraintFromVar(
 						array_var.length, _j, upper - appo_lower, InternalConstraint.TYPE_CONSTR.LE);
 				//System.out.println("kkkk"+(upper - appo_lower));
@@ -148,7 +172,7 @@ import org.ssclab.pl.milp.ObjectiveFunction.TARGET_FO;
 		
 		//da mettere alla fine 
 		for(InternalConstraint constraint: list_constraint) {
-			constraint.standardize_b();
+			constraint.standardize_b_positive();
 		}
 		
 		/*
@@ -233,11 +257,11 @@ import org.ssclab.pl.milp.ObjectiveFunction.TARGET_FO;
 		int N=array_var.length;
 		int N_free=0;
 		int N_slacks=0;
-		for(int _j=0;_j< array_var.length;_j++) {
+		for(int _j=0;_j< N;_j++) {
 			if(array_var[_j].isFree()) N_free++;
 		}
 		for(InternalConstraint constraint: list_constraint) {
-			if(!(constraint.getType()==InternalConstraint.TYPE_CONSTR.EQ)) N_slacks++;
+			if(constraint.getType()!=InternalConstraint.TYPE_CONSTR.EQ) N_slacks++;
 		}
 		return N+N_free+N_slacks;
 	}
@@ -266,14 +290,24 @@ import org.ssclab.pl.milp.ObjectiveFunction.TARGET_FO;
 		return clone;
 	}
 	
+	
+	public void configureFree() throws LPException {
+		for(Var var: array_var) {
+			var.configureFree();
+			System.out.println("name:"+var.getName()+"  free:"+var.isFree());
+		}
+	}
+	
+	
+	
 	public void configureInteger() throws LPException {
 		boolean is_present_upper_or_lower_in_var_binary=false; 
 		for(Var var:array_var) {
 			if(var.getType()==Var.TYPE_VAR.BINARY) {
-				if(!var.getLowerIsNaN() && var.getLower()!= 0.0) {
+				if(var.getLower()!= 0.0) {
 					is_present_upper_or_lower_in_var_binary=true; 
 				}
-				else if(!var.getUpperIsNaN() && var.getUpper()!= 1.0) {
+				else if(!var.isUpperInfinite() && var.getUpper()!= 1.0) {
 					is_present_upper_or_lower_in_var_binary=true;
 				}
 				var.setUpper(1.0); //1.0
@@ -287,7 +321,6 @@ import org.ssclab.pl.milp.ObjectiveFunction.TARGET_FO;
 	
 	
 	public void configureSemicont() throws LPException {
-		
 		for(Var var:array_var) {
 			if(var.isSemicon()) { 
 				double upper=var.getUpper();
@@ -295,8 +328,8 @@ import org.ssclab.pl.milp.ObjectiveFunction.TARGET_FO;
 				var.resetUpperLower();
 				var.setUpperSemicon(upper);
 				var.setLowerSemicon(lower);
-				
-				if((Double.isNaN(lower) || lower <= 0.0) && (Double.isNaN(upper) || upper >= 0.0)) {
+				//se semicontinua upper-lower non possono contenere lo zero
+				if((Double.isInfinite(lower) || lower <= 0.0) && (Double.isInfinite(upper) || upper >= 0.0)) {
 					throw new LPException(RB.format("it.ssc.pl.milp.MilpProblem.msg2", var.getName()));
 				}
 			}
