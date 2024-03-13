@@ -115,25 +115,6 @@ import org.ssclab.pl.milp.ObjectiveFunction.TARGET_FO;
 		//ma non cambia il valore this.target_fo
 		fo.standardize(); 
 		
-		//Aggiornare i valori di b con gli lower bound
-		// per avere variabili > 0
-		/*
-		double aij;
-		InternalConstraint constrainte ;
-		Iterator<InternalConstraint> itr = list_constraint.iterator();
-	    while (itr.hasNext()) {
-	    	constrainte = itr.next();
-			double cumulata=0;
-			for(int _a=0;_a<array_var.length;_a++) { 
-				aij=constrainte.getAij(_a);
-				Double lower=array_var[_a].getLower();
-				if(!Double.isNaN(lower) && lower!=0.0) {
-					cumulata+= -(lower*aij);
-				}  
-			}
-			constrainte.setBi(constrainte.getBi()+cumulata);
-	    }
-	    */
 		//Aggiorno i valori di b con gli lower bound
 		// per avere variabili > 0
 		//gli upper- lower non sono modificati
@@ -174,12 +155,10 @@ import org.ssclab.pl.milp.ObjectiveFunction.TARGET_FO;
 		for(InternalConstraint constraint: list_constraint) {
 			constraint.standardize_b_positive();
 		}
-		
 		/*
 		for(InternalConstraint constraint: list_constraint) {
 			constraint.aprint();
 		}*/
-		
 		this.new_dimension=newDimensionProblemToPhase1();
 	}
 	
@@ -290,15 +269,12 @@ import org.ssclab.pl.milp.ObjectiveFunction.TARGET_FO;
 		return clone;
 	}
 	
-	
 	public void configureFree() throws LPException {
 		for(Var var: array_var) {
 			var.configureFree();
-			System.out.println("name:"+var.getName()+"  free:"+var.isFree());
+			//System.out.println("name:"+var.getName()+"  free:"+var.isFree());
 		}
 	}
-	
-	
 	
 	public void configureInteger() throws LPException {
 		boolean is_present_upper_or_lower_in_var_binary=false; 

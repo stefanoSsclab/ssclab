@@ -351,6 +351,9 @@ public final class LP implements FormatTypeInput {
 	private void createStandartProblem(PLProblem pl_original) throws InvalidSessionException, Exception {
 		
 		String path_work=session.getFactoryLibraries().getLibraryWork().getAbsolutePath();
+		
+		//memorizza nella work il pl_original cosi com'e', come oggetto
+		//prima di essere standardizzato
 		persistencePl=new PersistensePLProblem(pl_original,path_work);
 		pl_original.standardize(); 
 				

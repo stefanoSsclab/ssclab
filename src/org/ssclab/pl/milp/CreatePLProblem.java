@@ -47,16 +47,9 @@ import static org.ssclab.pl.milp.InternalConstraint.TYPE_CONSTR;
 		 for(int _a=0;_a<N; _a++)  {
 			 xj=lp_original.getVar(_a);
 			 lower_val=arrayProb.array_lower[_a];
-			 upper_val=arrayProb.array_upper[_a];
-
-			 //System.out.println("LOW:"+lower_val);
-			 //System.out.println("UPP:"+upper_val);
-			 //nel vettore degli upper o lower seil valore e' null vuol dire che non e' valorizzato. 
-			 
-			 // (09/03/2024) e -infinito come si esprime ? 
+			 upper_val=arrayProb.array_upper[_a]; 
 			 if(upper_val!=null)  xj.setUpper(upper_val);
 			 if(lower_val!=null)  xj.setLower(lower_val);
-
 		 }
 
 		 if(!isMilp && arrayProb.isMilp) throw new LPException(RB.getString("it.ssc.pl.milp.CreateMilpProblem.msg5"));
