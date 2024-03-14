@@ -7,11 +7,13 @@ public class Matrix  {
 	protected int n_row;
 	protected int n_column;
 	
+	/*
 	public Matrix(int n_row, int n_column) {
 		this.n_row=n_row;
 		this.n_column=n_column;
 		this.big_matrix=new double[n_row][n_column];
 	}
+	*/
 	
 	public double[][] getMatrix() {
 		return big_matrix;

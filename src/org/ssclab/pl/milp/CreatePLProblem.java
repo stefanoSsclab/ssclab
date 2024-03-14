@@ -18,7 +18,7 @@ import static org.ssclab.pl.milp.InternalConstraint.TYPE_CONSTR;
 	 private static final Logger logger=SscLogger.getLogger();
 	 
 	 
-	 public static PLProblem create(LinearObjectiveFunction f,
+	 protected static PLProblem create(LinearObjectiveFunction f,
 			 ArrayList<InternalConstraint> constraints, ArrayList<String> nomi_var,ArrayProblem arrayProb,
 			 boolean isMilp) throws Exception  {
 
@@ -80,7 +80,7 @@ import static org.ssclab.pl.milp.InternalConstraint.TYPE_CONSTR;
 	 }
 
 	 
-	 public static PLProblem create(LinearObjectiveFunction f,
+	 protected static PLProblem create(LinearObjectiveFunction f,
 			 						ArrayList<Constraint> constraints,
 			 						boolean isMilp) throws Exception  {
 
@@ -218,7 +218,7 @@ import static org.ssclab.pl.milp.InternalConstraint.TYPE_CONSTR;
 	
 	//ATTENZIONE FARE TUTTI i CONTROLLI 
 	
-	public static PLProblem create(DataSource lp_data_source,boolean isMilp) throws Exception  {
+	protected static PLProblem create(DataSource lp_data_source,boolean isMilp) throws Exception  {
 		
 		boolean exist_integer_var=false;
 		boolean is_set_row_obj_function=false;
@@ -419,7 +419,7 @@ import static org.ssclab.pl.milp.InternalConstraint.TYPE_CONSTR;
 	
 	
 	
-	public static PLProblem createFromSparse(DataSource source_sparse,boolean isMilp) throws DataSourceException, Exception {
+	protected static PLProblem createFromSparse(DataSource source_sparse,boolean isMilp) throws DataSourceException, Exception {
 		HashMap<String,String> hash_row_type=new HashMap<String,String>(); 
 		HashMap<String,HashMap<String, Double>> hash_row_col=new HashMap<String,HashMap<String, Double>>(); 
 		TreeSet<String> tree_col=new TreeSet<String>();
@@ -580,7 +580,7 @@ import static org.ssclab.pl.milp.InternalConstraint.TYPE_CONSTR;
 	
 	
 	
-	private static PLProblem createMilpFromHashTables(HashMap<String,String> hash_row_type,
+	protected static PLProblem createMilpFromHashTables(HashMap<String,String> hash_row_type,
 											  HashMap<String,HashMap<String, Double>> hash_row_col,
 											  TreeSet<String> tree_col) throws LPException  {
 		
@@ -691,7 +691,7 @@ import static org.ssclab.pl.milp.InternalConstraint.TYPE_CONSTR;
 	}
 	
 	
-	private static void checkDimensionProblem(LinearObjectiveFunction f,
+	protected static void checkDimensionProblem(LinearObjectiveFunction f,
 											  ArrayList<Constraint> constraints) throws SimplexException {
 
 		double[] c=f.getC();

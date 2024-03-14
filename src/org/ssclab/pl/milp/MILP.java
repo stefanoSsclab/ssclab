@@ -35,8 +35,8 @@ public final class MILP implements FormatTypeInput {
 	public static double NaN=Double.NaN;
 	
 	private static final EPSILON epsilon=EPSILON._1E_M10;
-	private static final  EPSILON iepsilon=EPSILON._1E_M10; 
-	private static final  EPSILON cepsilon=EPSILON._1E_M8;
+	private static final EPSILON iepsilon=EPSILON._1E_M10; 
+	private static final EPSILON cepsilon=EPSILON._1E_M8;
 	private static final Logger logger=SscLogger.getLogger(); 
 	
 	private MilpManager milp_initiale;

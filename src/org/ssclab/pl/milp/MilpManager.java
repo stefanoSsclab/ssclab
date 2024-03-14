@@ -12,6 +12,7 @@ import org.ssclab.log.SscLogger;
 import org.ssclab.pl.milp.FormatTypeInput.FormatType;
 import org.ssclab.pl.milp.ObjectiveFunction.TARGET_FO;
 import org.ssclab.pl.milp.Variable.TYPE_VAR;
+import org.ssclab.pl.milp.util.VectorsPL;
 import org.ssclab.ref.Input;
 import org.ssclab.step.parallel.Parallelizable;
 import org.ssclab.vector_spaces.MatrixException;
@@ -132,22 +133,21 @@ import org.ssclab.vector_spaces.MatrixException;
 		 * d) Calcola il nuovo valore new_dimension che sara' poi la dimensione delle colonne di A (matrice standard)
 		 */
 		
-		lp_standard.standardize(); 
-		
-		
-		double[]   B=lp_standard.getVectorB();
-		double[]   C=lp_standard.getVectorC();
-		//ATTENZIONE ... qui gli internal constraint vengono svuotati
-		//ho messo la creazione della matrice per ultima per svuotare gli internal constraint
-		double[][] A=lp_standard.getMatrixA();
+		VectorsPL vectors_pl=lp_standard.standardize(); 
 		
 		/*
-		printTableA( A);
-		printTableV( B);
-		printTableV( C);
+		double[]   B=lp_standard.getVectorB();
+		double[]   C=lp_standard.getVectorC();
+		double[][] A=lp_standard.getMatrixA();
+		*/
+		
+		/*
+		printTableA( vectors_pl.A);
+		printTableV( vectors_pl.B);
+		printTableV( vectors_pl.C);
 		*/
 			
-		SimplexInterface simplex=new Simplex(A, B, C,epsilon,cepsilon);
+		SimplexInterface simplex=new Simplex(vectors_pl.A, vectors_pl.B, vectors_pl.C,epsilon,cepsilon);
 		simplex.setNumIterationMax(num_iteration);
 		simplex.setMilp(true);
 		

@@ -21,6 +21,7 @@ import org.ssclab.pl.milp.util.A_DataMatrix;
 import org.ssclab.pl.milp.util.A_Matrix;
 import org.ssclab.pl.milp.util.LPThreadsNumber;
 import org.ssclab.ref.Input;
+import org.ssclab.pl.milp.util.VectorsPL;
 
 
 
@@ -40,9 +41,11 @@ public final class LP implements FormatTypeInput {
 	private static final Logger logger=SscLogger.getLogger();
 	private SolutionImpl solution_pl;
 	private int num_max_iteration=10_000_000;
+	/*
 	private double[][] A;
 	private double[]   B;
-	private double[]   C;
+	private double[]   C;*/
+	private VectorsPL vectors_pl;
 	private Session session;
 	private final boolean isMilp=false;
 	private boolean isParallelSimplex=false;
@@ -62,31 +65,6 @@ public final class LP implements FormatTypeInput {
 		logger.log(Level.INFO,  "##############################################");
 		logger.log(Level.INFO,  " ");
 	}
-	
-	
-	/*
-	 * Costruttore di un oggetto LP per la risoluzione di problemi formulati in formato a disequazioni contenute in stringhe. 
-	 * In questo formato le variabili devono necessariamente chiamarsi X<sub>j</sub>, con l'indice j che parte da 1. 
-	 * 
-	 * @param inequality  Lista dei vincoli di tipo (EQ,GE,LE) sotto forma di disequazioni contenute in stringhe
-	 * @param fo Un oggetto LinearObjectiveFunction che rappresenta la funzione obiettivo
-	 * @throws Exception Viene generata una eccezione se il problema non &egrave; formulato correttamente 
-	 */
-	
-	/*
-	
-	public LP(ArrayList<String> inequality,LinearObjectiveFunction fo) throws Exception  { 
-		
-		if(inequality==null || inequality.isEmpty()) throw new LPException(RB.getString("it.ssc.pl.milp.LP.msg12"));
-		this.session=Context.createNewSession();
-		int dimension=fo.getC().length;
-		ConstraintFromString cfs=new ConstraintFromString(dimension, inequality);
-		ArrayList<Constraint> new_constraints=cfs.getConstraint();
-		PLProblem pl_original=CreatePLProblem.create(fo,new_constraints,isMilp);
-		createStandartProblem(pl_original);
-	}
-	*/
-	
 	
 	/**
 	 * 
@@ -355,16 +333,25 @@ public final class LP implements FormatTypeInput {
 		//memorizza nella work il pl_original cosi com'e', come oggetto
 		//prima di essere standardizzato
 		persistencePl=new PersistensePLProblem(pl_original,path_work);
-		pl_original.standardize(); 
-				
-		B=pl_original.getVectorB();
-		C=pl_original.getVectorC();
-		//for(double c:C) System.out.println("->"+c);
 		
-		//ho messo la creazione della matrice per ultima per svuotare gli internal constraint
-		A=pl_original.getMatrixA();  
-	
-		amatrix=new A_DataMatrix(A,path_work);
+		/*
+		 * Nella fase di standardizzazione : 
+		 * 
+		 * a) Cambio segno alla funzione obiettivo se essa e MIN - > MAX e Cj = -Cj
+		 * b) Essettuo traslazione del vincolo esistente  aggiornado bi se esiste una o piu' variabili con lower != 0 o da .
+		 * c) Aggiungo nuovo vincolo nel caso esista un lower (Xj <= upper - appo_lower )  
+		 * d) Calcola il nuovo valore new_dimension che sara' poi la dimensione delle colonne di A (matrice standard)
+		 */
+		
+		vectors_pl=pl_original.standardize(); 
+		
+		/*
+		vectors_pl.B=pl_original.getVectorB();
+		vectors_pl.C=pl_original.getVectorC();
+		//for(double c:vectors_pl.C) System.out.println("->"+c);
+		vectors_pl.A=pl_original.getMatrixA();  
+		*/
+		amatrix=new A_DataMatrix(vectors_pl.A,path_work);
 	
 		/*
 		//printTableAm(Amatrix);
@@ -394,7 +381,7 @@ public final class LP implements FormatTypeInput {
 		logger.log(SscLevel.INFO,RB.format("it.ssc.pl.milp.LP.msg11")+threadsNumber.getThread());
 		logger.log(Level.INFO,  "---------------------------------------------");
 		
-		SimplexInterface simplex =new Simplex(A, B, C,epsilon,cepsilon);
+		SimplexInterface simplex =new Simplex(vectors_pl.A, vectors_pl.B, vectors_pl.C,epsilon,cepsilon);
 		simplex.setNumIterationMax(num_max_iteration);
 		simplex.setThreadsNumber(threadsNumber) ;
 		
@@ -434,7 +421,7 @@ public final class LP implements FormatTypeInput {
 		}	
 		logger.log(SscLevel.TIME,RB.format("it.ssc.pl.milp.LP.msg6",RB.getHhMmSsMmm(end_phase_two-start_simplex)));
 		if(type_solution==SolutionType.FEASIBLE || type_solution==SolutionType.OPTIMUM) {
-			loggerAccurancy( amatrix, B, simplex.getFinalBasis(),simplex.getFinalValuesBasis(),isStopPhase2);
+			loggerAccurancy( amatrix, vectors_pl.B, simplex.getFinalBasis(),simplex.getFinalValuesBasis(),isStopPhase2);
 		}
 		closeAfterResolve() ;
 		return type_solution;
@@ -464,7 +451,7 @@ public final class LP implements FormatTypeInput {
 	 */
 	
 	public double[] getStandartVectorB() {
-		return B.clone();
+		return vectors_pl.B.clone();
 	}
 
 	/**
@@ -474,7 +461,7 @@ public final class LP implements FormatTypeInput {
 	 * @return Il vettore c dei coefficienti della f.o.
 	 */
 	public double[] getStandartVectorC() {
-		return C.clone();
+		return vectors_pl.C.clone();
 	}
 
 	/**
@@ -650,6 +637,8 @@ public final class LP implements FormatTypeInput {
 		
 		System.out.println("");
 	}
+	
+	
 }
 /*
  * */

@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 import org.ssclab.i18n.RB;
 import org.ssclab.log.SscLogger;
 import org.ssclab.pl.milp.ObjectiveFunction.TARGET_FO;
+import org.ssclab.pl.milp.util.VectorsPL;
 
 
  final class PLProblem implements Costant , Cloneable, Serializable {
@@ -22,8 +23,6 @@ import org.ssclab.pl.milp.ObjectiveFunction.TARGET_FO;
 	private ObjectiveFunctionImpl fo;
 	private ArrayList<InternalConstraint> list_constraint;  
 	private Var[] array_var;
-	//nuova dimensione con N + Var_free + Var_slacks
-	private int new_dimension;
 	private TARGET_FO target_fo= TARGET_FO.MAX;
 		
 	public ObjectiveFunctionImpl getObjFunction() {
@@ -109,7 +108,7 @@ import org.ssclab.pl.milp.ObjectiveFunction.TARGET_FO;
 		list_constraint.add(constraint);
 	}
 	
-	public void standardize() {
+	public VectorsPL standardize() {
 		
 		//standardizza la funzione obiettivo. Se MIN -> MAX
 		//ma non cambia il valore this.target_fo
@@ -133,8 +132,6 @@ import org.ssclab.pl.milp.ObjectiveFunction.TARGET_FO;
 				constrainte.setBi(constrainte.getBi()+cumulata);
 		    }
 		}
-	    
-		//ciclo sulle variabili 
 		//Se lower o upper != null -> vincoli 
 		for(int _j=0;_j< array_var.length;_j++) {
 			double lower=array_var[_j].getLower();
@@ -150,7 +147,6 @@ import org.ssclab.pl.milp.ObjectiveFunction.TARGET_FO;
 				list_constraint.add(constraint);
 			}
 		}
-		
 		//da mettere alla fine 
 		for(InternalConstraint constraint: list_constraint) {
 			constraint.standardize_b_positive();
@@ -159,11 +155,16 @@ import org.ssclab.pl.milp.ObjectiveFunction.TARGET_FO;
 		for(InternalConstraint constraint: list_constraint) {
 			constraint.aprint();
 		}*/
-		this.new_dimension=newDimensionProblemToPhase1();
+		int new_dimension=newDimensionProblemToPhase1();
+		VectorsPL vectors_pl=new VectorsPL();
+		vectors_pl.B=getVectorB();
+		vectors_pl.C=getVectorC(new_dimension);
+		vectors_pl.A=getMatrixA(new_dimension);
+		return vectors_pl;
 	}
 	
 	
-	public double []  getVectorC() {
+	private double []  getVectorC(int new_dimension) {
 		double C[]=new double[new_dimension];
 		int index_cj=0;
 		for(int _a=0;_a<array_var.length;_a++) {
@@ -179,7 +180,7 @@ import org.ssclab.pl.milp.ObjectiveFunction.TARGET_FO;
 		return C;
 	}
 	
-	public double[][]  getMatrixA() {  
+	private double[][]  getMatrixA_old(int new_dimension) {  
 		double Aij[][]=new double[list_constraint.size()][];
 		int index_contr=0;
 		int index_Ai=0;
@@ -222,7 +223,48 @@ import org.ssclab.pl.milp.ObjectiveFunction.TARGET_FO;
 		return Aij;
 	}
 	
-	public double [] getVectorB() {
+	private double[][]  getMatrixA(int new_dimension) {  
+		double Aij[][]=new double[list_constraint.size()][];
+		int index_contr=0;
+		int index_Ai=0;
+		int index_slack=0;
+		double aij;
+		for(InternalConstraint constraint: list_constraint) { 
+	    	//System.out.println("->"+index_contr);
+	    	Aij[index_contr]=new double[new_dimension];
+	    	//System.out.println(""+index_contr);
+			index_Ai=0;
+			for(int _a=0;_a<array_var.length;_a++) { 
+				aij=constraint.getAij(_a);
+				Aij[index_contr][index_Ai]=aij;
+				index_Ai++;
+				if(array_var[_a].isFree()) {
+					if(aij!=0) Aij[index_contr][index_Ai]=-aij;
+					else Aij[index_contr][index_Ai]=0.0;
+					index_Ai++;
+				}
+			}
+			
+			if(index_slack==0) index_slack=index_Ai;
+			if((constraint.getType()==InternalConstraint.TYPE_CONSTR.GE)) {
+				Aij[index_contr][index_slack]=-1.0;
+				index_slack++;
+			}
+			else if((constraint.getType()==InternalConstraint.TYPE_CONSTR.LE)) {
+				Aij[index_contr][index_slack]=1.0;
+				index_slack++;
+			}
+			constraint.setAi(null);
+			index_contr++;
+			//System.out.println(""+index_contr);
+	    }
+		return Aij;
+	}
+	
+	
+	
+	
+	private double [] getVectorB() {
 		double B[]=new double[list_constraint.size()];
 		int index_b=0;
 		for(InternalConstraint constraint: list_constraint) {
@@ -269,7 +311,7 @@ import org.ssclab.pl.milp.ObjectiveFunction.TARGET_FO;
 		return clone;
 	}
 	
-	public void configureFree() throws LPException {
+	protected void configureFree() throws LPException {
 		for(Var var: array_var) {
 			var.configureFree();
 			//System.out.println("name:"+var.getName()+"  free:"+var.isFree());
