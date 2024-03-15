@@ -26,10 +26,10 @@ public final class Constraint {
 	 * @throws SimplexException Se il vincolo non &egrave; congruente 
 	 */
 	
-	public Constraint(double[] Aj, ConsType rel, double rhs) throws SimplexException {
-		if(Aj==null) throw new SimplexException(RB.getString("it.ssc.pl.milp.Constraint.msg1"));
+	public Constraint(double[] Aj, ConsType rel, double rhs) throws LPException {
+		if(Aj==null) throw new LPException(RB.getString("it.ssc.pl.milp.Constraint.msg1"));
 		this.Aj=Aj;
-		if(rel==null) throw new SimplexException(RB.getString("it.ssc.pl.milp.Constraint.msg2"));
+		if(rel==null) throw new LPException(RB.getString("it.ssc.pl.milp.Constraint.msg2"));
 		this.rel=rel;
 		this.bi=rhs;
 	}

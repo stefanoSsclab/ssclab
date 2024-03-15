@@ -9,7 +9,7 @@ import org.ssclab.i18n.RB;
 final class ConstraintFromString {
 	private ArrayList<Constraint> constraint;
 	
-	 ConstraintFromString(int dimension, ArrayList<String> inequality) throws SimplexException, LPException {
+	 ConstraintFromString(int dimension, ArrayList<String> inequality) throws LPException, LPException {
 		 this.constraint=new  ArrayList<Constraint> ();
 		 for(String disequa:inequality) {
 			 constraint.add(getConstraintFromString(dimension, disequa));
@@ -17,7 +17,7 @@ final class ConstraintFromString {
 		 
 	 }
 	 
-	 ConstraintFromString(int dimension, ArrayList<String> inequality,ArrayList<Constraint> constraint) throws SimplexException, LPException {
+	 ConstraintFromString(int dimension, ArrayList<String> inequality,ArrayList<Constraint> constraint) throws LPException, LPException {
 		 this.constraint=constraint;
 		 for(String disequa:inequality) {
 			 this.constraint.add(getConstraintFromString(dimension, disequa));
@@ -31,7 +31,7 @@ final class ConstraintFromString {
 	}
 	 
 
-	private Constraint getConstraintFromString(int dim,String dis) throws  LPException, SimplexException {
+	private Constraint getConstraintFromString(int dim,String dis) throws  LPException, LPException {
 
 		 Pattern pattern = Pattern.compile("\\s*([+-]?)\\s*(((\\d+)((\\.)?)(\\d*))?)X(\\d+)((\\s*([+-])\\s*(((\\d+)((\\.)?)(\\d*))?)X(\\d+))*)\\s*((<\\s*=)|(>\\s*=)|(=))\\s*(([+-]?)(\\d+)((\\.)?)(\\d*))",Pattern.CASE_INSENSITIVE);
 		 Matcher matcher_group_var = pattern.matcher(dis);
@@ -46,7 +46,7 @@ final class ConstraintFromString {
 	 }
 	 
 	 
-	 private Constraint equationFromString(int dim, String s) throws SimplexException  {
+	 private Constraint equationFromString(int dim, String s) throws LPException  {
 		 ConsType rel=null;
 		 //System.out.println("dim"+dim);
 		 if (     s.matches("(.+)>\\s*=(.+)")) {

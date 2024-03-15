@@ -235,10 +235,8 @@ import static org.ssclab.pl.milp.InternalConstraint.TYPE_CONSTR;
 		}
 		else N=num_col_datasource-2;
 		
+		//logger.log(Level.INFO, "Numero var dichiarate:"+N);
 		
-		/*Calcola il numero delle variabili del problema, numero colonne -2 */
-		
-		logger.log(Level.INFO, "Numero var dichiarate:"+N);
 		/*Crea un problema con N variabili */
 		PLProblem pl_original=new PLProblem(N);
 		
@@ -408,8 +406,7 @@ import static org.ssclab.pl.milp.InternalConstraint.TYPE_CONSTR;
 		}
 		lp_data_source.close();
 		
-		//	EFFETTUARE QUI CONTROLLI POST LETTURA PROBLEMA. COME QUELLO SE LOWER > UPPER
-		// E SETTA se LA VARIABILE E' LIBERA ...
+		//verifica se upper > lower e setta le variabili se free
 		pl_original.configureFree();
 		
 		if(!is_set_row_obj_function) throw new LPException(RB.getString("it.ssc.pl.milp.CreateMilpProblem.msg50"));
@@ -538,7 +535,7 @@ import static org.ssclab.pl.milp.InternalConstraint.TYPE_CONSTR;
 			if( type2.equals(LE) || type2.equals(EQ) || type2.equals(GE) || type2.equals(MAX) || type2.equals(MIN)) {
 				//logger.log(SscLevel.WARNING,"####:"+row2);
 				HashMap<String, Double> hash_col_val2=hash_row_col.get(row2);
-				if(hash_col_val2==null) throw new SimplexException(RB.format("it.ssc.pl.milp.CreateMilpProblem.msg49", row2));
+				if(hash_col_val2==null) throw new LPException(RB.format("it.ssc.pl.milp.CreateMilpProblem.msg49", row2));
 				for(String col2:tree_col) {
 					Double coef2=hash_col_val2.get(col2);
 					if( !col2.equals("RHS") && coef2==null) hash_col_val2.put(col2, 0.0); //se manca vuol dire che e' a zero
@@ -558,7 +555,7 @@ import static org.ssclab.pl.milp.InternalConstraint.TYPE_CONSTR;
 					if(col2.equals("RHS")) exist_rhs=true;
 					//System.out.println("ROW:"+row2 +" COL:"+col2 );
 				}
-				if(!exist_rhs) throw new SimplexException(RB.format("it.ssc.pl.milp.CreateMilpProblem.msg42", row2,type2));  
+				if(!exist_rhs) throw new LPException(RB.format("it.ssc.pl.milp.CreateMilpProblem.msg42", row2,type2));  
 			}
 		}
 		
@@ -692,14 +689,14 @@ import static org.ssclab.pl.milp.InternalConstraint.TYPE_CONSTR;
 	
 	
 	protected static void checkDimensionProblem(LinearObjectiveFunction f,
-											  ArrayList<Constraint> constraints) throws SimplexException {
+											  ArrayList<Constraint> constraints) throws LPException {
 
 		double[] c=f.getC();
 		int n=c.length;
 
 		for(Constraint constraint:constraints) {
 			if(n!= constraint.getAj().length) {
-				throw new SimplexException(RB.format("it.ssc.pl.milp.CreateMilpProblem.msg48", constraint.getRel(),n)); 		 
+				throw new LPException(RB.format("it.ssc.pl.milp.CreateMilpProblem.msg48", constraint.getRel(),n)); 		 
 			}
 		}
 	}

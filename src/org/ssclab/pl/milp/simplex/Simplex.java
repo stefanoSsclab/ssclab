@@ -1,14 +1,15 @@
-package org.ssclab.pl.milp;
+package org.ssclab.pl.milp.simplex;
+
 
 import org.ssclab.pl.milp.util.LPThreadsNumber;
 import org.ssclab.vector_spaces.Matrix;
 import org.ssclab.vector_spaces.MatrixException;
 import org.ssclab.vector_spaces.Vector;
+import org.ssclab.pl.milp.EPSILON;
+import org.ssclab.pl.milp.SolutionType;
 
-
- final class Simplex implements SimplexInterface {
+ public final class Simplex implements SimplexInterface {
 	 
-	
 	private Matrix A;
 	private Vector B;
 	private Vector C;
@@ -38,7 +39,7 @@ import org.ssclab.vector_spaces.Vector;
 		this(new Matrix(A), new Vector(B), new Vector(C),epsilon,cepsilon);
 	}
 	
-	public Simplex(Matrix A, Vector B, Vector C,EPSILON epsilon,EPSILON cepsilon) throws SimplexException {
+	private Simplex(Matrix A, Vector B, Vector C,EPSILON epsilon,EPSILON cepsilon) throws SimplexException {
 		
 		this.epsilon=epsilon;
 		this.cepsilon=cepsilon;
@@ -129,3 +130,4 @@ import org.ssclab.vector_spaces.Vector;
 		return this.basis;  //prima era clone
 	}
 }
+

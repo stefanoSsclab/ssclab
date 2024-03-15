@@ -1,4 +1,6 @@
-package org.ssclab.pl.milp;
+package org.ssclab.pl.milp.simplex;
+
+
 
 import java.util.ArrayList;
 import java.util.concurrent.CyclicBarrier;
@@ -6,6 +8,8 @@ import java.util.concurrent.CyclicBarrier;
 import org.ssclab.pl.milp.util.LPThreadsNumber;
 import org.ssclab.step.parallel.Parallelizable;
 import org.ssclab.step.parallel.Task;
+import org.ssclab.pl.milp.EPSILON;
+import org.ssclab.pl.milp.SolutionType;
 
 abstract class Phase {
 
@@ -382,3 +386,4 @@ abstract class Phase {
 		return basis;
 	}
 }
+

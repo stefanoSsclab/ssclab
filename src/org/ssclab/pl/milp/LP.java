@@ -22,6 +22,9 @@ import org.ssclab.pl.milp.util.A_Matrix;
 import org.ssclab.pl.milp.util.LPThreadsNumber;
 import org.ssclab.ref.Input;
 import org.ssclab.pl.milp.util.VectorsPL;
+import org.ssclab.pl.milp.simplex.Simplex;
+import org.ssclab.pl.milp.simplex.SimplexInterface;
+import org.ssclab.pl.milp.simplex.SimplexException;
 
 
 
@@ -41,10 +44,6 @@ public final class LP implements FormatTypeInput {
 	private static final Logger logger=SscLogger.getLogger();
 	private SolutionImpl solution_pl;
 	private int num_max_iteration=10_000_000;
-	/*
-	private double[][] A;
-	private double[]   B;
-	private double[]   C;*/
 	private VectorsPL vectors_pl;
 	private Session session;
 	private final boolean isMilp=false;
@@ -80,7 +79,15 @@ public final class LP implements FormatTypeInput {
 		ArrayList<String> nomi_var=fo_fromm_string.getListNomiVar();
 		ScanConstraintFromString scan_const=new ScanConstraintFromString(inequality,nomi_var);
 		ArrayList<InternalConstraint> list_constraints=scan_const.getConstraints();
-		PLProblem pl_original=CreatePLProblem.create(fo,list_constraints,nomi_var,scan_const.getArraysProb(),isMilp); 
+		PLProblem pl_original=CreatePLProblem.create(fo,list_constraints,nomi_var,scan_const.getArraysProb(),isMilp);
+		
+		//memorizza nella work il pl_original come oggetto prima di essere standardizzato. 
+		//pl original , non e' memorizzato in LP , una volta terminato questo metodo, 
+		//ogni riferimento e' perso. 
+		//Questo oggetto non contiene i vincoli aggiuntivi degli upper/lower e le slacks, 
+		//ne nessuna standardizzazione  
+		persistencePl=new PersistensePLProblem(pl_original,session.getFactoryLibraries().getLibraryWork().getAbsolutePath());
+		
 		createStandartProblem(pl_original);
 	}
 	
@@ -111,7 +118,14 @@ public final class LP implements FormatTypeInput {
 		}
 		
 		ArrayList<InternalConstraint> list_constraints=scan_const.getConstraints();
-		PLProblem pl_original=CreatePLProblem.create(fo,list_constraints,nomi_var,scan_const.getArraysProb(),isMilp); 
+		PLProblem pl_original=CreatePLProblem.create(fo,list_constraints,nomi_var,scan_const.getArraysProb(),isMilp);
+		
+		//memorizza nella work il pl_original cosi com'e', come oggetto
+		//prima di essere standardizzato, pl original , non e' 
+		//variabile istanza di LP, una volta terminato questo metodo, ogni riferimento e' perso. 
+		//quindi questo non contiene i vincoli aggiuntivi degli upper/lower e le slacks 
+		persistencePl=new PersistensePLProblem(pl_original,session.getFactoryLibraries().getLibraryWork().getAbsolutePath());
+		
 		createStandartProblem(pl_original);
 	}
 	
@@ -186,6 +200,13 @@ public final class LP implements FormatTypeInput {
 		if(constraints==null ) throw new LPException(RB.getString("it.ssc.pl.milp.LP.msg13"));
 		this.session=Context.createNewSession();
 		PLProblem pl_original=CreatePLProblem.create(fo,constraints,isMilp);
+		
+		//memorizza nella work il pl_original cosi com'e', come oggetto
+		//prima di essere standardizzato, pl original , non e' 
+		//variabile istanza di LP, una volta terminato questo metodo, ogni riferimento e' perso. 
+		//quindi questo non contiene i vincoli aggiuntivi degli upper/lower e le slacks 
+		persistencePl=new PersistensePLProblem(pl_original,session.getFactoryLibraries().getLibraryWork().getAbsolutePath());
+		
 		createStandartProblem(pl_original);
 	}
 	
@@ -202,6 +223,13 @@ public final class LP implements FormatTypeInput {
 	public LP(LinearObjectiveFunction fo,ListConstraints constraints) throws Exception  { 
 		this.session=Context.createNewSession();
 		PLProblem pl_original=CreatePLProblem.create(fo,constraints.getListConstraint(),isMilp);
+		
+		//memorizza nella work il pl_original cosi com'e', come oggetto
+		//prima di essere standardizzato, pl original , non e' 
+		//variabile istanza di LP, una volta terminato questo metodo, ogni riferimento e' perso. 
+		//quindi questo non contiene i vincoli aggiuntivi degli upper/lower e le slacks 
+		persistencePl=new PersistensePLProblem(pl_original,session.getFactoryLibraries().getLibraryWork().getAbsolutePath());
+		
 		createStandartProblem(pl_original);
 	}
 	
@@ -222,6 +250,12 @@ public final class LP implements FormatTypeInput {
 		PLProblem pl_original=null;
 		if(format==FormatType.SPARSE) pl_original=CreatePLProblem.createFromSparse(milp_data_source,isMilp);
 		else if(format==FormatType.COEFF) pl_original=CreatePLProblem.create(milp_data_source, isMilp);
+		
+		//memorizza nella work il pl_original cosi com'e', come oggetto
+		//prima di essere standardizzato, pl original , non e' 
+		//variabile istanza di LP, una volta terminato questo metodo, ogni riferimento e' perso. 
+		//quindi questo non contiene i vincoli aggiuntivi degli upper/lower e le slacks 
+		persistencePl=new PersistensePLProblem(pl_original,session.getFactoryLibraries().getLibraryWork().getAbsolutePath());
 		createStandartProblem(pl_original);
 	}
 	
@@ -247,7 +281,6 @@ public final class LP implements FormatTypeInput {
 
 	public LP(Input input_natural) throws Exception {
 		
-		
 		this(input_natural, Context.createNewSession());
 		this.toCloseSessionInternal=true;
 		//logger.log(Level.INFO,RB.getString("it.ssc.pl.milp.LP.msg1")); 
@@ -269,6 +302,13 @@ public final class LP implements FormatTypeInput {
 		DataSource milp_data_source=session.createDataSource(input_natural);
 		/*Crea im problema puro , cosi come dichiarato dall'utente A <=> b , f=C*/
 		PLProblem pl_original=CreatePLProblem.create(milp_data_source, isMilp);
+		
+		//memorizza nella work il pl_original cosi com'e', come oggetto
+		//prima di essere standardizzato, pl original , non e' 
+		//variabile istanza di LP, una volta terminato questo metodo, ogni riferimento e' perso. 
+		//quindi questo non contiene i vincoli aggiuntivi degli upper/lower e le slacks 
+		persistencePl=new PersistensePLProblem(pl_original,session.getFactoryLibraries().getLibraryWork().getAbsolutePath());
+		
 		createStandartProblem(pl_original); 
 	}
 	
@@ -330,44 +370,36 @@ public final class LP implements FormatTypeInput {
 		
 		String path_work=session.getFactoryLibraries().getLibraryWork().getAbsolutePath();
 		
-		//memorizza nella work il pl_original cosi com'e', come oggetto
-		//prima di essere standardizzato
-		persistencePl=new PersistensePLProblem(pl_original,path_work);
-		
 		/*
 		 * Nella fase di standardizzazione : 
 		 * 
 		 * a) Cambio segno alla funzione obiettivo se essa e MIN - > MAX e Cj = -Cj
-		 * b) Essettuo traslazione del vincolo esistente  aggiornado bi se esiste una o piu' variabili con lower != 0 o da .
+		 * b) Essettuo traslazione del vincolo esistente  aggiornado bi se esiste 
+		 *    una o piu' variabili con lower != 0 o da -inf.
 		 * c) Aggiungo nuovo vincolo nel caso esista un lower (Xj <= upper - appo_lower )  
-		 * d) Calcola il nuovo valore new_dimension che sara' poi la dimensione delle colonne di A (matrice standard)
+		 * d) Rende tutti i termini noti b positivi , cambiando segno a tuta la riga
+		 * 
+		 * e) Calcola il nuovo valore new_dimension che sara' poi la dimensione delle colonne di A 
+		 *    (la nuova matrice standard)
+		 * f) Crea la nuova matrice A aggiungendo anche le variabili libere (x=y-z) e le slacks, 
+//		 *    e i vettori C e B
 		 */
 		
 		vectors_pl=pl_original.standardize(); 
 		
-		/*
-		vectors_pl.B=pl_original.getVectorB();
-		vectors_pl.C=pl_original.getVectorC();
-		//for(double c:vectors_pl.C) System.out.println("->"+c);
-		vectors_pl.A=pl_original.getMatrixA();  
-		*/
+		//memorizza su disco la matrice A
 		amatrix=new A_DataMatrix(vectors_pl.A,path_work);
 	
 		/*
-		//printTableAm(Amatrix);
-		
+		printTableAm(Amatrix);
 		System.out.println("--------A");
 		printTableA(A);
 		System.out.println("--------B");
 		printTableV(B);
 		System.out.println("--------C");
 		printTableV(C);
-		 * 
-		 */
-		
+		*/
 	}
-	
-	
 	
 	/**
 	 * Esegue il simplesso (fase 1 + fase 2).

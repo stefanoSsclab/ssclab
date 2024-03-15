@@ -1,5 +1,6 @@
-//versione 3
-package org.ssclab.pl.milp;
+package org.ssclab.pl.milp.simplex;
+
+
 
 import java.util.logging.Logger;
 
@@ -11,6 +12,9 @@ import org.ssclab.util.Tuple2;
 import org.ssclab.vector_spaces.Matrix;
 import org.ssclab.vector_spaces.MatrixException;
 import org.ssclab.vector_spaces.Vector;
+import org.ssclab.pl.milp.EPSILON;
+import org.ssclab.pl.milp.SolutionType;
+
 
 final class Phase1 extends Phase {
 	
@@ -190,26 +194,26 @@ final class Phase1 extends Phase {
 	}
 	
 
-   
+ 
 
-   //a fronte dell'indice della riga i dove la variabile ausiliaria e' in base, vedo se c'è qualche Aij =! 0 
-   private int existVarOrigOutBase(int index_aux) {
+ //a fronte dell'indice della riga i dove la variabile ausiliaria e' in base, vedo se c'è qualche Aij =! 0 
+ private int existVarOrigOutBase(int index_aux) {
 	   for (int j = 0; j < n ; j++) {
 		   if ( Math.abs(TBEX[index_aux][j]) > epsilon )  {
 			   return j;
 		   }
 	   }
 	   return -1;
-   }
-   
-   //se ce in base una variabile con indice  >=n e' ausiliaria
-   private int existAuxBase() {
+ }
+ 
+ //se ce in base una variabile con indice  >=n e' ausiliaria
+ private int existAuxBase() {
 	   for (int i = 0; i < basis.length; i++) {
 			if(basis[i] >= n) return i ;
 		}
 	   return -1;
-   }
-   
+ }
+ 
 	public Matrix pulish() throws MatrixException { 
 		//se c'e' una variabile ausiliaria in base (naturalmente degenere) si fa uscire 
 		//se quelle presenti hanno zero sulle variabili reali.  Si tolgono le righe 
@@ -233,9 +237,9 @@ final class Phase1 extends Phase {
 		}
 		return values;
 	}
-   
+ 
 
-   private final class Pulish {
+ private final class Pulish {
 	   
 	   double[][] deleteRowAux(double[][] table_pulish) {
 			int index_aux_out = 0;
@@ -378,5 +382,6 @@ final class Phase1 extends Phase {
 			}
 			return table;
 	   }
-   }  
+ }  
 }
+

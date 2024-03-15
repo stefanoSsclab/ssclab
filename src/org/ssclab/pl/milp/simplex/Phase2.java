@@ -1,5 +1,4 @@
-package org.ssclab.pl.milp;
-
+package org.ssclab.pl.milp.simplex;
 
 import java.util.logging.Logger;
 
@@ -8,6 +7,9 @@ import org.ssclab.log.SscLogger;
 import org.ssclab.pl.milp.util.LPThreadsNumber;
 import org.ssclab.vector_spaces.Matrix;
 import org.ssclab.vector_spaces.Vector;
+import org.ssclab.pl.milp.EPSILON;
+import org.ssclab.pl.milp.SolutionType;
+
 
 /**
  * @author Scarioli
@@ -151,3 +153,4 @@ import org.ssclab.vector_spaces.Vector;
 		return values;
 	}
 }
+

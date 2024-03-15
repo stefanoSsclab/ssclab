@@ -115,8 +115,7 @@ import org.ssclab.pl.milp.util.VectorsPL;
 		fo.standardize(); 
 		
 		//Aggiorno i valori di b con gli lower bound
-		// per avere variabili > 0
-		//gli upper- lower non sono modificati
+		//per avere variabili > 0
 		{
 			double aij,lower,cumulata;
 		    for(InternalConstraint constrainte:list_constraint) {
@@ -140,6 +139,7 @@ import org.ssclab.pl.milp.util.VectorsPL;
 			if(!Double.isInfinite(lower) && lower!=0.0) {
 				appo_lower=lower;
 			}
+			//solo sugli upper si crea vincolo, in quanto lower -> o traslazione o free
 			if(!Double.isInfinite(upper)) {
 				InternalConstraint constraint=InternalConstraint.createConstraintFromVar(
 						array_var.length, _j, upper - appo_lower, InternalConstraint.TYPE_CONSTR.LE);
@@ -230,21 +230,18 @@ import org.ssclab.pl.milp.util.VectorsPL;
 		int index_slack=0;
 		double aij;
 		for(InternalConstraint constraint: list_constraint) { 
-	    	//System.out.println("->"+index_contr);
 	    	Aij[index_contr]=new double[new_dimension];
-	    	//System.out.println(""+index_contr);
-			index_Ai=0;
+	    	index_Ai=0;
 			for(int _a=0;_a<array_var.length;_a++) { 
 				aij=constraint.getAij(_a);
 				Aij[index_contr][index_Ai]=aij;
 				index_Ai++;
 				if(array_var[_a].isFree()) {
 					if(aij!=0) Aij[index_contr][index_Ai]=-aij;
-					else Aij[index_contr][index_Ai]=0.0;
+					//else Aij[index_contr][index_Ai]=0.0;
 					index_Ai++;
 				}
 			}
-			
 			if(index_slack==0) index_slack=index_Ai;
 			if((constraint.getType()==InternalConstraint.TYPE_CONSTR.GE)) {
 				Aij[index_contr][index_slack]=-1.0;
@@ -260,9 +257,6 @@ import org.ssclab.pl.milp.util.VectorsPL;
 	    }
 		return Aij;
 	}
-	
-	
-	
 	
 	private double [] getVectorB() {
 		double B[]=new double[list_constraint.size()];

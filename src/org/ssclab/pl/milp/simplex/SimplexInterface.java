@@ -1,9 +1,11 @@
-package org.ssclab.pl.milp;
+package org.ssclab.pl.milp.simplex;
+
 
 import org.ssclab.pl.milp.util.LPThreadsNumber;
-import org.ssclab.vector_spaces.MatrixException;
+import org.ssclab.pl.milp.SolutionType;
 
-interface SimplexInterface {
+
+public interface SimplexInterface {
 	
 	public SolutionType runPhaseOne()  throws Exception ;
 	public long getNumIterationPhaseOne();

@@ -1,4 +1,4 @@
-package org.ssclab.pl.milp;
+package org.ssclab.pl.milp.simplex;
 
 public class SimplexException extends Exception { 
 	

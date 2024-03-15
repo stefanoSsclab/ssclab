@@ -15,7 +15,9 @@ import org.ssclab.pl.milp.Variable.TYPE_VAR;
 import org.ssclab.pl.milp.util.VectorsPL;
 import org.ssclab.ref.Input;
 import org.ssclab.step.parallel.Parallelizable;
-import org.ssclab.vector_spaces.MatrixException;
+import org.ssclab.pl.milp.simplex.Simplex;
+import org.ssclab.pl.milp.simplex.SimplexInterface;
+import org.ssclab.pl.milp.simplex.SimplexException;
 
 
  final class MilpManager implements Cloneable,  Parallelizable,  Comparable<MilpManager> { 
