@@ -413,7 +413,7 @@ public final class MILP implements FormatTypeInput {
 		int num_simplex_resolved=1;
 		long start=System.currentTimeMillis();
 		SolutionType type_solution=SolutionType.VUOTUM;
-		//MilpManager milp_current=milp_initiale;    
+		//MilpManager milp_current=milp_initiale;        //commentato il 19/03/2024 DUPLICATO INUTILE
 		milp_initiale.setMaxIteration(num_max_iteration);
 		
 		if(!milp_initiale.existVarToBeIntegerOrSemicon()) {
@@ -468,6 +468,7 @@ public final class MILP implements FormatTypeInput {
 				if(!scarti_to_separe.isEmpty()) {
 					listMangerMilpToRun = new ArrayList<MilpManager>();
 
+					//prende il milp lp_curent
 					for(MilpManager lp_curent:scarti_to_separe) {
 						MilpManager.populateArrayListBySeparation(listMangerMilpToRun,lp_curent);
 					}

@@ -147,7 +147,7 @@ import org.ssclab.pl.milp.util.VectorsPL;
 				list_constraint.add(constraint);
 			}
 		}
-		//da mettere alla fine 
+		//da mettere alla fine , per evere valori di b positivi, per farlo cambia anche i valori di Aij
 		for(InternalConstraint constraint: list_constraint) {
 			constraint.standardize_b_positive();
 		}
@@ -296,8 +296,8 @@ import org.ssclab.pl.milp.util.VectorsPL;
 			clone.fo=fo.clone();
 			clone.list_constraint=new ArrayList<InternalConstraint>();
 			
-			for(InternalConstraint constra: list_constraint) {
-				clone.list_constraint.add(constra.clone());
+			for(InternalConstraint constraint: list_constraint) {
+				clone.list_constraint.add(constraint.clone());
 			}
 		} 
 		catch (CloneNotSupportedException e) {

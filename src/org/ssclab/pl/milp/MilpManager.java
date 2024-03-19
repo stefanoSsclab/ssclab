@@ -118,13 +118,17 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 	
 	SolutionType resolve() throws Exception {
 		
-		PLProblem lp_standard=pl_current.clone();  //necessario clonare ? 
+		//necessario clonare ?  Si il pl_current non viene mai eseguito, ne standardizzato, 
+		//ma viene standardizzato ed eseguito un suo clone, quindi il MilpManager ha un riferimento integro 
+		//del problema di programmazione lineare da risolvere senza stravolgimenti dovuti alla
+		//standardizzazione. 
+		PLProblem lp_standard=pl_current.clone();  
 		
 		/*
 		 * pl_original_zero viane inizializzato la prima volta se e a null. 
 		 */
 		
-		 pl_original_zero=father.father_pl_original_zero;    //forse non occorre clonare ?????
+		 pl_original_zero=father.father_pl_original_zero;    //forse non occorre clonare ????? TOLTO clone 19/03/2024
 		
 		/*
 		 * Nella fase di standardizzazione : 
@@ -136,12 +140,6 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 		 */
 		
 		VectorsPL vectors_pl=lp_standard.standardize(); 
-		
-		/*
-		double[]   B=lp_standard.getVectorB();
-		double[]   C=lp_standard.getVectorC();
-		double[][] A=lp_standard.getMatrixA();
-		*/
 		
 		/*
 		printTableA( vectors_pl.A);
