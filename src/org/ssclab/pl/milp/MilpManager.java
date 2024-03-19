@@ -124,7 +124,7 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 		 * pl_original_zero viane inizializzato la prima volta se e a null. 
 		 */
 		
-		 pl_original_zero=father.father_pl_original_zero.clone();    //forse non occorre clonare ?????
+		 pl_original_zero=father.father_pl_original_zero;    //forse non occorre clonare ?????
 		
 		/*
 		 * Nella fase di standardizzazione : 
@@ -157,7 +157,7 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 		if(this.solutionType==SolutionType.OPTIMUM) { 
 			this.solutionType =simplex.runPhaseTwo();
 			this.solution_pl=new SolutionImpl(this.solutionType,
-											  pl_original_zero, //devo passare un clone in quanto modifiva l'array di Var
+											  pl_original_zero, //dovevo passare un clone in quanto modifiva l'array di Var
 											  simplex.getFinalBasis(),
 											  simplex.getFinalValuesBasis(),
 											  pl_current.getVariables());
@@ -433,9 +433,11 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 		System.out.println("");
 	}
 	
-	  static void resetZero()  {
+	/*
+	  static void resetZerov()  {
 		pl_original_zero=null;
 	}
+	*/
 	
 }
 
