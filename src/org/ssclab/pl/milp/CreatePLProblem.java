@@ -642,7 +642,6 @@ import static org.ssclab.pl.milp.InternalConstraint.TYPE_CONSTR;
 					if(!col.equals("RHS")) { 
 						Var xj=lp_original.getVar(link_name_index.get(col));
 						Double bound_val=hah_col_val.get(col);
-						//if(bound_val==null) bound_val=Double.NaN;
 						if(type_row.equals(UPPER)) xj.setUpper(bound_val);
 						if(type_row.equals(LOWER)) xj.setLower(bound_val);
 						//System.out.println("xxx "+type_row+"::"+link_name_index.get(col)+"::"+bound_val);

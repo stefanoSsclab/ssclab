@@ -51,34 +51,32 @@ final class Phase1 extends Phase {
 		
 		basis = new int[m];
 		//questo vettore dovra' determinare se nella riga iesima esiste gia una variabile 
-		//che può essere utilizzata per far diventare il sistema in forma canonica ( cij =1)
+		//che può essere utilizzata per far diventare il sistema in forma canonica ( Aij =1)
 		//se non le trova, vengono create con valore tupla a false
 		Tuple2<Integer,Boolean>[] var_canonical=new Tuple2[m];
 		
-		//vedo se in ogni riga esiste una variabile con un cij =1  
+		//vedo se in ogni riga esiste una variabile con un Aij =1  
 		double sum_Aij;
 		for (int row = 0; row < m ; row++) {  //spazzolo le righe 
-			for (int j = 0; j < n ; j++) { //su una righa vedo se sulle diverse colonne ci sono aij=1
-				if(A_[row][j]==1) {          //se si , controllo che gli altri valori sulla colonna siano a zero 
+			for (int j = 0; j < n ; j++) {    //su una righa vedo se sulle diverse colonne ci sono aij=1
+				if(A_[row][j] == 1.0) {       //se si , controllo che gli altri valori sulla colonna siano a zero 
 					sum_Aij=0;
 					for (int k = 0; k < m ; k++) { 
 						sum_Aij+=Math.abs(A_[k][j]);
 					}
-					if(sum_Aij==1) { 
-						var_canonical[row]=new Tuple2<>(j,true);
+					if(sum_Aij==1.0) { 
+						var_canonical[row]=new Tuple2<Integer,Boolean>(j,true);
 					}
 				}
 			}
 		}
 		
-		//numero variabili ausiliarie introdotte
+		//calcolo il numero variabili ausiliarie da introdurre
 		n_aux=0;
-		
 		//determino la dove occorre inserire una variabile ausiliaria
-		
 		for (int row = 0; row < m ; row++) { 
 			 if(var_canonical[row]==null)  { 
-				 var_canonical[row]=new Tuple2<>(n + n_aux,false); 
+				 var_canonical[row]=new Tuple2<Integer,Boolean>(n + n_aux,false); 
 				 n_aux++;
 			 }
 		}
@@ -89,15 +87,15 @@ final class Phase1 extends Phase {
 		//Matrix table = new Matrix(m+1,n+n_aux+1);
 		double[][] table_exended_loc=new double[m+1][];
 		
-		
-		//MATRICE ORIGINALE
+		//La matrice originale viene annullata per creare quella estesa
 		for (int i = 0; i < m ; i++) {
 			table_exended_loc[i]=new double[n+n_aux+1];
 			for (int j = 0; j < n ; j++) {
 				table_exended_loc[i][j]=A_[i][j];
 			}
 			A_[i]=null;
-		}   
+		}  
+		A_=null;
 		
 		
 		//VARIABILI SLACKS - B - BASE 

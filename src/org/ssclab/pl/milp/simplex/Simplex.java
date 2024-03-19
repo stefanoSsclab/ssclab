@@ -13,9 +13,7 @@ import org.ssclab.pl.milp.SolutionType;
 	private Matrix A;
 	private Vector B;
 	private Vector C;
-	private int n; 
-	private int m; 
-	
+		
 	private EPSILON epsilon;
 	private EPSILON cepsilon;
 	
@@ -44,19 +42,16 @@ import org.ssclab.pl.milp.SolutionType;
 		this.epsilon=epsilon;
 		this.cepsilon=cepsilon;
 		
-		this.m=A.getNrow();
-		this.n=A.getNcolumn();
-		
 		if(B.getTipo() == Vector.TYPE_VECTOR.ROW) {
 			B.traspose();
 		}
 		if(C.getTipo() == Vector.TYPE_VECTOR.COLUMN) {
 			C.traspose();
 		}
-		if(m!=B.lenght()) {
+		if(A.getNrow()!=B.lenght()) {
 			throw new SimplexException("Il numero di righe di A (matrice dei coefficienti) non si adatta al numero di componenti del vettore B dei termini noti");
 		}
-		if(n!=C.lenght()) {
+		if(A.getNcolumn()!=C.lenght()) {
 			throw new SimplexException("Il numero di colonne di A (matrice dei coefficienti) non si adatta al numero di componenti del vettore C della funzione obiettivo");
 		}
 		//matrice dei coefficienti dei vincoli
@@ -84,6 +79,7 @@ import org.ssclab.pl.milp.SolutionType;
 	}
 
 	public SolutionType runPhaseOne()  throws SimplexException, MatrixException, InterruptedException {
+		//dentro new Phase1(A,B, .. la matrice A viene estesa in una nuova e quindi annullata 
 		phase_one=new Phase1(A,B,epsilon,cepsilon);
 		phase_one.setMilp(isMilp);
 		phase_one.setThreadsNumber(threadsNumber);

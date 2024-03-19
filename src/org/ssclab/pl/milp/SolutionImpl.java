@@ -116,8 +116,6 @@ final class SolutionImpl implements Solution {
               .toArray();
 	}
 	
-	
-	
 	private int  getIndexInBase( int basis[],int index) {
 		for (int i = 0; i < basis.length; i++) {
 			if(index== basis[i]) {

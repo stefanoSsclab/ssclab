@@ -35,12 +35,14 @@ abstract class Phase {
 	private int num_thread;
 	
 
+	//usato dalla fase 2
 	protected Phase(int _M, int _N, EPSILON epsilon) {
 		this._M=_M; //righe 
 		this._N=_N; //colonne
 		this.epsilon=epsilon.getValue();
 	}
 	
+	//usato dalla fase 1
 	protected Phase(EPSILON epsilon,EPSILON cepsilon) {
 		this.cepsilon=cepsilon.getValue();
 		this.epsilon=epsilon.getValue();

@@ -180,6 +180,7 @@ import org.ssclab.pl.milp.util.VectorsPL;
 		return C;
 	}
 	
+	/*
 	private double[][]  getMatrixA_old(int new_dimension) {  
 		double Aij[][]=new double[list_constraint.size()][];
 		int index_contr=0;
@@ -221,7 +222,7 @@ import org.ssclab.pl.milp.util.VectorsPL;
 	        itr.remove();
 	    }
 		return Aij;
-	}
+	}*/
 	
 	private double[][]  getMatrixA(int new_dimension) {  
 		double Aij[][]=new double[list_constraint.size()][];

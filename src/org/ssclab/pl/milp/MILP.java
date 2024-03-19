@@ -48,7 +48,7 @@ public final class MILP implements FormatTypeInput {
 	private int num_max_iteration=10_000_000;
 	private boolean isJustTakeFeasibleSolution;
 	private MILPThreadsNumber threadNumber=MILPThreadsNumber.N_1;
-	private double stepDisadvantage=0.0;
+	//private double stepDisadvantage=0.0;
 	
 	protected PLProblem father_pl_original_zero;
 	
@@ -184,7 +184,7 @@ public final class MILP implements FormatTypeInput {
 	
 	public MILP(Input input) throws  Exception {
 		Session session=Context.createNewSession();
-		this.milp_initiale = new MilpManager(input, session,this); 
+		this.milp_initiale = new MilpManager(input, session, this); 
 		logger.log(Level.INFO,RB.getString("it.ssc.pl.milp.MILP.msg1"));
 		session.close();
 		setAllEpsilon();
@@ -338,7 +338,7 @@ public final class MILP implements FormatTypeInput {
 		
 		//if(threadNumber==MILPThreadsNumber.N_1) return resolveSingleThread();
 		// else 
-		 return resolveMultiThread() ;
+		 return resolve2() ;
 	}
 	
 	/*
@@ -408,22 +408,22 @@ public final class MILP implements FormatTypeInput {
 	*/
 	
 	
-	private SolutionType resolveMultiThread() throws Exception {
+	private SolutionType resolve2() throws Exception {
 		
 		int num_simplex_resolved=1;
 		long start=System.currentTimeMillis();
 		SolutionType type_solution=SolutionType.VUOTUM;
-		MilpManager milp_current=milp_initiale;    
-		milp_current.setMaxIteration(num_max_iteration);
+		//MilpManager milp_current=milp_initiale;    
+		milp_initiale.setMaxIteration(num_max_iteration);
 		
-		if(!milp_current.existVarToBeIntegerOrSemicon()) {
+		if(!milp_initiale.existVarToBeIntegerOrSemicon()) {
 			throw new LPException(RB.format("it.ssc.pl.milp.MILP.msg12"));
 		}
 		
-		SolutionType type_solution_initial=milp_current.resolve(); 
+		SolutionType type_solution_initial=milp_initiale.resolve(); 
 		
 		//lo chiamo dopo resolve perche' il target lo recupera dal milp_zero, che e' valorizzato dopo il resolve
-		TARGET_FO target=milp_current.getTargetFoOriginal();
+		TARGET_FO target=milp_initiale.getTargetFoOriginal();
 		TreeV3 tree=new TreeV3(target);
 		
 		if(target==TARGET_FO.MAX)  lb.value=Double.NEGATIVE_INFINITY;    //per il max 
@@ -431,14 +431,14 @@ public final class MILP implements FormatTypeInput {
 		//System.out.println("lb:"+milp_current.getOptimumValue());
 		
 		if(type_solution_initial==SolutionType.OPTIMUM) {
-			if(milp_current.isSolutionIntegerAmmisible() && milp_current.isProblemSemiContinusAmmisible()) {
+			if(milp_initiale.isSolutionIntegerAmmisible() && milp_initiale.isProblemSemiContinusAmmisible()) {
 				//System.out.println("intera:"+milp.getOptimumValue());
-				if(  (target==TARGET_FO.MAX && lb.value < milp_current.getOptimumValue())     //max 
-				  || (target==TARGET_FO.MIN && lb.value > milp_current.getOptimumValue())) {  //questo vale per il min
+				if(  (target==TARGET_FO.MAX && lb.value < milp_initiale.getOptimumValue())     //max 
+				  || (target==TARGET_FO.MIN && lb.value > milp_initiale.getOptimumValue())) {  //questo vale per il min
 
-					milp_current.setIntegerIfOptimal();
-					lb.value= milp_current.getOptimumValue();
-					lb.milp=milp_current;
+					milp_initiale.setIntegerIfOptimal();
+					lb.value= milp_initiale.getOptimumValue();
+					lb.milp=milp_initiale;
 					type_solution=SolutionType.OPTIMUM; 
 					//se devo cercare solo una soluzione ammissibile , ma non ottima
 					if(isJustTakeFeasibleSolution) {
@@ -446,7 +446,7 @@ public final class MILP implements FormatTypeInput {
 					}
 				}
 			}
-			else tree.addNode(milp_current);
+			else tree.addNode(milp_initiale);
 		}	 
 		
 		CyclicBarrier cb =null;

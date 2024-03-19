@@ -88,7 +88,28 @@ public final class LP implements FormatTypeInput {
 		//ne nessuna standardizzazione  
 		persistencePl=new PersistensePLProblem(pl_original,session.getFactoryLibraries().getLibraryWork().getAbsolutePath());
 		
-		createStandartProblem(pl_original);
+		//createStandartProblem(pl_original); 
+		String path_work=session.getFactoryLibraries().getLibraryWork().getAbsolutePath();
+		
+		/*
+		 * Nella fase di standardizzazione : 
+		 * 
+		 * a) Cambio segno alla funzione obiettivo se essa e MIN - > MAX e Cj = -Cj
+		 * b) Essettuo traslazione del vincolo esistente  aggiornando bi, se esiste 
+		 *    una o piu' variabili con lower != 0 o da -inf.
+		 * c) Aggiungo nuovo vincolo nel caso esista un lower (Xj <= upper - appo_lower )  
+		 * d) Rende tutti i termini noti b positivi , cambiando segno a tutta la riga
+		 * 
+		 * e) Calcola il nuovo valore new_dimension che sara' poi la dimensione delle colonne di A 
+		 *    (la nuova matrice standard)
+		 * f) Crea la nuova matrice A aggiungendo anche le variabili libere (x=y-z) e le slacks, 
+		 *    e i vettori C e B
+		 */
+		
+		vectors_pl=pl_original.standardize(); 
+		
+		//memorizza su disco la matrice A
+		amatrix=new A_DataMatrix(vectors_pl.A,path_work);
 	}
 	
 	
@@ -120,13 +141,35 @@ public final class LP implements FormatTypeInput {
 		ArrayList<InternalConstraint> list_constraints=scan_const.getConstraints();
 		PLProblem pl_original=CreatePLProblem.create(fo,list_constraints,nomi_var,scan_const.getArraysProb(),isMilp);
 		
-		//memorizza nella work il pl_original cosi com'e', come oggetto
-		//prima di essere standardizzato, pl original , non e' 
-		//variabile istanza di LP, una volta terminato questo metodo, ogni riferimento e' perso. 
-		//quindi questo non contiene i vincoli aggiuntivi degli upper/lower e le slacks 
+		//memorizza nella work il pl_original come oggetto prima di essere standardizzato. 
+		//pl original , non e' memorizzato in LP , una volta terminato questo metodo, 
+		//ogni riferimento e' perso. 
+		//Questo oggetto non contiene i vincoli aggiuntivi degli upper/lower e le slacks, 
+		//ne nessuna standardizzazione  
 		persistencePl=new PersistensePLProblem(pl_original,session.getFactoryLibraries().getLibraryWork().getAbsolutePath());
 		
-		createStandartProblem(pl_original);
+		//createStandartProblem(pl_original);
+		String path_work=session.getFactoryLibraries().getLibraryWork().getAbsolutePath();
+		
+		/*
+		 * Nella fase di standardizzazione : 
+		 * 
+		 * a) Cambio segno alla funzione obiettivo se essa e MIN - > MAX e Cj = -Cj
+		 * b) Essettuo traslazione del vincolo esistente  aggiornando bi, se esiste 
+		 *    una o piu' variabili con lower != 0 o da -inf.
+		 * c) Aggiungo nuovo vincolo nel caso esista un lower (Xj <= upper - appo_lower )  
+		 * d) Rende tutti i termini noti b positivi , cambiando segno a tutta la riga
+		 * 
+		 * e) Calcola il nuovo valore new_dimension che sara' poi la dimensione delle colonne di A 
+		 *    (la nuova matrice standard)
+		 * f) Crea la nuova matrice A aggiungendo anche le variabili libere (x=y-z) e le slacks, 
+		 *    e i vettori C e B
+		 */
+		
+		vectors_pl=pl_original.standardize(); 
+		
+		//memorizza su disco la matrice A
+		amatrix=new A_DataMatrix(vectors_pl.A,path_work);
 	}
 	
 	
@@ -201,13 +244,35 @@ public final class LP implements FormatTypeInput {
 		this.session=Context.createNewSession();
 		PLProblem pl_original=CreatePLProblem.create(fo,constraints,isMilp);
 		
-		//memorizza nella work il pl_original cosi com'e', come oggetto
-		//prima di essere standardizzato, pl original , non e' 
-		//variabile istanza di LP, una volta terminato questo metodo, ogni riferimento e' perso. 
-		//quindi questo non contiene i vincoli aggiuntivi degli upper/lower e le slacks 
+		//memorizza nella work il pl_original come oggetto prima di essere standardizzato. 
+		//pl original , non e' memorizzato in LP , una volta terminato questo metodo, 
+		//ogni riferimento e' perso. 
+		//Questo oggetto non contiene i vincoli aggiuntivi degli upper/lower e le slacks, 
+		//ne nessuna standardizzazione  
 		persistencePl=new PersistensePLProblem(pl_original,session.getFactoryLibraries().getLibraryWork().getAbsolutePath());
 		
-		createStandartProblem(pl_original);
+		//createStandartProblem(pl_original);
+		String path_work=session.getFactoryLibraries().getLibraryWork().getAbsolutePath();
+		
+		/*
+		 * Nella fase di standardizzazione : 
+		 * 
+		 * a) Cambio segno alla funzione obiettivo se essa e MIN - > MAX e Cj = -Cj
+		 * b) Essettuo traslazione del vincolo esistente  aggiornando bi, se esiste 
+		 *    una o piu' variabili con lower != 0 o da -inf.
+		 * c) Aggiungo nuovo vincolo nel caso esista un lower (Xj <= upper - appo_lower )  
+		 * d) Rende tutti i termini noti b positivi , cambiando segno a tutta la riga
+		 * 
+		 * e) Calcola il nuovo valore new_dimension che sara' poi la dimensione delle colonne di A 
+		 *    (la nuova matrice standard)
+		 * f) Crea la nuova matrice A aggiungendo anche le variabili libere (x=y-z) e le slacks, 
+		 *    e i vettori C e B
+		 */
+		
+		vectors_pl=pl_original.standardize(); 
+		
+		//memorizza su disco la matrice A
+		amatrix=new A_DataMatrix(vectors_pl.A,path_work);
 	}
 	
 	
@@ -224,13 +289,35 @@ public final class LP implements FormatTypeInput {
 		this.session=Context.createNewSession();
 		PLProblem pl_original=CreatePLProblem.create(fo,constraints.getListConstraint(),isMilp);
 		
-		//memorizza nella work il pl_original cosi com'e', come oggetto
-		//prima di essere standardizzato, pl original , non e' 
-		//variabile istanza di LP, una volta terminato questo metodo, ogni riferimento e' perso. 
-		//quindi questo non contiene i vincoli aggiuntivi degli upper/lower e le slacks 
+		//memorizza nella work il pl_original come oggetto prima di essere standardizzato. 
+		//pl original , non e' memorizzato in LP , una volta terminato questo metodo, 
+		//ogni riferimento e' perso. 
+		//Questo oggetto non contiene i vincoli aggiuntivi degli upper/lower e le slacks, 
+		//ne nessuna standardizzazione  
 		persistencePl=new PersistensePLProblem(pl_original,session.getFactoryLibraries().getLibraryWork().getAbsolutePath());
 		
-		createStandartProblem(pl_original);
+		//createStandartProblem(pl_original);
+		String path_work=session.getFactoryLibraries().getLibraryWork().getAbsolutePath();
+		
+		/*
+		 * Nella fase di standardizzazione : 
+		 * 
+		 * a) Cambio segno alla funzione obiettivo se essa e MIN - > MAX e Cj = -Cj
+		 * b) Essettuo traslazione del vincolo esistente  aggiornando bi, se esiste 
+		 *    una o piu' variabili con lower != 0 o da -inf.
+		 * c) Aggiungo nuovo vincolo nel caso esista un lower (Xj <= upper - appo_lower )  
+		 * d) Rende tutti i termini noti b positivi , cambiando segno a tutta la riga
+		 * 
+		 * e) Calcola il nuovo valore new_dimension che sara' poi la dimensione delle colonne di A 
+		 *    (la nuova matrice standard)
+		 * f) Crea la nuova matrice A aggiungendo anche le variabili libere (x=y-z) e le slacks, 
+		 *    e i vettori C e B
+		 */
+		
+		vectors_pl=pl_original.standardize(); 
+		
+		//memorizza su disco la matrice A
+		amatrix=new A_DataMatrix(vectors_pl.A,path_work);
 	}
 	
 	
@@ -251,12 +338,36 @@ public final class LP implements FormatTypeInput {
 		if(format==FormatType.SPARSE) pl_original=CreatePLProblem.createFromSparse(milp_data_source,isMilp);
 		else if(format==FormatType.COEFF) pl_original=CreatePLProblem.create(milp_data_source, isMilp);
 		
-		//memorizza nella work il pl_original cosi com'e', come oggetto
-		//prima di essere standardizzato, pl original , non e' 
-		//variabile istanza di LP, una volta terminato questo metodo, ogni riferimento e' perso. 
-		//quindi questo non contiene i vincoli aggiuntivi degli upper/lower e le slacks 
+		//memorizza nella work il pl_original come oggetto prima di essere standardizzato. 
+		//pl original , non e' memorizzato in LP , una volta terminato questo metodo, 
+		//ogni riferimento e' perso. 
+		//Questo oggetto non contiene i vincoli aggiuntivi degli upper/lower e le slacks, 
+		//ne nessuna standardizzazione  
 		persistencePl=new PersistensePLProblem(pl_original,session.getFactoryLibraries().getLibraryWork().getAbsolutePath());
-		createStandartProblem(pl_original);
+		
+		
+		//createStandartProblem(pl_original);
+		String path_work=session.getFactoryLibraries().getLibraryWork().getAbsolutePath();
+		
+		/*
+		 * Nella fase di standardizzazione : 
+		 * 
+		 * a) Cambio segno alla funzione obiettivo se essa e MIN - > MAX e Cj = -Cj
+		 * b) Essettuo traslazione del vincolo esistente  aggiornando bi, se esiste 
+		 *    una o piu' variabili con lower != 0 o da -inf.
+		 * c) Aggiungo nuovo vincolo nel caso esista un lower (Xj <= upper - appo_lower )  
+		 * d) Rende tutti i termini noti b positivi , cambiando segno a tutta la riga
+		 * 
+		 * e) Calcola il nuovo valore new_dimension che sara' poi la dimensione delle colonne di A 
+		 *    (la nuova matrice standard)
+		 * f) Crea la nuova matrice A aggiungendo anche le variabili libere (x=y-z) e le slacks, 
+		 *    e i vettori C e B
+		 */
+		
+		vectors_pl=pl_original.standardize(); 
+		
+		//memorizza su disco la matrice A
+		amatrix=new A_DataMatrix(vectors_pl.A,path_work);
 	}
 	
 	/**
@@ -303,13 +414,45 @@ public final class LP implements FormatTypeInput {
 		/*Crea im problema puro , cosi come dichiarato dall'utente A <=> b , f=C*/
 		PLProblem pl_original=CreatePLProblem.create(milp_data_source, isMilp);
 		
-		//memorizza nella work il pl_original cosi com'e', come oggetto
-		//prima di essere standardizzato, pl original , non e' 
-		//variabile istanza di LP, una volta terminato questo metodo, ogni riferimento e' perso. 
-		//quindi questo non contiene i vincoli aggiuntivi degli upper/lower e le slacks 
-		persistencePl=new PersistensePLProblem(pl_original,session.getFactoryLibraries().getLibraryWork().getAbsolutePath());
+		//memorizza nella work il pl_original come oggetto prima di essere standardizzato. 
+		//pl original , non e' memorizzato in LP , una volta terminato questo metodo, 
+		//ogni riferimento e' perso. 
+		//Questo oggetto non contiene i vincoli aggiuntivi degli upper/lower e le slacks, 
+		//ne nessuna standardizzazione  
+		String path_work=session.getFactoryLibraries().getLibraryWork().getAbsolutePath();
+		persistencePl=new PersistensePLProblem(pl_original,path_work);
+		//createStandartProblem(pl_original); 
+
 		
-		createStandartProblem(pl_original); 
+		/*
+		 * Nella fase di standardizzazione : 
+		 * 
+		 * a) Cambio segno alla funzione obiettivo se essa e MIN - > MAX e Cj = -Cj
+		 * b) Essettuo traslazione del vincolo esistente  aggiornando bi, se esiste 
+		 *    una o piu' variabili con lower != 0 o da -inf.
+		 * c) Aggiungo nuovo vincolo nel caso esista un lower (Xj <= upper - appo_lower )  
+		 * d) Rende tutti i termini noti b positivi , cambiando segno a tutta la riga
+		 * 
+		 * e) Calcola il nuovo valore new_dimension che sara' poi la dimensione delle colonne di A 
+		 *    (la nuova matrice standard)
+		 * f) Crea la nuova matrice A aggiungendo anche le variabili libere (x=y-z) e le slacks, 
+		 *    e i vettori C e B
+		 */
+		
+		vectors_pl=pl_original.standardize(); 
+		
+		//memorizza su disco la matrice A
+		amatrix=new A_DataMatrix(vectors_pl.A,path_work);
+	
+		/*
+		printTableAm(Amatrix);
+		System.out.println("--------A");
+		printTableA(A);
+		System.out.println("--------B");
+		printTableV(B);
+		System.out.println("--------C");
+		printTableV(C);
+		*/
 	}
 	
 	
@@ -374,10 +517,10 @@ public final class LP implements FormatTypeInput {
 		 * Nella fase di standardizzazione : 
 		 * 
 		 * a) Cambio segno alla funzione obiettivo se essa e MIN - > MAX e Cj = -Cj
-		 * b) Essettuo traslazione del vincolo esistente  aggiornado bi se esiste 
+		 * b) Essettuo traslazione del vincolo esistente  aggiornando bi, se esiste 
 		 *    una o piu' variabili con lower != 0 o da -inf.
 		 * c) Aggiungo nuovo vincolo nel caso esista un lower (Xj <= upper - appo_lower )  
-		 * d) Rende tutti i termini noti b positivi , cambiando segno a tuta la riga
+		 * d) Rende tutti i termini noti b positivi , cambiando segno a tutta la riga
 		 * 
 		 * e) Calcola il nuovo valore new_dimension che sara' poi la dimensione delle colonne di A 
 		 *    (la nuova matrice standard)

@@ -25,7 +25,7 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 	public enum VERSUS_SEPARATION { MINOR , MAJOR , ZERO , INTERVAL}; 
 	
 	private static final Logger logger=SscLogger.getLogger();
-	private volatile static int  static_counter=1; 
+	private volatile static int static_counter=1; 
 	private int id;
 	private PLProblem pl_current;
 	private static PLProblem pl_original_zero;
@@ -38,7 +38,7 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 	
 	private SolutionImpl solution_pl;
 	private SolutionType solutionType;
-	private  MILP father;
+	private MILP father;
 	
 	
 	MilpManager(Input input_sparse,Session session, FormatType format, MILP father) throws InvalidSessionException, Exception {
@@ -118,13 +118,13 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 	
 	SolutionType resolve() throws Exception {
 		
-		PLProblem lp_standard=pl_current.clone();
+		PLProblem lp_standard=pl_current.clone();  //necessario clonare ? 
 		
 		/*
 		 * pl_original_zero viane inizializzato la prima volta se e a null. 
 		 */
 		
-		 pl_original_zero=father.father_pl_original_zero.clone();    //	QUI FORSE SI PUò LASCIARE L'ORIGINALE ... senza fare clone
+		 pl_original_zero=father.father_pl_original_zero.clone();    //forse non occorre clonare ?????
 		
 		/*
 		 * Nella fase di standardizzazione : 
