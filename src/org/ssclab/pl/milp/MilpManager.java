@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import org.ssclab.context.Session;
 import org.ssclab.context.exception.InvalidSessionException;
 import org.ssclab.datasource.DataSource;
+import org.ssclab.i18n.RB;
 import org.ssclab.log.SscLogger;
 import org.ssclab.pl.milp.FormatTypeInput.FormatType;
 import org.ssclab.pl.milp.ObjectiveFunction.TARGET_FO;
@@ -141,6 +142,7 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 		
 		VectorsPL vectors_pl=lp_standard.standardize(); 
 		
+		
 		/*
 		printTableA( vectors_pl.A);
 		printTableV( vectors_pl.B);
@@ -155,7 +157,7 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 		if(this.solutionType==SolutionType.OPTIMUM) { 
 			this.solutionType =simplex.runPhaseTwo();
 			this.solution_pl=new SolutionImpl(this.solutionType,
-											  pl_original_zero, //dovevo passare un clone in quanto modifiva l'array di Var
+											  pl_current, //dovevo passare un clone in quanto modifiva l'array di Var
 											  simplex.getFinalBasis(),
 											  simplex.getFinalValuesBasis(),
 											  pl_current.getVariables());
@@ -174,11 +176,12 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 	
 	
 	 MilpManager getCloneBySeparationContinus(int index_var,VERSUS_SEPARATION versus) throws CloneNotSupportedException, LPException {
-		int num_tot_var= this.solution_pl.getVariables().length;
+		
 		MilpManager clone_separation=clone();
 		Var variable=clone_separation.pl_current.getVariables()[index_var];
 		variable.setSemicon(false);
 		if(versus==VERSUS_SEPARATION.ZERO)  {
+			int num_tot_var= this.solution_pl.getVariables().length;
 			//System.out.println(index_var+":ZERO-ZERO"+"   ID_CLONE"+clone_separation.getId() );
 			InternalConstraint constraint=InternalConstraint.createConstraintFromVar(num_tot_var, index_var, 0.0, InternalConstraint.TYPE_CONSTR.LE);
 			clone_separation.pl_current.addConstraint(constraint);
@@ -187,33 +190,41 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 		else {
 			variable.setUpper(variable.getUpperSemicon());
 			variable.setLower(variable.getLowerSemicon());
+			variable.configureFree();
 		}
 		return clone_separation;
 	}
 	
-	 MilpManager getCloneBySeparationInteger(int index_var,VERSUS_SEPARATION versus) throws CloneNotSupportedException {
+	 MilpManager getCloneBySeparationInteger(int index_var,VERSUS_SEPARATION versus) throws CloneNotSupportedException, LPException {
 		double value=this.solution_pl.getVariables()[index_var].getValue();
-		int num_tot_var= this.solution_pl.getVariables().length;
 		MilpManager clone_separation=clone();
-		
-		InternalConstraint constraint=null;
+		Var varc= clone_separation.pl_current.getVariables()[index_var];
+		double upper=varc.getUpper();
+		double lower=varc.getLower();
+		varc.resetUpperLower();
 		if(versus==VERSUS_SEPARATION.MINOR)  {
-			//5 =Math.floor(5.2);
+			//5 =Math.floor(5.5);
 			value=Math.floor(value);
-			//System.out.println(index_var+":MINOR:"+value +"   ID_CLONE"+clone_separation.getId() );
-			//PERCHE' HO CREATO UN VINCOLO E NON UN UPPER-LOWER BOUND ? COSA CHE HO FATTO CON LE SEMICONTINUE ?
-			constraint=InternalConstraint.createConstraintFromVar( 
-					num_tot_var, index_var, value, InternalConstraint.TYPE_CONSTR.LE);
+			//constraint=InternalConstraint.createConstraintFromVar(num_tot_var, index_var, value, InternalConstraint.TYPE_CONSTR.LE);
+			//PUO CAPITARE ? Forse si. Se il lower e' per esempio 5.2 -> Xj < 5 e Xj > 5.2 -> return null
+			if(lower > value)  {
+				return null;
+			}
+			varc.setLower(lower);
+			varc.setUpper(value);
 		}
 		else {
-			//6 =Math.floor(5.2);
+			//6 =Math.floor(5.5);
 			value=Math.ceil(value);
-			//System.out.println(index_var+":MAIOR"+value+"   ID_CLONE"+clone_separation.getId());
-			constraint=InternalConstraint.createConstraintFromVar(
-					num_tot_var, index_var, value, InternalConstraint.TYPE_CONSTR.GE);
-			
+			//constraint=InternalConstraint.createConstraintFromVar(num_tot_var, index_var, value, InternalConstraint.TYPE_CONSTR.GE);
+			if(upper < value) {
+				return null;
+			}
+			varc.setLower(value);
+			varc.setUpper(upper);
 		}
-		clone_separation.pl_current.addConstraint(constraint);
+		//clone_separation.pl_current.addConstraint(constraint);
+		varc.configureFree();
 		return clone_separation;
 	 }
 	 
@@ -230,9 +241,8 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 				milp_sotto2=milp_current2.getCloneBySeparationInteger(index_var_not_integer2, VERSUS_SEPARATION.MINOR);
 				milp_sopra2=milp_current2.getCloneBySeparationInteger(index_var_not_integer2, VERSUS_SEPARATION.MAJOR);
 			}	
-			listMangerMilp.add(milp_sotto2);
-			listMangerMilp.add(milp_sopra2);
-			
+			if(milp_sotto2!=null) listMangerMilp.add(milp_sotto2);
+			if(milp_sopra2!=null) listMangerMilp.add(milp_sopra2);
 		}
 	
 	 int getIndexVarToBeSemiContinus() {
@@ -260,7 +270,6 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 		return false;
 	}
 	
-	
 	private int getIndexVarToBeInteger() {
 		int index =0;
 		Var[] variables= this.solution_pl.getVariables();
@@ -278,7 +287,6 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 	
 	
 	/*
-	
 	@SuppressWarnings("unused")
 	private int getIndexVarToBeIntegerNew2Test() {
 		int index =0;
@@ -314,8 +322,6 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 		return is_continus_ammisible;
 	}
 	
-	
-	
 	public boolean isSolutionIntegerAmmisible()  {
 		boolean is_integer_ammisible=true;
 		Var[] variables= this.solution_pl.getVariables();
@@ -329,8 +335,6 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 		}
 		return is_integer_ammisible;
 	}
-	
-	
 	
 	public void setIntegerIfOptimal() {
 		Var[] variables= this.solution_pl.getVariables();
@@ -430,12 +434,6 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 		
 		System.out.println("");
 	}
-	
-	/*
-	  static void resetZerov()  {
-		pl_original_zero=null;
-	}
-	*/
 	
 }
 

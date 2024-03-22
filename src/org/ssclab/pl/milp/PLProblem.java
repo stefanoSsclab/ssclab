@@ -125,10 +125,12 @@ import org.ssclab.pl.milp.util.VectorsPL;
 					lower=array_var[_a].getLower();
 					//System.out.println("name :"+array_var[_a].getName() +" lower:"+lower);
 					if(!Double.isInfinite(lower) && lower!=0.0) {
-						cumulata+= -(lower*aij);
+						cumulata+= (lower*aij);
 					}  
 				}
-				constrainte.setBi(constrainte.getBi()+cumulata);
+				double cum=constrainte.getBi()-cumulata;
+				constrainte.setBi(cum);
+				//System.out.println("cumulata :"+cum);
 		    }
 		}
 		//Se lower o upper != null -> vincoli 

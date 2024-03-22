@@ -8,11 +8,6 @@ import org.ssclab.log.SscLogger;
 
 final class InternalConstraint implements Cloneable,Serializable {
 	
-	
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger=SscLogger.getLogger();
 	public static enum TYPE_CONSTR {EQ, LE, GE}; 
@@ -34,12 +29,9 @@ final class InternalConstraint implements Cloneable,Serializable {
 		Ai[j]=aij;
 	}
 	
-	
 	public void setAi(double[] Ai) {
 		this.Ai=Ai;
 	}
-	
-	
 	
 	public String getName() {
 		return name;
@@ -91,11 +83,10 @@ final class InternalConstraint implements Cloneable,Serializable {
 		InternalConstraint l_constraint =new InternalConstraint(dim);
 		for(int j=0;j<dim;j++) {
 			if(j==index)  l_constraint.Ai[j]=1.0;
-			else l_constraint.Ai[j]=0.0;
-			l_constraint.bi=value;
-			//System.out.println("mmmm:"+value);
-			l_constraint.type=ltype;
+			//else l_constraint.Ai[j]=0.0;
 		}
+		l_constraint.bi=value;
+		l_constraint.type=ltype;
 		return l_constraint;
 	}
 	

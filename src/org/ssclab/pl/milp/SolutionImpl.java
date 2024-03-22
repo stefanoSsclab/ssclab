@@ -35,22 +35,22 @@ final class SolutionImpl implements Solution {
 			else if((index_base=getIndexInBase( basis,index_var))!=-1) {
 				
 				if(var.isSemicon() && !var.isZeroSemicontVar()) {
-					if(!Double.isNaN(var.getLowerSemicon()) && var.getLowerSemicon()!=0.0) {
+					if(!Double.isInfinite(var.getLowerSemicon()) && var.getLowerSemicon()!=0.0) {
 						 var.setValue(values[index_base]+var.getLowerSemicon());
 					 }
 				}
-				else if(!Double.isNaN(var.getLower()) && var.getLower()!=0.0) {
+				else if(!Double.isInfinite(var.getLower()) && var.getLower()!=0.0) {
 					 var.setValue(values[index_base]+var.getLower());
 				 }
 				else var.setValue(values[index_base]);
 			}
 			//la variabile non è in base , ma occorre sommarci il lower, in quanto se ha avuto valore zero, occorre sommarci il lower
-			else if(!Double.isNaN(var.getLower()) && var.getLower()!=0.0) {
+			else if(!Double.isInfinite(var.getLower()) && var.getLower()!=0.0) {
 				var.setValue(var.getLower());
 			}
 			
 			else if(var.isSemicon() && !var.isZeroSemicontVar()) {
-				if(!Double.isNaN(var.getLowerSemicon()) && var.getLowerSemicon()!=0.0) {
+				if(!Double.isInfinite(var.getLowerSemicon()) && var.getLowerSemicon()!=0.0) {
 					 var.setValue(var.getLowerSemicon());
 				 }
 			}
@@ -80,13 +80,13 @@ final class SolutionImpl implements Solution {
 				index_var++;
 			}
 			else if((index_base=getIndexInBase( basis,index_var))!=-1) {
-				if(!Double.isNaN(var.getLower()) && var.getLower()!=0.0) {
+				if(!Double.isInfinite(var.getLower()) && var.getLower()!=0.0) {
 					 var.setValue(values[index_base]+var.getLower());
 				 }
 				else var.setValue(values[index_base]);
 			}
 			//la variabile non è in base , ma occorre sommarci il lower
-			else if(!Double.isNaN(var.getLower())&& var.getLower()!=0.0) {
+			else if(!Double.isInfinite(var.getLower())&& var.getLower()!=0.0) {
 				var.setValue(var.getLower());
 			}
 			index_var++;
