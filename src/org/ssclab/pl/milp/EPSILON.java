@@ -1,7 +1,7 @@
 package org.ssclab.pl.milp;
 
 /**
- * Enumerazione per valori di epsilon che vanno da 1E-16 a 1E-4.  
+ * Enumeration for epsilon values ranging from 1E-16 to 1E-4.
  * 
  * @author Stefano Scarioli
  * @version 1.0

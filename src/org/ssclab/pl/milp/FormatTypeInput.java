@@ -4,7 +4,7 @@ public interface FormatTypeInput {
 	
 	public enum FormatType {
 		/**
-		 * Per definire un vincolo del tipo = 
+		 * Enumeration used to define the type of format utilized
 		 */
 		SPARSE,
 		COEFF

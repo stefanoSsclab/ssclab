@@ -1,7 +1,7 @@
 package org.ssclab.pl.milp;
 
 /**
- * Enumerazione utilizzata per definire il tipo di relazione in un oggetto Constraint
+ * Enumeration used to define the type of relationship in a Constraint object.
  * 
  * @author Stefano Scarioli
  * @version 1.0
@@ -10,35 +10,35 @@ package org.ssclab.pl.milp;
 
 public enum  ConsType {
 	/**
-	 * Per definire un vincolo del tipo = 
+	 * To define a constraint of the type = 
 	 */
 	EQ, 
 	/**
-	 * Per definire un vincolo del tipo &lt; = 
+	 * To define a constraint of the type &lt; = 
 	 */
 	LE, 
 	/**
-	 * Per definire un vincolo del tipo &gt; = 
+	 * To define a constraint of the type &gt; = 
 	 */
 	GE, 
 	/**
-	 * Per definire variabili intere
+	 * To define integer variables
 	 */
 	INT, 
 	/**
-	 * Per definire variabili binarie
+	 * To define binary variables
 	 */
 	BIN, 
 	/**
-	 * Per la definizione degli Upper bound 
+	 * For defining Upper bounds 
 	 */
 	UPPER, 
 	/**
-	 * Per la definizione dei Lower bound
+	 * For defining Lower bounds
 	 */
 	LOWER,
 	/**
-	 * Per definire variabili semicontinue
+	 * To define semicontinuous variables
 	 */
 	SEMICONT
 	

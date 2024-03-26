@@ -1,8 +1,8 @@
 package org.ssclab.pl.milp;
 
 /**
- * Questa enumerazione permette di dichiarare il tipo di ottimizzazione ricercata
- * sulla funzione obiettivo : massimizzazione o minimizzazione. 
+ *This enumeration allows declaring the type of optimization sought on the 
+ * objective function: maximization or minimization.
  * 
  * @author Stefano Scarioli
  * @version 1.0

@@ -17,19 +17,17 @@ import org.ssclab.pl.milp.ObjectiveFunction.TARGET_FO;
 import org.ssclab.pl.milp.util.MILPThreadsNumber;
 import org.ssclab.ref.Input;
 import org.ssclab.step.parallel.Task;
-import org.ssclab.pl.milp.simplex.Simplex;
-import org.ssclab.pl.milp.simplex.SimplexInterface;
 import org.ssclab.pl.milp.simplex.SimplexException;
 
 
 
 /**
- * Questa classe permette di eseguire e risolvere formulazioni di problemi di programmazione 
- * lineare misto intera , binaria o semicontinua. Il metodo utilizzato per la risoluzione di tali problemi di ottimizzazione 
- * &egrave; il metodo del simplesso abbinato a quello del Branch and Bound. 
+ * This class allows executing and solving formulations of mixed integer linear programming problems,
+ * binary or semicontinuous. The method used for solving such optimization problems 
+ * is the simplex method combined with the Branch and Bound method.
  * 
  * @author Stefano Scarioli
- * @version 3.0
+ * @version 4.0
  * @see <a target="_new" href="http://www.ssclab.org">SSC Software www.sscLab.org</a> 
  */
 
@@ -106,12 +104,11 @@ public final class MILP implements FormatTypeInput {
 	
 	
 	/**
+	 * Constructor of a MILP object for solving problems formulated in inequality format contained in
+	 * an ArrayList of Strings.
 	 * 
-	 * Costruttore di un oggetto MILP per la risoluzione di problemi formulati in formato a disequazioni contenuto in 
-	 * ArrayList di Stringhe.  
-	 * 
-	 * @param inequality
-	 * @throws Exception
+	 * @param inequality The ArrayList with the problem
+	 * @throws Exception if the ArrayList is null or empty
 	 */
 	public MILP(ArrayList<String> inequality) throws Exception  { 
 		if(inequality==null || inequality.isEmpty()) throw new LPException(RB.getString("it.ssc.pl.milp.LP.msg12"));
@@ -126,13 +123,12 @@ public final class MILP implements FormatTypeInput {
 	
 	
 	/**
-	 *  Costruttore di un oggetto MILP per la risoluzione di problemi formulati in formato a disequazioni contenuto in 
-	 * un file esterno.  
+	 * Constructor of a MILP object for solving problems formulated in inequality format contained in
+	 * an external file.
 	 * 
-	 * @param path Path del file contenente il problema in formato a disequazioni
-	 * @throws Exception se il problema non &egrave; formulato correttamente
+	 * @param path Path of the file containing the problem in inequality format
+	 * @throws Exception if the problem is not correctly formulated
 	 */
-	
 	
 	public MILP(String path) throws Exception  { 
 		
@@ -160,12 +156,11 @@ public final class MILP implements FormatTypeInput {
 	
 	
 	/**
-	 * Costruttore di un oggetto MILP per la risoluzione di problemi espressi in formato matriciale.
+	 * Constructor of a MILP object for solving problems expressed in matrix format.
 	 * 
-	 * @param fo Un oggetto LinearObjectiveFunction che rappresenta la funzione obiettivo
-	 * @param constraints La lista dei vincoli 
-	 * @throws Exception Viene generata una eccezione se il problema non &egrave; formulato correttamente 
-	 * 
+	 * @param fo A LinearObjectiveFunction object representing the objective function
+	 * @param constraints The list of constraints
+	 * @throws Exception An exception is thrown if the problem is not correctly formulated
 	 */
 	
 	public MILP(LinearObjectiveFunction fo,ArrayList<Constraint> constraints) throws  Exception {
@@ -176,10 +171,10 @@ public final class MILP implements FormatTypeInput {
 	
 
 	/**
-	 * Costruttore di un oggetto MILP per la risoluzione di problemi espressi in formato a coefficienti.
+	 * Constructor of a MILP object for solving problems expressed in coefficient format.
 	 * 
-	 * @param input Il problema formulato col formato a coefficenti
-	 * @throws Exception Viene generata una eccezione se il problema &egrave; formulato in modo non corretto
+	 * @param input The problem formulated in coefficient format
+	 * @throws Exception An exception is thrown if the problem is not formulated correctly
 	 */
 	
 	public MILP(Input input) throws  Exception {
@@ -191,11 +186,11 @@ public final class MILP implements FormatTypeInput {
 	}
 	
 	/**
-	 * Costruttore di un oggetto MILP per la risoluzione di problemi espressi in formato a coefficienti.
+	 * Constructor of a MILP object for solving problems expressed in coefficient format.
 	 * 
-	 * @param input Il problema formulato col formato a coefficenti
-	 * @param session Una sessione di lavoro SSC 
-	 * @throws Exception Viene generata una eccezione se il problema &egrave; formulato in modo non corretto
+	 * @param input The problem formulated in coefficient format
+	 * @param session An SSC working session 
+	 * @throws Exception An exception is thrown if the problem is not formulated correctly
 	 */
 	
 	public MILP(Input input,Session session) throws  Exception {
@@ -205,12 +200,12 @@ public final class MILP implements FormatTypeInput {
 	
 	
 	/**
-	 * Costruttore di un oggetto MILP per la risoluzione di problemi espressi o in formato sparso o a coefficienti.
+	 * Constructor of a MILP object for solving problems expressed in either sparse or coefficient format.
 	 * 
-	 * @param input_sparse Il problema formulato col formato sparso o a coefficienti
-	 * @param session Una sessione di lavoro SSC 
-	 * @param format Il tipo di formato utilizzato (FormatType.SPARSE o FormatType.COEFF)
-	 * @throws Exception Viene generata una eccezione se il problema &egrave; formulato in modo non corretto
+	 * @param input_sparse The problem formulated in sparse or coefficient format
+	 * @param session An SSC working session 
+	 * @param format The type of format used (FormatType.SPARSE or FormatType.COEFF)
+	 * @throws Exception An exception is thrown if the problem is not formulated correctly
 	 */
 	
 	public MILP(Input input_sparse,Session session, FormatType format) throws Exception {
@@ -219,11 +214,11 @@ public final class MILP implements FormatTypeInput {
 	}
 	
 	/**
-	 * Costruttore di un oggetto MILP per la risoluzione di problemi espressi in formato sparso o a coefficienti.
+	 * Constructor of a MILP object for solving problems expressed in sparse or coefficient format.
 	 * 
-	 * @param input_sparse Il problema formulato col formato sparso
-	 * @param format Il tipo di formato utilizzato (FormatType.SPARSE o FormatType.COEFF)
-	 * @throws Exception Viene generata una eccezione se il problema &egrave; formulato in modo non corretto
+	 * @param input_sparse The problem formulated in sparse format
+	 * @param format The type of format used (FormatType.SPARSE or FormatType.COEFF)
+	 * @throws Exception An exception is thrown if the problem is not formulated correctly
 	 */
 	
 	public MILP(Input input_sparse,FormatType format) throws  Exception {
@@ -236,7 +231,7 @@ public final class MILP implements FormatTypeInput {
 	
 	/**
 	 * 
-	 * @return il numero massimo di iterazioni eseguibile da ciascun simplesso
+	 * @return the maximum number of iterations that each simplex can execute
 	 */
 	
 
@@ -245,10 +240,10 @@ public final class MILP implements FormatTypeInput {
 	}
 	
 	/**
-	 * Metodo per settare il nunmero di iterazioni di ogni singolo simplesso 
+	 * Method to set the number of iterations for each individual simplex.
 	 * 
-	 * @param num_max_iteration Il numero massimo di iterazioni eseguibili da ciascun simplesso
-	 * @throws SimplexException Se si genera un errore durante il processo 
+	 * @param num_max_iteration The maximum number of iterations that each simplex can execute
+	 * @throws SimplexException If an error occurs during the process
 	 */
 
 	public void setNumMaxIterationForSingleSimplex(int num_max_iteration) throws SimplexException {
@@ -258,7 +253,7 @@ public final class MILP implements FormatTypeInput {
 	
 	/**
 	 * 
-	 * @return il numero massimo di simplessi eseguibili nel procedimento del branch and bound 
+	 * @return the maximum number of simplexes executable in the Branch and Bound procedure
 	 */
 
 	public int getNumMaxSimplexs() {
@@ -266,9 +261,9 @@ public final class MILP implements FormatTypeInput {
 	}
 	
 	/**
-	 * Metodo per impostare il nunmero massimo di simplessi
+	 * Method to set the maximum number of simplexes.
 	 * 
-	 * @param num_max_simplex il numero massimo di simplessi eseguibili nel procedimento del branch and bound 
+	 * @param num_max_simplex the maximum number of simplexes executable in the Branch and Bound procedure
 	 */
 
 	public void setNumMaxSimplexs(int num_max_simplex) {
@@ -282,16 +277,15 @@ public final class MILP implements FormatTypeInput {
 	}
 	
 	/**
-	 * Questo metodo permette di settare il valore epsilon relativo alla tolleranza che interviene in diversi ambiti del simplesso. &Egrave;  
-	 * utilizzato nei seguenti casi : <br>
+	 * This method allows setting the epsilon value relative to the tolerance that intervenes in various aspects of the simplex. It is used in the following cases: <br>
 	 * 
-	 * 1) Durante la fase uno, sia nella determinazione delle variabile entrante che in quella della variabile uscente con o senza regola di Bland. 
-	 *    Sia per determinare se la base &egrave; degenere. Viene anche utilizzata alla fine della fase uno : se esiste una variabile ausiliaria in base, 
-	 *    epsilon viene utilizzato per determinare se &egrave; possibile eliminare le righe e le colonne di queste sulla tabella estesa.  <br>
-	 * 2) Durante la fase due , sia nella determinazione delle variabile entrante che in quella della variabile uscente con o senza regola di BLand. 
-	 *    Sia per determinare se la base &egrave; degenere.   
+	 * 1) During phase one, both in determining the entering variable and in determining the exiting variable with or without the Bland rule.
+	 *    Also to determine if the base is degenerate. It is also used at the end of phase one: if there is an auxiliary variable in the base, 
+	 *    epsilon is used to determine if it is possible to eliminate the rows and columns of these on the extended table. <br>
+	 * 2) During phase two, both in determining the entering variable and in determining the exiting variable with or without the Bland rule.
+	 *    Also to determine if the base is degenerate.
 	 * 
-	 * @param epsilon Toleranza utilizzata in diverse fasi del simplesso. Valore default 1-E10
+	 * @param epsilon Tolerance used in various phases of the simplex. Default value 1E-10
 	 */
 	
 	public void setEpsilon(EPSILON epsilon) {
@@ -299,25 +293,26 @@ public final class MILP implements FormatTypeInput {
 	}
 	
 	/**
-	 * Questo metodo permette di settare il valore epsilon relativo alla tolleranza per 
-	 * determinare se una soluzione ottima della fase 1 del simplesso &egrave; prossima o uguale a zero e quindi da origine a 
-	 * soluzioni ammissibili per il problema . 
+	 * This method allows setting the epsilon value relative to the tolerance for
+	 * determining if an optimal solution of phase 1 of the simplex is close to or equal to zero and thus gives rise to
+	 * feasible solutions for the problem.
 	 * 
-	 * @param cepsilon Tolleranza soluzione fase 1 rispetto allo zero. Valore default 1-E8
+	 * @param cepsilon Tolerance of phase 1 solution with respect to zero. Default value 1E-8
 	 */
 	
 	public void setCEpsilon(EPSILON cepsilon) {
 		this.milp_initiale.setCEpsilon(cepsilon);
 	}
 	
+		
 	/**
-	 * Questo metodo permette di settare il valore epsilon relativo alla tolleranza per 
-	 * determinare se un numero deve essere considerato intero o no. Questo controllo 
-	 * avviene quando alla fine del simplesso si valuta se la soluzione trovata soddisfa la condizione di interezza 
-	 * sulle variabili che devono esserlo.  Sia x un numero e sia Int(x) l'intero pi&ugrave; vicino a x, se 
+	 * This method allows setting the epsilon value relative to the tolerance for
+	 * determining if a number should be considered integer or not. This check
+	 * occurs when at the end of the simplex the solution found is evaluated to satisfy the integer condition
+	 * on the variables that must be integers. Let x be a number and Int(x) the nearest integer to x, if
 	 *  | Int(x) - x | &lt; epsilon -&gt; x &#x2208; &#x2124;
 	 * 
-	 * @param iepsilon Tolleranza per considerare un numero come intero. Valore default 1-E10
+	 * @param iepsilon Tolerance to consider a number as integer. Default value 1E-10
 	 */
 	
 	public void setIEpsilon(EPSILON iepsilon) {
@@ -325,10 +320,10 @@ public final class MILP implements FormatTypeInput {
 	}
 	
 	/**
-	 * Esegue il branch and bound.
+	 * Executes the Branch and Bound algorithm.
 	 * 
-	 * @return Il tipo di soluzione trovata 
-	 * @throws Exception Se il processo di esecuzione genera un errore 
+	 * @return The type of solution found
+	 * @throws Exception If the execution process generates an error
 	 */
 	
 	
@@ -536,12 +531,11 @@ public final class MILP implements FormatTypeInput {
 	
 	
 	/**
-	 * Questo metodo restituisce la soluzione del problema eliminando i vincoli di interezza (soluzione rilassata). 
-	 * Se vi sono variabili binarie , viene solo tolto il vincolo dall'assumere valori interi, ma  
-	 * alla variabile binaria rimane il vincolo  di essere compresa tra zero ed uno . 
+	 * This method returns the solution of the problem by removing the integer constraints (relaxed solution).
+	 * If there are binary variables, only the constraint from assuming integer values is removed, but
+	 * the binary variable still has the constraint of being between zero and one.
 	 * 
-	 * @return restituisce la soluzione rilassata, ovvero la soluzione del problema senza vincoli di interezza. 
-	 * 
+	 * @return returns the relaxed solution, i.e., the solution of the problem without integer constraints.
 	 */
 	
 	public Solution getRelaxedSolution()  {
@@ -550,9 +544,9 @@ public final class MILP implements FormatTypeInput {
 	}
 	
 	/**
-	 * Questo metodo restituisce, se esiste, la soluzione ottima intera, misto intera o binaria 
+	 * This method returns, if it exists, the optimal integer, mixed-integer, or binary solution.
 	 * 
-	 * @return  la soluzione ottima intera, misto intera o binaria 
+	 * @return the optimal integer, mixed-integer, or binary solution
 	 */
 	
 	public Solution getSolution()  {
@@ -561,10 +555,11 @@ public final class MILP implements FormatTypeInput {
 	}
 	
 	/**
-	 * Se il problema ammette soluzione ottima , questo metodo ritorna tale soluzione ottima sotto forma 
-	 * array con i valori delle variabili 
-	 * @return La soluzione ottima del problema come array di valori
-	 * @throws SimplexException Se la soluzione ottima non &egrave; presente 
+	 * If the problem has an optimal solution, this method returns that optimal solution in the form
+	 * of an array with the values of the variables.
+	 * 
+	 * @return The optimal solution of the problem as an array of values
+	 * @throws SimplexException If the optimal solution is not present
 	 */
 	
 	public double[] getValuesSolution() throws SimplexException  {
@@ -574,7 +569,7 @@ public final class MILP implements FormatTypeInput {
 	
 	/**
 	 * 
-	 * @return il numero di Thread impostati per la risoluzione del problema
+	 * @return the number of threads set for solving the problem
 	 */
 	
 	public MILPThreadsNumber getThreadNumber() {
@@ -582,14 +577,19 @@ public final class MILP implements FormatTypeInput {
 	}
 	
 	/**
-	 * Questo metodo permette di impostare il numero di Thread da utilizzare per eseguire il Branch and Bound
+	 * This method allows setting the number of threads to use for executing the Branch and Bound.
 	 * 
-	 * @param lthreadNumber
+	 * @param lthreadNumber Enumeration for setting the number of Threads
 	 */
 
 	public void setThreadNumber(MILPThreadsNumber lthreadNumber) {
 		threadNumber = lthreadNumber;
 	}
+	
+	/**
+	 * 
+	 * @return true if the mode of returning a feasible solution instead of an optimal one is set
+	 */
 
 
 	public boolean isJustTakeFeasibleSolution() {
@@ -597,9 +597,9 @@ public final class MILP implements FormatTypeInput {
 	}
 
 	/**
-	 * Impostando a true permette di interrompere il simplesso in modo da determinare 
-	 * non una soluzione ottima ma solamente una soluzione ammissibile del problema. 
-	 * @param isStopPhase2 true per interrompere il B&B ed ottenere solo una soluzione ammissibile. 
+	 * Setting it to true allows interrupting the Branch and Bound in order to determine
+	 * not an optimal solution but only a feasible solution to the problem.
+	 * @param isJustTakeFeasibleSolution true to interrupt the Branch and Bound and obtain only a feasible solution.
 	 */
 
 	public void setJustTakeFeasibleSolution(boolean isJustTakeFeasibleSolution) {
@@ -607,7 +607,7 @@ public final class MILP implements FormatTypeInput {
 	}
 
 	
-	/**
+	/*
 	 * Permette di impostare uno step (valore di tolleranza sacrificabile sul valore della 
 	 * funzione obiettivo, per cui questo valore &egrave; da esprimere nelle stesse unit&agrave; di misura con cui si esprime la f.o.) 
 	 * per accelerare la ricerca e minimizzare l'uso della memoria. Pi&ugrave; nel dettaglio se si individua una 

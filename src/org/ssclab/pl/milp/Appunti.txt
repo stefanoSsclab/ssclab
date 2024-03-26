@@ -108,44 +108,8 @@ a) la presenza di variabili con Lower bound determina una traslazione della vari
 ######################################################
 
 
-C
-valentina.cacchiani@unibo.it
-
-
-
-
-D
-mauro.dellamico@unimore.it
-
-
-
-G
-manlio.gaudioso@dimes.unical.it
-
-
-L
-giampaolo.liuzzi@iasi.cnr.it
-lucidi@dis.uniroma1.it
-
 
 --------------------------------------------------------
-
-Aprile-Giugno 2000, segue presso il Dipartimento di Informatica e Sistemistica “Antonio
-Ruberti” dell’Universit`a di Roma “La Sapienza”, il corso di Ottimizzazione
-Continua comprendente i seguenti insegnamenti: Condizioni di Ottimalita (Prof.
-Stefano Lucidi), Metodi di Ottimizzazione non Vincolata (Dr. Massimo Roma),
-Metodi per Problemi ai Minimi Quadrati (Ing. Marco Sciandrone), Metodi di Ottimizzazione
-Vincolata (Prof. Gianni Di Pillo), Ottimizzazione Globale (Ing. Laura
-Palagi).
-
-Michele Conforti
-Universita di Padova, Italy
-e-mail: conforti@math.unipd.it
-
-Giacomo Zambelli
-Universita' di Padova, Italy
-e-mail: giacomo@math.unipd.it
-
 
 ####################################################
 ####################################################
@@ -167,6 +131,7 @@ In che modo implementare sul Branch &Bound il simplesso duale per ottimizzare la
 Ricordarsi che sono presenti le variabili semicontinue. 
 
 Se tutte le variabili sono intere e' possibile applicare il metodo dei tagli di Gomory. 
+scrivi qui
 
 
 

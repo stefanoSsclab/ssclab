@@ -1,12 +1,14 @@
 package org.ssclab.pl.milp;
 
 /**
- * Questa interfaccia permette di accedere ad un vincolo del problema di LP dove ad ogni variabile incognita &egrave;  stato assegnato 
- * il  valore ottimo. &Egrave; possibile ricavare il valore LHS del vincolo in funzione della soluzione ottima.   
- * Per componente LHS intendiamo l'equazione linerare che occupa la parte sinistra 
- * del vincolo. Dato un vincolo X1 + 3X2 &#x2265; 7, la componente 
- * LHS &egrave; data dala parte X1 + 3X2. 
+
+ * * This interface allows accessing a constraint of the LP problem where each unknown variable has been assigned
+ * the optimal value. It is possible to obtain the LHS value of the constraint based on the optimal solution.
+ * By LHS component we mean the linear equation that occupies the left-hand side of the constraint. 
+ * Given a constraint X1 + 3X2 &#x2265; 7, the LHS component is given by the part X1 + 3X2.
  * 
+ * 
+ 
  * @author Stefano Scarioli 
  * @version 1.0 
  * @see <a target="_new" href="http://www.ssclab.org">SSC Software www.sscLab.org</a>
@@ -16,27 +18,30 @@ package org.ssclab.pl.milp;
 public interface SolutionConstraint {
 	
 	/**
-	 * 
-	 * @return La componente fissa Rhs del vincolo 
-	 */
+     * Retrieves the fixed component Rhs of the constraint.
+     * 
+     * @return The fixed component Rhs of the constraint.
+     */
 	public double getRhs() ;
-	/**
-	 * 
-	 * @return Il valore che la componente LHS assume sostituendo alle variabili 
-	 *         incognite  la soluzione ottima determinata
-	 * 
-	 */
+	 /**
+     * Retrieves the value that the LHS component assumes by substituting the unknown variables
+     * with the determined optimal solution.
+     * 
+     * @return The value that the LHS component assumes by substituting the unknown variables with the determined optimal solution.
+     */
 	public double getValue() ;
 	
 	/**
-	 * 
-	 * @return Il tipo di vincolo (GE,LE,EQ)
-	 */
+     * Retrieves the type of constraint (GE, LE, EQ).
+     * 
+     * @return The type of constraint (GE, LE, EQ).
+     */
 	public ConsType getRel() ;
 	/**
-	 * 
-	 * @return Il nome del vincolo 
-	 */
+     * Retrieves the name of the constraint.
+     * 
+     * @return The name of the constraint.
+     */
 	public String getName() ;
 
 }

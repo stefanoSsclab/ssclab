@@ -29,12 +29,11 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 
 
 /**
- * Questa classe permette di eseguire e risolvere formulazioni di problemi di programmazione 
- * lineare. Il metodo utilizzato per la risoluzione di tali problemi di ottimizzazione &egrave; il 
- * metodo del simplesso
+ * This class allows executing and solving formulations of linear programming problems.
+ * The method used for solving such optimization problems is the simplex method.
  * 
  * @author Stefano Scarioli
- * @version 3.0
+ * @version 4.0
  * @see <a target="_new" href="http://www.ssclab.org">SSC Software www.sscLab.org</a>
  */
 
@@ -66,11 +65,11 @@ public final class LP implements FormatTypeInput {
 	}
 	
 	/**
-	 * 
-	 * @param inequality Un ArrayList (di oggetti String) contenenti la formulazione del problema nel formato 
-	 * a disequazioni
-	 * @throws Exception Viene generata una eccezione se il problema non &egrave; formulato correttamente 
-	 */
+	*
+	* @param inequality An ArrayList (of String objects) containing the problem formulation in the 
+	* form of inequalities
+	* @throws Exception An exception is thrown if the problem is not correctly formulated
+	*/
 	public LP(ArrayList<String> inequality) throws Exception  { 
 		if(inequality==null || inequality.isEmpty()) throw new LPException(RB.getString("it.ssc.pl.milp.LP.msg12"));
 		this.session=Context.createNewSession();
@@ -115,11 +114,12 @@ public final class LP implements FormatTypeInput {
 	
 	
 	/**
-	 * 
-	 * @param path Path dove &egrave; localizzato il file contenente il problema di PL formulato con il formato a 
-	 * disequazioni
-	 * @throws Exception Viene generata una eccezione se il problema non &egrave; formulato correttamente o se il file non esiste
-	 */
+	* 
+	*@param path The path where the file containing the LP problem formulated with the inequality 
+	*format is located
+	*@throws Exception An exception is thrown if the problem is not correctly formulated or 
+	*if the file does not exist
+	*/
 	public LP(String path) throws Exception  { 
 		BufferedReader br=null;
 		ScanConstraintFromString scan_const;
@@ -229,16 +229,18 @@ public final class LP implements FormatTypeInput {
 	*/
 	
 	
+	
 	/**
-	 * Costruttore di un oggetto LP per la risoluzione di problemi espressi in formato matriciale.
+	 * Constructor
 	 * 
-	 * @param fo Un oggetto LinearObjectiveFunction che rappresenta la funzione obiettivo
-	 * @param constraints La lista dei vincoli espressa come ArrayList di Oggetti Constraint
-	 * @throws Exception Viene generata una eccezione se il problema non &egrave; formulato correttamente 
+	 * Creates an LP object for solving problems expressed in matrix format.
+	 * 
+	 * @param fo A LinearObjectiveFunction object representing the objective function
+	 * @param constraints The list of constraints expressed as an ArrayList of Constraint objects
+	 * @throws Exception An exception is thrown if the problem is not correctly formulated
 	 * 
 	 */
 
-		
 	public LP(LinearObjectiveFunction fo,ArrayList<Constraint> constraints) throws Exception { 
 		if(constraints==null ) throw new LPException(RB.getString("it.ssc.pl.milp.LP.msg13"));
 		this.session=Context.createNewSession();
@@ -276,14 +278,13 @@ public final class LP implements FormatTypeInput {
 	}
 	
 	
+		
 	/**
-	 * Costruttore di un oggetto LP per la risoluzione di problemi espressi in formato matriciale.
-	 * 
-	 * @param fo Un oggetto LinearObjectiveFunction che rappresenta la funzione obiettivo
-	 * @param constraints La lista dei vincoli sotto forma di oggetto ListConstraints 
-	 * @throws Exception Viene generata una eccezione se il problema non &egrave; formulato correttamente 
-	 * 
-	 */
+	*Constructor of an LP object for solving problems expressed in matrix format.
+	*@param fo A LinearObjectiveFunction object representing the objective function
+	*@param constraints The list of constraints as a ListConstraints object
+	*@throws Exception An exception is thrown if the problem is not correctly formulated
+	*/
 	
 	public LP(LinearObjectiveFunction fo,ListConstraints constraints) throws Exception  { 
 		this.session=Context.createNewSession();
@@ -322,13 +323,15 @@ public final class LP implements FormatTypeInput {
 	
 	
 	
+	
+
 	/**
-	 * Costruttore di un oggetto LP per la risoluzione di problemi espressi in formato o sparso o a coefficienti.
-	 * @param input Il problema formulato col formato sparso
-	 * @param session Una sessione di lavoro SSC 
-	 * @param format Costante per esprimere con quale formato &egrave; formulato il problema (FormatType.SPARSE o FormatType.COEFF)
-	 * @throws Exception Viene generata una eccezione se il problema &egrave; formulato in modo non corretto
-	 */
+	*Constructor of an LP object for solving problems expressed in sparse format or coefficient format.
+	*@param input The problem formulated in sparse format or coefficient format 
+	*@param session An SSC working session
+	*@param format Constant to express in which format the problem is formulated (FormatType.SPARSE or FormatType.COEFF)
+	*@throws Exception An exception is thrown if the problem is not formulated correctly
+	*/
 	
 	public LP(Input input,Session session, FormatType format) throws Exception {
 		this.session=session;
@@ -370,12 +373,14 @@ public final class LP implements FormatTypeInput {
 		amatrix=new A_DataMatrix(vectors_pl.A,path_work);
 	}
 	
+	
+	
 	/**
-	 * Costruttore di un oggetto LP per la risoluzione di problemi espressi in formato o sparso o a coefficienti.
-	 * @param input Il problema formulato col formato sparso
-	 * @param format Costante per esprimere con quale formato &egrave; formulato il problema (FormatType.SPARSE o FormatType.COEFF)
-	 * @throws Exception Viene generata una eccezione se il problema &egrave; formulato in modo non corretto
-	 */
+	*Constructor of an LP object for solving problems expressed in either sparse or coefficient format.
+	*@param input The problem formulated in sparse format
+	*@param format Constant to express in which format the problem is formulated (FormatType.SPARSE or FormatType.COEFF)
+	*@throws Exception An exception is thrown if the problem is not formulated correctly
+	*/
 	
 	public LP(Input input,FormatType format) throws  Exception {
 		
@@ -384,11 +389,11 @@ public final class LP implements FormatTypeInput {
 	}
 	
 	/**
-	 * Costruttore di un oggetto LP per la risoluzione di problemi espressi in formato a coefficienti.
-	 * 
-	 * @param input_natural Il problema formulato col formato a coefficienti
-	 * @throws Exception Viene generata una eccezione se il problema &egrave; formulato in modo non corretto
-	 */
+	*
+	*Constructor of an LP object for solving problems expressed in coefficient format.
+	*@param input_natural The problem formulated in coefficient format
+	*@throws Exception An exception is thrown if the problem is not formulated correctly
+	*/
 
 	public LP(Input input_natural) throws Exception {
 		
@@ -398,13 +403,14 @@ public final class LP implements FormatTypeInput {
 		//session.close();
 	}
 	
+
 	/**
-	 * Costruttore di un oggetto LP per la risoluzione di problemi espressi in formato a coefficienti.
-	 * 
-	 * @param input_natural Il problema formulato col formato a coefficienti
-	 * @param session Una sessione di lavoro SSC 
-	 * @throws Exception Viene generata una eccezione se il problema &egrave; formulato in modo non corretto
-	 */
+	*
+	*Constructor of an LP object for solving problems expressed in coefficient format.
+	*@param input_natural The problem formulated in coefficient format
+	*@param session An SSC working session
+	*@throws Exception An exception is thrown if the problem is not formulated correctly
+	*/
 	
 	public LP(Input input_natural,Session session) throws Exception {
 		
@@ -456,101 +462,75 @@ public final class LP implements FormatTypeInput {
 	}
 	
 	
+
 	/**
-	 * Questo metodo permette di settare il valore epsilon relativo alla tolleranza che interviene in diversi ambiti. &Egrave;  
-	 * utilizzato nei seguenti casi : <br>
-	 * 
-	 * 1) Durante la fase uno, sia nella determinazione delle variabile entrante che in quella della variabile uscente con o senza regola di Bland; 
-	 *    sia per determinare se la base &egrave; degenere. Viene anche utilizzata alla fine della fase uno : se esiste una variabile ausiliaria in base, 
-	 *    epsilon viene utilizzato per determinare se &egrave; possibile eliminare le righe e le colonne di queste sulla tabella estesa.  <br>
-	 * 2) Durante la fase due , sia nella determinazione delle variabile entrante che in quella della variabile uscente con o senza regola di BLand; 
-	 *    sia per determinare se la base &egrave; degenere.   
-	 * 
-	 * @param epsilon Tolleranza utilizzata in diverse fasi del simplesso. Valore default 1-E10
-	 */
+	*This method allows setting the epsilon value relative to the tolerance that intervenes in various contexts.
+	*It is used in the following cases: <br>
+	*During phase one, both in determining the entering variable and in determining the exiting variable with or without the Bland rule;
+	*it is also used to determine if the base is degenerate. It is also used at the end of phase one: if there is an auxiliary variable in the base,
+	*epsilon is used to determine if it is possible to eliminate the rows and columns of these on the extended table. <br>
+	*During phase two, both in determining the entering variable and in determining the exiting variable with or without the Bland rule;
+	*it is also used to determine if the base is degenerate.
+	*@param epsilon Tolerance used in various phases of the simplex. Default value 1E-10
+	*/
 
 	
 	public void setEpsilon(EPSILON epsilon)   {  
 		this.epsilon=epsilon;
 	}
 	
+	
+
+	
 	/**
-	 * Questo metodo permette di settare il valore epsilon relativo alla tolleranza nel 
-	 * determinare se una soluzione ottima espressa dalla fase 1  &egrave; prossima o uguale a zero e quindi da origine a 
-	 * soluzioni ammissibili per il problema iniziale. 
-	 * 
-	 * @param epsilon Tolleranza soluzione fase 1 rispetto allo zero. Valore default 1-E8
-	 */
+	*
+	*This method allows setting the epsilon value relative to the tolerance in determining if an optimal solution expressed by phase 1
+	*is close to or equal to zero and thus gives rise to feasible solutions for the initial problem.
+	*@param epsilon Tolerance of phase 1 solution with respect to zero. Default value 1E-8
+	*/
 	
 	public void setCEpsilon(EPSILON epsilon)  { 
 		this.cepsilon=epsilon;
 	}
 	
 		
+	
 	/**
-	 * Questo metodo permette di limitare il numero massimo di iterazioni del simplesso (iterazioni fase 1 + iterazioni fase 2)
-	 * 
-	 * @param num_max_iteration Il numero di iterazioni che al massimo si vuole far eseguire. 
-	 * Valore di default 10,000,000. 
-	 * @throws LPException Se si imposta un numero errato (zero o negativo) 
-	 */
+	*
+	*This method allows limiting the maximum number of simplex iterations (phase 1 iterations + phase 2 iterations)
+	*@param num_max_iteration The maximum number of iterations to be executed.
+	*Default value 10,000,000.
+	*@throws LPException If an incorrect number (zero or negative) is set
+	*/
 	public void setNumMaxIteration(int num_max_iteration) throws LPException  { 
 		if(num_max_iteration <= 0) throw new LPException("Il numero massimo di iterazioni deve essere un numero positivo");
 		this.num_max_iteration=num_max_iteration;
 	}
 	
 	/**
-	 * Questo metodo ritorna il numero massimo di iterazioni del simplesso
-	 * 
-	 * @return Il numero massimo i iterazioni
-	 */
+	*
+	*This method returns the maximum number of simplex iterations
+	*@return The maximum number of iterations
+	*/
 	
 	public int getNumMaxIteration()   { 
 		return this.num_max_iteration;
 	}
 	
 	private void createStandartProblem(PLProblem pl_original) throws InvalidSessionException, Exception {
-		
 		String path_work=session.getFactoryLibraries().getLibraryWork().getAbsolutePath();
-		
-		/*
-		 * Nella fase di standardizzazione : 
-		 * 
-		 * a) Cambio segno alla funzione obiettivo se essa e MIN - > MAX e Cj = -Cj
-		 * b) Essettuo traslazione del vincolo esistente  aggiornando bi, se esiste 
-		 *    una o piu' variabili con lower != 0 o da -inf.
-		 * c) Aggiungo nuovo vincolo nel caso esista un lower (Xj <= upper - appo_lower )  
-		 * d) Rende tutti i termini noti b positivi , cambiando segno a tutta la riga
-		 * 
-		 * e) Calcola il nuovo valore new_dimension che sara' poi la dimensione delle colonne di A 
-		 *    (la nuova matrice standard)
-		 * f) Crea la nuova matrice A aggiungendo anche le variabili libere (x=y-z) e le slacks, 
-//		 *    e i vettori C e B
-		 */
-		
 		vectors_pl=pl_original.standardize(); 
-		
 		//memorizza su disco la matrice A
 		amatrix=new A_DataMatrix(vectors_pl.A,path_work);
-	
-		/*
-		printTableAm(Amatrix);
-		System.out.println("--------A");
-		printTableA(A);
-		System.out.println("--------B");
-		printTableV(B);
-		System.out.println("--------C");
-		printTableV(C);
-		*/
 	}
 	
-	/**
-	 * Esegue il simplesso (fase 1 + fase 2).
-	 * 
-	 * @return Il tipo di soluzione trovata 
-	 * @throws Exception Se il processo di esecuzione genera un errore 
-	 */
 	
+	/**
+	*
+	*Executes the simplex (phase 1 + phase 2).
+	*@return The type of solution found
+	*@throws Exception If the execution process generates an error
+	*/
 	public SolutionType resolve() throws Exception {
 		
 		logger.log(SscLevel.INFO,RB.format("it.ssc.pl.milp.LP.msg11")+threadsNumber.getThread());
@@ -606,12 +586,12 @@ public final class LP implements FormatTypeInput {
 	
 	
 	/**
-	 * Questo metodo ritorna la matrice A ottenuta in seguito al processo di riduzione in 
-	 * forma standart (max z , Ax + s=b, x &ge; 0, b &ge; 0)  del problema di programmazione lineare di partenza.
+	 * This method returns the matrix A obtained after the process of reduction to
+     * standard form  (max z , Ax + s=b, x &ge; 0, b &ge; 0) of the original linear programming problem.
 	 * 
-	 * @return La matrice dei coefficienti A 
-	 * @throws SimplexException 
-	 * @throws IOException se il problema non &egrave; stato ridotto in forma standart
+	 * @return The coefficient matrix A
+     * @throws SimplexException If null matrix
+     * @throws IOException if the problem has not been reduced to standard form
 	 */
 	public double[][] getStandartMatrixA() throws SimplexException, IOException {
 		if(amatrix==null) throw new SimplexException(RB.getString("it.ssc.pl.milp.LP.msg9"));
@@ -619,10 +599,10 @@ public final class LP implements FormatTypeInput {
 	}
 
 	/**
-	 * Questo metodo ritorna il vettore b dei valori rhs ottenuto in seguito al processo di riduzione in 
-	 * forma standart (max z , Ax+s=b, x &ge; 0, b &ge; 0)  del problema di programmazione lineare di partenza.
-	 * 
-	 * @return Il vettore dei coefficienti RHS 
+	 *This method returns the vector b of the rhs values obtained after the process of reduction to
+     * standard form(max z , Ax+s=b, x &ge; 0, b &ge; 0)  of the original linear programming problem.
+     * 
+     * @return The vector of RHS coefficients
 	 */
 	
 	public double[] getStandartVectorB() {
@@ -630,101 +610,103 @@ public final class LP implements FormatTypeInput {
 	}
 
 	/**
-	 * Questo metodo ritorna il vettore c dei coefficienti della f.o. in seguito al processo di riduzione 
-	 * in forma standart (max z , Ax+s=b, x &ge; 0, b &ge; 0) del problema di programmazione lineare di partenza.
+	 * This method returns the vector c of the coefficients of the objective function after the process of reduction
+     * to standard form (max z , Ax+s=b, x &ge; 0, b &ge; 0) of the original linear programming problem.
 	 * 
-	 * @return Il vettore c dei coefficienti della f.o.
+	 * @return The vector c of the coefficients of the objective function.
 	 */
 	public double[] getStandartVectorC() {
 		return vectors_pl.C.clone();
 	}
 
-	/**
-	 * Se il problema ammette soluzione ottima , questo metodo ritorna tale soluzione ottima sotto forma di oggetto della 
-	 * classe Solution
-	 * @return La soluzione ottima del problema 
-	 * @throws SimplexException Se la soluzione ottima non &egrave; presente 
-	 */
 	
+	
+	/**
+	*
+	*If the problem has an optimal solution, this method returns that optimal solution in the form of an object of the
+	*Solution class.
+	*@return The optimal solution of the problem
+	*@throws SimplexException If the optimal solution is not present
+	*/
 	public Solution getSolution() throws SimplexException  {
 		if(this.solution_pl==null)  throw new SimplexException(RB.getString("it.ssc.pl.milp.LP.msg10"));
 		return this.solution_pl;
 	}
 	
 	
-	/**
-	 * Se il problema ammette soluzione ottima , questo metodo ritorna tale soluzione ottima sotto forma 
-	 * array con i valori delle variabili 
-	 * @return La soluzione ottima del problema come array di valori
-	 * @throws SimplexException Se la soluzione ottima non &egrave; presente 
-	 */
 	
+	/**
+	*
+	*If the problem has an optimal solution, this method returns that optimal solution in the form of
+	*an array with the values of the variables.
+	*@return The optimal solution of the problem as an array of double values
+	*@throws SimplexException If the optimal solution is not present
+	*/
 	public double[] getValuesSolution() throws SimplexException  {
 		if(this.solution_pl==null)  throw new SimplexException(RB.getString("it.ssc.pl.milp.LP.msg10"));
 		return this.solution_pl.getValuesSolution();
 	}
 	
 	
-	/**
-	 * 
-	 * @return vero se la parallelizzazione del simplesso &egrave; attiva. 
-	 */
 	
+	/**
+	* @return true if the parallelization with multiple threads of the simplex is active.
+	*/
 	public boolean isParallelSimplex() {
 		return isParallelSimplex;
 	}
-	/**
-	 * Se il numero di core fisici dell'host su cui viene eseguito SSc  &egrave; maggiore di 4 , pu&ograve; essere 
-	 * migliorata la performance del simplesso facendo eseguire i processi di ottimizzazione in parallelo su pi &ugrave; 
-	 * thread. 
-	 * 
-	 * @param isParallelSimplex True per attivare la parallelizzazione
-	 */
 	
+	
+	/**
+	*
+	*If the number of physical cores of the host on which SSc is running is greater than 4,
+	*the performance of the simplex can be improved by executing the optimization processes in parallel on multiple threads.
+	*@param isParallelSimplex True to activate parallelization
+	*/
 	public void setParallelSimplex(boolean isParallelSimplex) {
 		this.isParallelSimplex = isParallelSimplex;
 		if(isParallelSimplex==true) threadsNumber=LPThreadsNumber.AUTO;
 	}
 	
+		
+	
 	/**
-	 * 
-	 * @return il numero di Thread utilizzati nell'esecuzione. Se il valore &egrave; AUTO  &egrave; il sistema a 
-	 * decidere il numero di 
-	 * Thread da utilizzare. 
-	 */
-	
-	
+	*
+	* @return the number of threads used in the execution. If the value is AUTO, the system decides the number of threads to use.
+	*/
 	public LPThreadsNumber getThreadsNumber() {
 		return threadsNumber;
 	}
 	
 	
+	
 	/**
-	 * 
-	 * @param threadsNumber Imposta il numero di Thread da utilizzare nell'esecuzione. 
-	 * Se il valore impostato &egrave; AUTO  &egrave; il sistema a decidere il numero di 
-	 * Thread da utilizzare.
-	 */
-
+	* If the set value is AUTO, the system decides the number of
+	threads to use.
+	* @param threadsNumber Sets the number of threads to use in the execution.
+	*/
 	public void setThreadsNumber(LPThreadsNumber threadsNumber) {
 		isParallelSimplex=true;
 		this.threadsNumber = threadsNumber;
 	}
 	
+
+
 	/**
-	 * Restituisce true se se &egrave; impostato l'esecuzione della sola fase 1. 
-	 * @return
-	 */
-	
+	*
+	*Returns true if only phase 1 execution is set to obtain a feasible solution.
+	*@return true if active
+	*/
 	public boolean isJustTakeFeasibleSolution() {
 		return isStopPhase2;
 	}
 
 	/**
-	 * Impostando a true permette di interrompere il simplesso alla fine della fase 1, in modo da determinare 
-	 * non una soluzione ottima ma solamente una soluzione ammissibile del problema. 
-	 * @param isStopPhase2 true per interrompere il simplesso prima della fase 2. 
-	 */
+	*
+	* Setting to true allows interrupting the simplex at the end of phase 1, in order 
+	* to determine not an optimal solution but only a feasible solution of the problem.
+	* @param isStopPhase2 true to interrupt the simplex before phase 2.
+	*/
 	public void setJustTakeFeasibleSolution(boolean isStopPhase2) {
 		this.isStopPhase2 = isStopPhase2;
 	}

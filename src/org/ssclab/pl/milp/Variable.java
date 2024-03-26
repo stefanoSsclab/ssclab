@@ -1,9 +1,9 @@
 package org.ssclab.pl.milp;
 
 /**
- * Questa interfaccia permette di accedere al valore  ottimo assunto dalla j-esima variabile 
- * del problema di LP (j=1..N).  Oltre al valore ottimo, &egrave; possibile recuperare anche 
- * altre caratteristiche .  
+ * This interface allows accessing the optimal value assumed by the j-th variable
+ * of the LP problem (j=1..N). In addition to the optimal value, it is possible to retrieve
+ * other characteristics. 
  * 
  * @author Stefano Scarioli
  * @version 1.0
@@ -14,51 +14,62 @@ package org.ssclab.pl.milp;
 public interface Variable {
 	/**
 	 * 
-	 * @return il nome della variabile 
+	 * Retrieves the name of the variable.
+	 * 
+	 *  @return The name of variable
 	 */
 	
 	public String getName() ;
 	/**
 	 * 
-	 * @return il tipo di variabile (intera , binaria , reale )
+	 * Retrieves the type of variable (integer, binary, real).
+	 * 
+	 * @return The type of variable
 	 */
 
 	public TYPE_VAR getType() ;
 	/**
 	 * 
-	 * @return il suo upper bound se valorizzato (di default &egrave; + &infin;)
+	  * Retrieves its upper bound if set (by default it is + &infin;)
+	  * 
+	  *  @return The upper bound of variable
 	 */
 
 	public double getUpper() ;
 	
 	/**
 	 * 
-	 * @return il suo lower bound 
+	* Retrieves its lower bound.
+	* 
+	* 
+	*  @return The lower bound of variable
 	 */
 
 	public double getLower() ;
 	
 	/**
 	 * 
-	 * @return ritorna true se la variabile &egrave; libera. Per rendere una variabile libera 
-	 * occorre che sia stato definito per la variabile o un upper  bound negativo, o un lower bound negativo o
-	 * indefinito (- &infin;)
+	 * Retrieves true if the variable is free. To make a variable free,
+     * it must have been defined for the variable either a negative upper bound,
+     * or a negative lower bound, or indefinite (- &infin;).
+     * 
+     * @return True if the variable is free. 
 	 */
 
 	public boolean isFree() ;
 	
 	/**
-	 * 
-	 * @return il valore ottimo assunto dalla variabile nell'ambito della soluzione ottima determinata
-	 */
+     * Retrieves the optimal value assumed by the variable within the determined optimal solution.
+     * 
+     * @return The optimal value assumed by the variable within the determined optimal solution.
+     */
 	
 	public double getValue() ;
+	
 	/**
-	 * Definisce il tipo di variabile : intera, binaria o reale  
-	 * 
-	 * @author Scarioli Stefano 
-	 *
-	 */
+     * Defines the type of variable: integer, binary, or real.
+     * 
+    */
 	
 	public enum TYPE_VAR {
 		REAL, 

@@ -3,8 +3,8 @@ package org.ssclab.pl.milp;
 import org.ssclab.i18n.RB;
 
 /**
- * Questa classe permette di istanziare oggetti che rappresentano la funzione obiettivo 
- * in problemi di LP espressi nella notazione matriciale 
+ * This class allows instantiating objects representing the objective function in linear
+ *  programming problems expressed in matrix notation.
  * 
  * @author Stefano Scarioli
  * @version 1.0
@@ -19,7 +19,7 @@ public final class LinearObjectiveFunction {
 	
 	/**
 	 * 
-	 * @return il tipo di ottimizzazione (MAX o MIN)
+	 * @return  The type of optimization (MAX or MIN))
 	 */
 	
 	public GoalType getType() {
@@ -27,19 +27,19 @@ public final class LinearObjectiveFunction {
 	}
 	/**
 	 * 
-	 * @return il vettore dei coefficienti della funzione obiettivo 
+	 * @return The vector of coefficients of the objective function
 	 */
 
 	public double[] getC() {
 		return C;
 	}
+
 	/**
-	 * Costruttore 
-	 * 
-	 * @param C Il vettore dei coefficienti della funzione obiettivo
-	 * @param type Il tipo di ottimizzazione (MAX o MIN) come istanza della enumerazione GoalType
-	 * @throws LPException Se i parametri sono incongruenti con il problema
-	 */
+	*Constructor
+	*@param C The vector of coefficients of the objective function
+	*@param type The type of optimization (MAX or MIN) as an instance of the GoalType enumeration
+	*@throws LPException If the parameters are incongruent with the problem
+	*/
 
 	public LinearObjectiveFunction(double[] C, GoalType type) throws  LPException {
 		if(type==null) throw new LPException(RB.getString("it.ssc.pl.milp.LinearObjectiveFunction.msg1"));

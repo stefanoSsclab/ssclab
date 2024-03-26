@@ -3,8 +3,8 @@ package org.ssclab.pl.milp;
 import org.ssclab.i18n.RB;
 
 /**
- * Questa classe permette di costruire oggetti ognuno dei quali rappresenta un vincolo per  
- * un problema di LP espresso nella notazione matriciale
+ * This class allows you to build objects, each of which represents a constraint for a linear 
+ * programming problem expressed in matrix notation 
  * 
  * @author Stefano Scarioli 
  * @version 1.0
@@ -19,12 +19,12 @@ public final class Constraint {
 	private double bi;
 	
 	/**
-	 * 
-	 * @param Aj La parte LHS del j-esimo vincolo del problema
-	 * @param rel Il tipo  di vincolo/relazione (EQ,LE,GE,UPPER,LOWER,INT,BIN,SEMICONT)
-	 * @param rhs La parte RHS del vincolo o coefficiente bj 
-	 * @throws SimplexException Se il vincolo non &egrave; congruente 
-	 */
+	*
+	*@param Aj The LHS part of the j-th constraint of the problem
+	*@param rel The type of constraint/relation (EQ, LE, GE, UPPER, LOWER, INT, BIN, SEMICONT)
+	*@param rhs The RHS part of the constraint or coefficient bj
+	*@throws LPException If the constraint is not congruent
+	*/
 	
 	public Constraint(double[] Aj, ConsType rel, double rhs) throws LPException {
 		if(Aj==null) throw new LPException(RB.getString("it.ssc.pl.milp.Constraint.msg1"));
@@ -34,25 +34,27 @@ public final class Constraint {
 		this.bi=rhs;
 	}
 	
-	/**
-	 * 
-	 * @return La parte LHS del j-esimo vincolo del problema
-	 */
+
+   /**
+    * @return The LHS part of the j-th constraint of the problem
+    */
 
 	public double[] getAj() {
 		return Aj;
 	}
+	
 	/**
 	 * 
-	 * @return Il tipo  di vincolo (relazione) definito (EQ,LE,GE)
+	 * @return  The type of constraint (relation) defined (EQ, LE, GE)
 	 */
 
 	public ConsType getRel() {
 		return rel;
 	}
+	
 	/**
 	 * 
-	 * @return La parte RHS del vincolo o coefficiente bj 
+	 * @return The RHS part of the constraint or coefficient bj
 	 */
 
 	public double getRhs() {

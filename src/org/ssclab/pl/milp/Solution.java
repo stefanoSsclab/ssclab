@@ -3,8 +3,7 @@ package org.ssclab.pl.milp;
 /**
  * 
  * 
- * Questa interfaccia permette di accedere  
- * ai valori assunti dalle n variabili della soluzione ottima. 
+ *  This interface allows accessing the values taken by the n variables of the optimal solution.
  * 
  * @author Stefano Scarioli 
  * @version 1.0 
@@ -12,43 +11,49 @@ package org.ssclab.pl.milp;
  *
  */
 
+
+
 public interface Solution {
 	
 	/**
-	 * 
-	 * @return Un array di oggetti Variable da cui prelevare le caratteristiche 
-	 *          ed il valore ottimo assunto da ogni variabile. 
-	 *         
-	 */
+     * Retrieves an array of Variable objects from which to obtain the characteristics
+     * and the optimal value assumed by each variable.
+     * 
+     * @return An array of Variable objects from which to obtain the characteristics and the optimal value assumed by each variable.
+     */
 	public Variable[] getVariables();
 	/**
-	 * 
-	 * @return Il valore ottimo assunto dalla funzione obiettivo. 
-	 */
+     * Retrieves the optimal value assumed by the objective function.
+     * 
+     * @return The optimal value assumed by the objective function.
+     */
 	public double getOptimumValue();
 	/**
-	 * 
-	 * @return Il tipo di soluzione ottenuta 
-	 */
+     * Retrieves the type of solution obtained.
+     * 
+     * @return The type of solution obtained.
+     */
 	public SolutionType getTypeSolution(); 
 	/**
-	 * 
-	 * @return Un array di oggetti vincolo, da cui ricavare il valore che 
-	 *         ciascun vincolo assume sostituendo alla variabili incognite 
-	 *         la soluzione ottima. 
-	 */
+     * Retrieves an array of SolutionConstraint objects from which to obtain the value that
+     * each constraint assumes by substituting the optimal solution for the unknown variables.
+     * 
+     * @return An array of SolutionConstraint objects from which to obtain the value that each constraint assumes by substituting the optimal solution for the unknown variables.
+     */
 	public SolutionConstraint[] getSolutionConstraint();
 	
-	/**
-	 * 
-	 * @return Il valore assunto dalla funzione obiettivo. 
-	 */
+	 /**
+     * Retrieves the value assumed by the objective function.
+     * 
+     * @return The value assumed by the objective function.
+     */
 	public double getValue();
 	
 	/**
-	 * 
-	 * @return I valori delle variabili in un array. 
-	 */
+     * Retrieves the values of the variables in an array.
+     * 
+     * @return The values of the variables in an array.
+     */
 	public double[] getValuesSolution();
 	
 }
