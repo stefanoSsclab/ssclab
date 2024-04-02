@@ -13,14 +13,14 @@ final class ScanConstraintFromString {
 	private ArrayList<InternalConstraint> new_constraints;
 	private ArrayList<String> nomi_var;
 	private int dimension;
-	private Double Ai[];
+	private double Ai[];
 	private ArrayProblem arraysProb;
 	
 	public ScanConstraintFromString(ArrayList<String> inequality,ArrayList<String> nomi_var) throws  ParseException, LPException {
 		this.nomi_var=nomi_var;
 		this.dimension=nomi_var.size();
 		this.new_constraints=new ArrayList<InternalConstraint>();
-		Ai=new Double[this.dimension];
+		Ai=new double[this.dimension];
 		arraysProb=new ArrayProblem(this.dimension);
 		
 		for(String line_problem:inequality) {
@@ -33,10 +33,11 @@ final class ScanConstraintFromString {
 		this.nomi_var=nomi_var;
 		this.dimension=nomi_var.size();
 		this.new_constraints=new ArrayList<InternalConstraint>();
-		Ai=new Double[this.dimension];
+		Ai=new double[this.dimension];
 		arraysProb=new ArrayProblem(this.dimension);
 		
 		String line;
+		//NON CHIUDE IL FILE ? 
 		while((line = br.readLine()) != null   ) {
 			parseSingleLine(line);
 		}	
@@ -75,10 +76,16 @@ final class ScanConstraintFromString {
 			checkSintassiInt(inequality);
 			scanIntSecBin(inequality);
 		}
-		else  if (matcher_group_var.lookingAt()  && inequality.matches("(.+)((<\\s*=)|(>\\s*=)|(=))\\s*(([+-]?)(\\d+)(\\.?)(\\d*))\\s*")) {
+		/* vecchia versione
+		else  if (matcher_group_var.lookingAt() && inequality.matches("(.+)((<\\s*=)|(>\\s*=)|(=))\\s*(([+-]?)(\\d+)(\\.?)(\\d*))\\s*")) {
 			checkSintassi(inequality);
 			scanDisequestion(inequality);
 		} 
+		*/
+		else  if (inequality.matches("(.+)((<\\s*=)|(>\\s*=)|(=))(.+)")) {
+			checkSintassiCompleta(inequality);
+			scanDisequestionCompleta(inequality);
+		}
 		else {
 			throw new ParseException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg1")+" ["+inequality+"]");
 		}
@@ -90,7 +97,7 @@ final class ScanConstraintFromString {
 		String name;
 		double aj=0,b;
 		int index=0;
-		for(int a=0;a<dimension;a++) Ai[a]=null;
+		for(int a=0;a<dimension;a++) Ai[a]=0;
 
 		if (line.matches("\\s*(\\p{Alpha}+\\p{Alnum}*\\s*:)(.+)")) {
 			String[] tokens = line.split(":");
@@ -101,15 +108,12 @@ final class ScanConstraintFromString {
 		} 
 
 		if (line.matches("(.+)>\\s*=(.+)")) {
-			//System.out.println("ge:"+line);
 			internal.setType(TYPE_CONSTR.GE);
 		} 
 		else if (line.matches("(.+)<\\s*=(.+)")) {
-			//System.out.println("le:"+line);
 			internal.setType(TYPE_CONSTR.LE);
 		} 
 		else if (line.contains("=")) {
-			//System.out.println("eq:"+line);
 			internal.setType(TYPE_CONSTR.EQ);
 		} 
 
@@ -117,13 +121,11 @@ final class ScanConstraintFromString {
 		b = Double.parseDouble(disequation[1].trim());
 		internal.setBi(b);
 		line= disequation[0];
-		//System.out.println("line:"+line);
-
+	
 		Pattern pattern2 = Pattern.compile("(([+-]?)\\s*(\\d+\\.?\\d*)?(\\p{Alpha}+\\p{Alnum}*)\\s*)",Pattern.CASE_INSENSITIVE);
 		Matcher matcher2 = pattern2.matcher(line);
 		
 		while (matcher2.find()) {
-			
 			String segno_var=matcher2.group(2); 
 			if(segno_var==null) segno_var="+";
 			
@@ -134,19 +136,14 @@ final class ScanConstraintFromString {
 			String nome_var=matcher2.group(4).toUpperCase(); 
 			index=nomi_var.indexOf(nome_var);
 			if(index==-1 ) throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromString.msg2",nome_var));
-			
-			if(Ai[index]!=null) {
-				aj=aj+Ai[index];
-			}
-			Ai[index]=aj;
-		
+			Ai[index]=Ai[index]+aj;
 			/*
 			for(int a=0;a<=matcher2.groupCount();a++) {
 				System.out.println("ZZZZ>>>>>" + matcher2.group(a) + "<-:"+a); 
 			}
 			*/
 		}
-		for(int a=0;a<Ai.length;a++) if(Ai[a]!=null) internal.setAij(a,Ai[a]);
+		for(int a=0;a<Ai.length;a++) if(Ai[a]!=0) internal.setAij(a,Ai[a]);
 		new_constraints.add(internal);
 	}
 	
@@ -227,7 +224,7 @@ final class ScanConstraintFromString {
 
 		if (line.toLowerCase().contains("int")) {
 			//se ho trovato delle varaibil intere , memorizzo l'informazione nel caso mi trovi in ambito 
-			//non MILP, altrimenti Exceptiuon
+			//non MILP, altrimenti Exception
 			arraysProb.isMilp=true;
 			
 			if(line.matches("\\s*(?i)(int)\\s*(?i)all\\s")) {
@@ -330,6 +327,172 @@ final class ScanConstraintFromString {
 				throw new ParseException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg1")+" ["+resto2+"]");
 			}
 		}
+	}
+	
+	
+	private void checkSintassiCompleta(String fo_string) throws  ParseException {
+		//s.split("[><]?\\s*=");
+
+		//Pattern pattern =       Pattern.compile("\\s*(\\p{Alpha}+\\p{Alnum}*\\s*:)?\\s*[+-]?\\s*(\\d+\\.?\\d*)?(\\p{Alpha}+\\p{Alnum}*)\\s*",Pattern.CASE_INSENSITIVE);
+		Pattern pattern =     Pattern.compile("\\s*(\\p{Alpha}+\\p{Alnum}*\\s*:\\s*)",Pattern.CASE_INSENSITIVE);
+		Matcher matcher_group_var = pattern.matcher(fo_string);
+		int end=0;
+		//MAX o MIN
+		if (matcher_group_var.lookingAt()) {
+			end=matcher_group_var.end();
+		}	
+		String resto2=fo_string.substring(end);
+		resto2=resto2.trim();
+		String[] separation = resto2.split("[><]?\\s*=");
+		Pattern patternSep = Pattern.compile("[><]?\\s*=");
+	    Matcher matcherSep = patternSep.matcher(resto2);
+        int conteggio = 0;
+        // Scansiona la stringa e conta le occorrenze
+        while (matcherSep.find()) {
+        	conteggio++;
+	    }
+    	//System.out.println("conteggio:"+conteggio);
+    	if(conteggio!=1 || separation.length!=2 || separation[0].trim().equals("")) { 
+    		throw new ParseException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg1")+" ["+fo_string+"]");
+		}
+		//deve iniziare per + o - o nienmte, se niente va in errore. 
+    	for(int _i=0;_i<separation.length;_i++) {
+    		separation[_i]=separation[_i].trim();
+    		char inizio=separation[_i].charAt(0);
+	    	 if (inizio == '+' || inizio == '-') {
+	             //System.out.println("Il primo carattere e :"+inizio);
+	         }
+	    	 else {
+	             separation[_i]="+"+separation[_i];
+	             //System.out.println("aggiunto carattere :"+separation[_i]);
+	    	 }
+    	 }
+	
+		
+		Pattern pattern2 = Pattern.compile("[+-]\\s*(\\d+\\.?\\d*)?(\\p{Alpha}+\\p{Alnum}*)\\s*",Pattern.CASE_INSENSITIVE);
+		Pattern pattern3 = Pattern.compile("(([+-])\\s*(\\d+)(\\.?)(\\d*))\\s*",Pattern.CASE_INSENSITIVE);
+		int end2=0;
+		
+		for(String meta:separation)	 {
+			String resto=meta;
+			while(!resto.equals(""))  {
+				Matcher matcher2 = pattern2.matcher(resto);
+				Matcher matcher3 = pattern3.matcher(resto);
+				if (matcher2.lookingAt()) {
+					end2=matcher2.end();
+					resto=resto.substring(end2);
+				}	
+				else if (matcher3.lookingAt()) {
+					end2=matcher3.end();
+					resto=resto.substring(end2);
+				}	
+				else { 
+					throw new ParseException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg1")+" ["+fo_string+"]");
+				}
+			}
+		}	
+	}
+
+	private void scanDisequestionCompleta(String line) throws LPException, ParseException {
+		
+		InternalConstraint internal=new InternalConstraint(dimension);
+		String name;
+		double aj=0,b=0;
+		int index=0;
+		for(int a=0;a<dimension;a++) Ai[a]=0;
+		String line2=line;
+		if (line2.matches("\\s*(\\p{Alpha}+\\p{Alnum}*\\s*:)(.+)")) {
+			String[] tokens = line.split(":");
+			name=tokens[0].trim();
+			//nome del vincolo
+			internal.setName(name);
+			line2=tokens[1];
+		} 
+
+		if (line2.matches("(.+)>\\s*=(.+)")) {
+			//System.out.println("ge:"+line);
+			internal.setType(TYPE_CONSTR.GE);
+		} 
+		else if (line2.matches("(.+)<\\s*=(.+)")) {
+			//System.out.println("le:"+line);
+			internal.setType(TYPE_CONSTR.LE);
+		} 
+		else if (line2.contains("=")) {
+			//System.out.println("eq:"+line);
+			internal.setType(TYPE_CONSTR.EQ);
+		} 
+
+		String[] disequation = line2.split("[><]?\\s*=");
+		
+		//deve iniziare per + o - o nienmte, se niente va in errore. 
+    	for(int _i=0;_i<disequation.length;_i++) {
+    		disequation[_i]=disequation[_i].trim();
+    		char inizio=disequation[_i].charAt(0);
+	    	 if (inizio == '+' || inizio == '-') {
+	             //System.out.println("Il primo carattere e :"+inizio);
+	         }
+	    	 else {
+	    		 disequation[_i]="+"+disequation[_i];
+	             //System.out.println("aggiunto carattere :"+disequation[_i]);
+	    	 }
+    	 }
+		
+    	Pattern pattern2 = Pattern.compile("(([+-])\\s*(\\d+\\.?\\d*)?(\\p{Alpha}+\\p{Alnum}*)\\s*)",Pattern.CASE_INSENSITIVE);
+		Pattern pattern3 = Pattern.compile("([+-]\\s*(\\d+)(\\.?)(\\d*))\\s*",Pattern.CASE_INSENSITIVE);
+		int end2=0;
+		
+		
+		//controllo lunghezz ==2
+		//for(String meta:disequation)	 {
+		for(int _j=0;_j<2;_j++) {
+			String resto=disequation[_j];
+			while(!resto.equals(""))  {
+				Matcher matcher2 = pattern2.matcher(resto);
+				Matcher matcher3 = pattern3.matcher(resto);
+				if (matcher2.lookingAt()) {
+					
+					String segno_var=matcher2.group(2); 
+					if(segno_var==null) segno_var="+";
+					
+					String number_var=matcher2.group(3); 
+					if(number_var==null) number_var="1";
+					aj=Double.parseDouble(segno_var+number_var);
+
+					String nome_var=matcher2.group(4).toUpperCase(); 
+					index=nomi_var.indexOf(nome_var);
+					if(index==-1 ) throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromString.msg2",nome_var));
+					
+					//System.out.println("var:"+nome_var +" value:"+aj);
+					
+					if(_j==0) Ai[index]=aj+Ai[index];
+					else Ai[index]=-aj+Ai[index];
+					
+					//System.out.println("var:"+nome_var +" valueTot:"+Ai[index]);
+					
+					end2=matcher2.end();
+					resto=resto.substring(end2);
+				}	
+				else if (matcher3.lookingAt()) {
+					end2=matcher3.end();
+					resto=resto.substring(end2);
+					//System.out.println("Greuppo b:"+matcher3.group(0));
+					String doppio=matcher3.group(0).replaceAll("\\s", "");
+					double bi= Double.parseDouble(doppio);
+					if(_j==0) b=b-bi;
+					else b=b+bi;
+					
+					//System.out.println("nuevo B:"+b);
+				}	
+				else { 
+					//Da togliere ????????????
+					throw new ParseException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg1")+" ["+line+"]");
+				}
+			}
+		}	
+		
+		internal.setBi(b);
+		for(int a=0;a<Ai.length;a++) if(Ai[a]!=0) internal.setAij(a,Ai[a]);
+		new_constraints.add(internal);
 	}
 	
 	

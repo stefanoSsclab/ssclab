@@ -77,7 +77,7 @@ final class ScanLineFOFromString {
 		return list_nomi_var;
 	}
 
-	private void scanFoFromString(String fo_string)  {
+	private void scanFoFromString(String fo_string) throws ParseException  {
 
 		Pattern pattern = Pattern.compile("\\s*(min|max)\\s*:\\s*(([+-]?)\\s*(\\d+\\.?\\d*)?(\\p{Alpha}+\\p{Alnum}*))\\s*",Pattern.CASE_INSENSITIVE);
 		Matcher matcher = pattern.matcher(fo_string);
@@ -95,6 +95,11 @@ final class ScanLineFOFromString {
 
 			String nome_prima_var=matcher.group(5).toUpperCase(); 
 			//non verifico nulla, in quanto e' la prima variabile inserita 
+			
+			if(nome_prima_var.equals("BIN") || nome_prima_var.equals("INT") ||  nome_prima_var.equals("SEC") || 
+					nome_prima_var.equals("TYPE") || nome_prima_var.equals("RHS")  || nome_prima_var.equals("ALL") 	) 
+				throw new ParseException(RB.getString("it.ssc.pl.milp.ScanLineFOFromString.msg4")+" ["+fo_string+"]");
+			
 			list_nomi_var.add(nome_prima_var);
 			/*
 			 for(int a=0;a<=matcher.groupCount();a++) {
@@ -120,6 +125,12 @@ final class ScanLineFOFromString {
 			
 			String nome_var=matcher2.group(4).toUpperCase(); 
 			//if(list_nomi_var.contains(nome_var)) throw new LPException(RB.format("it.ssc.pl.milp.ScanLineFOFromString.msg2",nome_var));
+			
+			if(nome_var.equals("BIN") || nome_var.equals("INT") ||  nome_var.equals("SEC") || 
+					nome_var.equals("TYPE") || nome_var.equals("RHS") || nome_var.equals("ALL") 	) 
+				throw new ParseException(RB.getString("it.ssc.pl.milp.ScanLineFOFromString.msg4")+" ["+fo_string+"]");
+			
+			
 			if(list_nomi_var.contains(nome_var)) {
 				int index=list_nomi_var.indexOf(nome_var);
 				cj=cj+list_cj_var.get(index);
@@ -150,8 +161,8 @@ final class ScanLineFOFromString {
 		else { 
 			throw new ParseException(RB.getString("it.ssc.pl.milp.ScanLineFOFromString.msg1")+" ["+fo_string+"]");
 		}
-		String resto=fo_string.substring(end);
-		String resto2=resto.trim();
+		String resto2=fo_string.substring(end);
+		resto2=resto2.trim();
 		Pattern pattern2 = Pattern.compile("[+-]\\s*(\\d+\\.?\\d*)?(\\p{Alpha}+\\p{Alnum}*)\\s*",Pattern.CASE_INSENSITIVE);
 		
 		int end2=0;
