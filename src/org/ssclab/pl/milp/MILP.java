@@ -3,6 +3,9 @@ package org.ssclab.pl.milp;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.StringReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.concurrent.CyclicBarrier;
 import java.util.logging.Level;
@@ -18,6 +21,10 @@ import org.ssclab.pl.milp.util.MILPThreadsNumber;
 import org.ssclab.ref.Input;
 import org.ssclab.step.parallel.Task;
 import org.ssclab.pl.milp.simplex.SimplexException;
+import org.ssclab.pl.milp.scantext.CheckSintaxText;
+import org.ssclab.pl.milp.scantext.ScanConstraintFromLine;
+import org.ssclab.pl.milp.scantext.ScanFoFromLine;
+import org.ssclab.pl.milp.scantext.ScanVarFromText;
 
 
 
@@ -101,6 +108,52 @@ public final class MILP implements FormatTypeInput {
 	}
 	*/
 	
+
+	/**
+	 * Constructor of a MILP object for solving problems formulated in inequality format contained in
+	 * an external file.
+	 * 
+	 * @param text String containing the problem in text format
+	 * @throws Exception if the problem is not correctly formulated
+	 */
+	
+	public MILP(String pl_text) throws Exception  { 
+		
+		BufferedReader br=null;
+		ScanConstraintFromLine scan_const;
+		ArrayList<String> list_var;
+		LinearObjectiveFunction fo;
+		try {
+			
+			//File file =new File(path);
+			br= new BufferedReader(new StringReader(pl_text));
+			//br = new BufferedReader(new FileReader(file));
+		    String line_fo=new CheckSintaxText(br).getLineFO();
+		    br.close();br=null;
+		    br= new BufferedReader(new StringReader(pl_text));
+			list_var=new ScanVarFromText(br).getListNomiVar();
+			br.close();br=null;
+			br= new BufferedReader(new StringReader(pl_text));
+			//for(String namev:list_var) System.out.println("name_ord :"+namev);
+			ScanFoFromLine fo_from_string=new ScanFoFromLine(line_fo,list_var);
+			fo=fo_from_string.getFOFunction();
+			scan_const=new ScanConstraintFromLine(br,list_var);
+		}
+		finally {
+			if (br != null ) br.close();
+		}
+		
+		ArrayList<InternalConstraint> list_constraints=scan_const.getConstraints();
+		this.milp_initiale = new MilpManager(fo,list_constraints,list_var,scan_const.getArraysProb(),this);
+		setAllEpsilon();
+	}
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	/**
@@ -112,12 +165,15 @@ public final class MILP implements FormatTypeInput {
 	 */
 	public MILP(ArrayList<String> inequality) throws Exception  { 
 		if(inequality==null || inequality.isEmpty()) throw new LPException(RB.getString("it.ssc.pl.milp.LP.msg12"));
-		ScanLineFOFromString fo_fromm_string=new ScanLineFOFromString(inequality);
-		LinearObjectiveFunction fo=fo_fromm_string.getFOFunction();
-		ArrayList<String> nomi_var=fo_fromm_string.getListNomiVar();
-		ScanConstraintFromString scan_const=new ScanConstraintFromString(inequality,nomi_var);
+		
+	    String line_fo=new CheckSintaxText(inequality).getLineFO();
+		ArrayList<String> list_var=new ScanVarFromText(inequality).getListNomiVar();
+		for(String namev:list_var) System.out.println("name_ord :"+namev);
+		ScanFoFromLine fo_from_string=new ScanFoFromLine(line_fo,list_var);
+		LinearObjectiveFunction fo=fo_from_string.getFOFunction();
+		ScanConstraintFromLine scan_const=new ScanConstraintFromLine(inequality,list_var);
 		ArrayList<InternalConstraint> list_constraints=scan_const.getConstraints();
-		this.milp_initiale = new MilpManager(fo,list_constraints,nomi_var,scan_const.getArraysProb(),this);
+		this.milp_initiale = new MilpManager(fo,list_constraints,list_var,scan_const.getArraysProb(),this);
 		setAllEpsilon();
 	}
 	
@@ -130,26 +186,34 @@ public final class MILP implements FormatTypeInput {
 	 * @throws Exception if the problem is not correctly formulated
 	 */
 	
-	public MILP(String path) throws Exception  { 
+	public MILP(Path path) throws Exception  { 
 		
 		BufferedReader br=null;
-		ScanConstraintFromString scan_const;
-		ArrayList<String> nomi_var;
+		ScanConstraintFromLine scan_const;
+		ArrayList<String> list_var;
 		LinearObjectiveFunction fo;
 		try {
-			File file =new File(path);
-			br = new BufferedReader(new FileReader(file));
-			ScanLineFOFromString fo_fromm_string=new ScanLineFOFromString(br);
-			fo=fo_fromm_string.getFOFunction();
-			nomi_var=fo_fromm_string.getListNomiVar();
-			scan_const=new ScanConstraintFromString(br,nomi_var);
+			
+			//File file =new File(path);
+			br=Files.newBufferedReader(path);
+			//br = new BufferedReader(new FileReader(file));
+		    String line_fo=new CheckSintaxText(br).getLineFO();
+		    br.close();br=null;
+		    br=Files.newBufferedReader(path);
+			list_var=new ScanVarFromText(br).getListNomiVar();
+			br.close();br=null;
+			br=Files.newBufferedReader(path);
+			//for(String namev:list_var) System.out.println("name_ord :"+namev);
+			ScanFoFromLine fo_from_string=new ScanFoFromLine(line_fo,list_var);
+			fo=fo_from_string.getFOFunction();
+			scan_const=new ScanConstraintFromLine(br,list_var);
 		}
 		finally {
-			if (br != null) br.close();
+			if (br != null ) br.close();
 		}
 		
 		ArrayList<InternalConstraint> list_constraints=scan_const.getConstraints();
-		this.milp_initiale = new MilpManager(fo,list_constraints,nomi_var,scan_const.getArraysProb(),this);
+		this.milp_initiale = new MilpManager(fo,list_constraints,list_var,scan_const.getArraysProb(),this);
 		setAllEpsilon();
 	}
 	

@@ -157,7 +157,7 @@ public class ParserInformatString extends GenericParser {
 			Matcher matcher_azioni = pattern_azioni.matcher(input_step);
 			
 			//pattern per i gruppi di variabili 
-			Pattern pattern_group_var = Pattern.compile("((\\p{Alpha}+)(\\d+)\\s*\\-\\s*(\\p{Alpha}+)(\\d+)\\s*):(.+)"); 
+			Pattern pattern_group_var = Pattern.compile("((\\p{Alpha}+\\w*)(\\d+)\\s*\\-\\s*(\\p{Alpha}+\\w*)(\\d+)\\s*):(.+)"); 
 			Matcher matcher_group_var = pattern_group_var.matcher(input_step);
 
 			if (matcher_dich_var.matches()) {

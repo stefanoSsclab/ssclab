@@ -1,14 +1,14 @@
 package org.ssclab.pl.milp;
 
-class ArrayProblem {
-	 Double array_upper[];
-	 Double array_lower[];
-	 double array_sec[];
-	 double array_bin[];
-	 double array_int[];
-	 boolean isMilp;
+public class ArrayProblem {
+	public Double array_upper[];
+	public Double array_lower[];
+	public double array_sec[];
+	public double array_bin[];
+	public double array_int[];
+	public boolean isMilp;
 	
-	ArrayProblem(int dim) {
+	public ArrayProblem(int dim) {
 		 array_upper=new Double[dim];
 		 array_lower=new Double[dim];
 		 array_sec=new double[dim];

@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 
 import org.ssclab.log.SscLogger;
 
-final class InternalConstraint implements Cloneable,Serializable {
+public final class InternalConstraint implements Cloneable,Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger=SscLogger.getLogger();

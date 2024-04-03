@@ -6,6 +6,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.StringReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,6 +25,10 @@ import org.ssclab.pl.milp.util.A_Matrix;
 import org.ssclab.pl.milp.util.LPThreadsNumber;
 import org.ssclab.ref.Input;
 import org.ssclab.pl.milp.util.VectorsPL;
+import org.ssclab.pl.milp.scantext.CheckSintaxText;
+import org.ssclab.pl.milp.scantext.ScanConstraintFromLine;
+import org.ssclab.pl.milp.scantext.ScanFoFromLine;
+import org.ssclab.pl.milp.scantext.ScanVarFromText;
 import org.ssclab.pl.milp.simplex.Simplex;
 import org.ssclab.pl.milp.simplex.SimplexInterface;
 import org.ssclab.pl.milp.simplex.SimplexException;
@@ -64,21 +71,105 @@ public final class LP implements FormatTypeInput {
 		logger.log(Level.INFO,  " ");
 	}
 	
+	
+	
+	
+	/**
+	* 
+	*@param text The text where the file containing the LP problem formulated with the text 
+	*format is located
+	*@throws Exception An exception is thrown if the problem is not correctly formulated or 
+	*if the file does not exist
+	*/
+	public LP(String pl_text) throws Exception  { 
+		BufferedReader br=null;
+		ScanConstraintFromLine scan_const=null;
+		LinearObjectiveFunction fo=null;
+		ArrayList<String> list_var=null;
+		this.session=Context.createNewSession();
+		try {
+			//System.out.println("Da file");
+			//File file =new File(path);
+			br= new BufferedReader(new StringReader(pl_text));
+			String line_fo=new CheckSintaxText(br).getLineFO();
+			br.close(); br=null;
+			br= new BufferedReader(new StringReader(pl_text));
+			list_var=new ScanVarFromText(br).getListNomiVar();
+			br.close();br=null;
+			br= new BufferedReader(new StringReader(pl_text));
+			//for(String namev:list_var) System.out.println("name_ord :"+namev);
+			ScanFoFromLine fo_from_string=new ScanFoFromLine(line_fo,list_var);
+			fo=fo_from_string.getFOFunction();
+			scan_const=new ScanConstraintFromLine(br,list_var);
+		}
+		finally {
+			if (br != null) br.close();
+		}
+		
+		ArrayList<InternalConstraint> list_constraints=scan_const.getConstraints();
+		PLProblem pl_original=CreatePLProblem.create(fo,list_constraints,list_var,scan_const.getArraysProb(),isMilp);
+		
+		//memorizza nella work il pl_original come oggetto prima di essere standardizzato. 
+		//pl original , non e' memorizzato in LP , una volta terminato questo metodo, 
+		//ogni riferimento e' perso. 
+		//Questo oggetto non contiene i vincoli aggiuntivi degli upper/lower e le slacks, 
+		//ne nessuna standardizzazione  
+		persistencePl=new PersistensePLProblem(pl_original,session.getFactoryLibraries().getLibraryWork().getAbsolutePath());
+		
+		//createStandartProblem(pl_original);
+		String path_work=session.getFactoryLibraries().getLibraryWork().getAbsolutePath();
+		
+		/*
+		 * Nella fase di standardizzazione : 
+		 * 
+		 * a) Cambio segno alla funzione obiettivo se essa e MIN - > MAX e Cj = -Cj
+		 * b) Essettuo traslazione del vincolo esistente  aggiornando bi, se esiste 
+		 *    una o piu' variabili con lower != 0 o da -inf.
+		 * c) Aggiungo nuovo vincolo nel caso esista un lower (Xj <= upper - appo_lower )  
+		 * d) Rende tutti i termini noti b positivi , cambiando segno a tutta la riga
+		 * 
+		 * e) Calcola il nuovo valore new_dimension che sara' poi la dimensione delle colonne di A 
+		 *    (la nuova matrice standard)
+		 * f) Crea la nuova matrice A aggiungendo anche le variabili libere (x=y-z) e le slacks, 
+		 *    e i vettori C e B
+		 */
+		
+		vectors_pl=pl_original.standardize(); 
+		
+		//memorizza su disco la matrice A
+		amatrix=new A_DataMatrix(vectors_pl.A,path_work);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	/**
 	*
-	* @param inequality An ArrayList (of String objects) containing the problem formulation in the 
-	* form of inequalities
+	* @param text An ArrayList (of String objects) containing the problem formulation in the 
+	* form of text
 	* @throws Exception An exception is thrown if the problem is not correctly formulated
 	*/
-	public LP(ArrayList<String> inequality) throws Exception  { 
-		if(inequality==null || inequality.isEmpty()) throw new LPException(RB.getString("it.ssc.pl.milp.LP.msg12"));
+	public LP(ArrayList<String> text) throws Exception  { 
+		if(text==null || text.isEmpty()) throw new LPException(RB.getString("it.ssc.pl.milp.LP.msg12"));
 		this.session=Context.createNewSession();
-		ScanLineFOFromString fo_fromm_string=new ScanLineFOFromString(inequality);
-		LinearObjectiveFunction fo=fo_fromm_string.getFOFunction();
-		ArrayList<String> nomi_var=fo_fromm_string.getListNomiVar();
-		ScanConstraintFromString scan_const=new ScanConstraintFromString(inequality,nomi_var);
+		//verifica che la sintassi sia giusta del formato testo
+		//e ritorna la funzione obiettivo come stringa
+		String line_fo=new CheckSintaxText(text).getLineFO();
+		
+		ArrayList<String> list_var=new ScanVarFromText(text).getListNomiVar();
+		//for(String namev:list_var) System.out.println("name_ord :"+namev);
+		ScanFoFromLine fo_from_string=new ScanFoFromLine(line_fo,list_var);
+		LinearObjectiveFunction fo=fo_from_string.getFOFunction();
+		ScanConstraintFromLine scan_const=new ScanConstraintFromLine(text,list_var);
 		ArrayList<InternalConstraint> list_constraints=scan_const.getConstraints();
-		PLProblem pl_original=CreatePLProblem.create(fo,list_constraints,nomi_var,scan_const.getArraysProb(),isMilp);
+		PLProblem pl_original=CreatePLProblem.create(fo,list_constraints,list_var,scan_const.getArraysProb(),isMilp);
 		
 		//memorizza nella work il pl_original come oggetto prima di essere standardizzato. 
 		//pl original , non e' memorizzato in LP , una volta terminato questo metodo, 
@@ -115,31 +206,38 @@ public final class LP implements FormatTypeInput {
 	
 	/**
 	* 
-	*@param path The path where the file containing the LP problem formulated with the inequality 
+	*@param Path The path where the file containing the LP problem formulated with the text 
 	*format is located
 	*@throws Exception An exception is thrown if the problem is not correctly formulated or 
 	*if the file does not exist
 	*/
-	public LP(String path) throws Exception  { 
+	public LP(Path path) throws Exception  { 
 		BufferedReader br=null;
-		ScanConstraintFromString scan_const;
-		ArrayList<String> nomi_var;
-		LinearObjectiveFunction fo;
+		ScanConstraintFromLine scan_const=null;
+		LinearObjectiveFunction fo=null;
+		ArrayList<String> list_var=null;
 		this.session=Context.createNewSession();
 		try {
-			File file =new File(path);
-			br = new BufferedReader(new FileReader(file));
-			ScanLineFOFromString fo_fromm_string=new ScanLineFOFromString(br);
-			fo=fo_fromm_string.getFOFunction();
-			nomi_var=fo_fromm_string.getListNomiVar();
-			scan_const=new ScanConstraintFromString(br,nomi_var);
+			//System.out.println("Da file");
+			//File file =new File(path);
+			br=Files.newBufferedReader(path);
+			String line_fo=new CheckSintaxText(br).getLineFO();
+			br.close(); br=null;
+			br=Files.newBufferedReader(path);
+			list_var=new ScanVarFromText(br).getListNomiVar();
+			br.close();br=null;
+			br=Files.newBufferedReader(path);
+			//for(String namev:list_var) System.out.println("name_ord :"+namev);
+			ScanFoFromLine fo_from_string=new ScanFoFromLine(line_fo,list_var);
+			fo=fo_from_string.getFOFunction();
+			scan_const=new ScanConstraintFromLine(br,list_var);
 		}
 		finally {
 			if (br != null) br.close();
 		}
 		
 		ArrayList<InternalConstraint> list_constraints=scan_const.getConstraints();
-		PLProblem pl_original=CreatePLProblem.create(fo,list_constraints,nomi_var,scan_const.getArraysProb(),isMilp);
+		PLProblem pl_original=CreatePLProblem.create(fo,list_constraints,list_var,scan_const.getArraysProb(),isMilp);
 		
 		//memorizza nella work il pl_original come oggetto prima di essere standardizzato. 
 		//pl original , non e' memorizzato in LP , una volta terminato questo metodo, 
