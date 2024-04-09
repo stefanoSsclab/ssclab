@@ -66,6 +66,8 @@ final class Phase1 extends Phase {
 					}
 					if(sum_Aij==1.0) { 
 						var_canonical[row]=new Tuple2<Integer,Boolean>(j,true);
+						//si potrebbe metttere un continue !!!
+						//continue;
 					}
 				}
 			}
@@ -262,7 +264,9 @@ final class Phase1 extends Phase {
 	    
 	    private boolean ifAllCoeffZeroAux(int index) {
 	 	   for (int j = 0; j < n ; j++) {
+	 		   //System.out.println("=>"+Math.abs(TBEX[index][j]));
 	 		   if( Math.abs(TBEX[index][j]) > epsilon  ) {
+	 			  System.out.println("cazzo=>"+Math.abs(TBEX[index][j]));
 	 			  logger.log(SscLevel.WARNING,"Esiste alla fine di Fase 1, una variabile artificiale in base che non è stata eliminata !");
 	 			  return false;
 	 		   }

@@ -186,8 +186,8 @@ public class ScanConstraintFromLine {
 		else if (line.toLowerCase().contains("bin")) {
 			arraysProb.isMilp=true;
 			
-			if(line.matches("\\s*(?i)(bin)\\s*(?i)all\\s")) {
-				for(int j=0;j<arraysProb.array_int.length;j++) {
+			if(line.matches("\\s*(?i)(bin)\\s*(?i)(all)\\s*")) {
+				for(int j=0;j<arraysProb.array_bin.length;j++) {
 					arraysProb.array_bin[j]=1;
 				}
 				//System.out.println("ALL bin");
@@ -206,8 +206,8 @@ public class ScanConstraintFromLine {
 		} 
 		else if (line.toLowerCase().contains("sec")) {
 			arraysProb.isMilp=true;
-			if(line.matches("\\s*(?i)(sec)\\s*(?i)all\\s")) {
-				for(int j=0;j<arraysProb.array_int.length;j++) {
+			if(line.matches("\\s*(?i)(sec)\\s*(?i)(all)\\s*")) {
+				for(int j=0;j<arraysProb.array_sec.length;j++) {
 					arraysProb.array_sec[j]=1;
 				}
 				//System.out.println("ALL sec");
