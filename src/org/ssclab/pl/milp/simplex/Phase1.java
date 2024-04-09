@@ -266,7 +266,7 @@ final class Phase1 extends Phase {
 	 	   for (int j = 0; j < n ; j++) {
 	 		   //System.out.println("=>"+Math.abs(TBEX[index][j]));
 	 		   if( Math.abs(TBEX[index][j]) > epsilon  ) {
-	 			  System.out.println("cazzo=>"+Math.abs(TBEX[index][j]));
+	 			  //System.out.println("azzo=>"+Math.abs(TBEX[index][j]));
 	 			  logger.log(SscLevel.WARNING,"Esiste alla fine di Fase 1, una variabile artificiale in base che non è stata eliminata !");
 	 			  return false;
 	 		   }
