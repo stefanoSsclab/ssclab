@@ -2,6 +2,7 @@ package org.ssclab.pl.milp.simplex;
 
 
 
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import org.ssclab.i18n.RB;
@@ -37,8 +38,8 @@ final class Phase1 extends Phase {
 		Tuple2<Integer,double[][]> ctr_phase1=createTablePhase1(A.getMatrix(),B.getVector());
 		this.n_aux=ctr_phase1._0;
 		this.TBEX=ctr_phase1._1;
-		this._N=A.getNcolumn() + n_aux; //numero ausiliarie n_aux + n
-		this._M=A.getNrow();
+		this._N=this.n + this.n_aux; //numero ausiliarie n_aux + n
+		this._M=this.m;
 	}
 	
 	public void setMilp(boolean isMilp) {
@@ -154,7 +155,9 @@ final class Phase1 extends Phase {
 			*/
 			
 			if(isBaseDegenerate()) var_incoming = test_var_incoming_bland();
-			else var_incoming = test_var_incoming();
+			//MODIFICA IL 10/04/2024 PASSO TRUE E N_AUX PER NON CONSIDERARE LE 
+			//VARIABILI ARTIFICIALI COME CANDIDATE NEL RIENTRARE IN BASE. 
+			else var_incoming = test_var_incoming(true,this.n_aux);
 			
 			if (var_incoming == -1) {	
 				solution= SolutionType.OPTIMUM; 
@@ -194,31 +197,37 @@ final class Phase1 extends Phase {
 	}
 	
 
- 
-
- //a fronte dell'indice della riga i dove la variabile ausiliaria e' in base, vedo se c'è qualche Aij =! 0 
- private int existVarOrigOutBase(int index_aux) {
-	   for (int j = 0; j < n ; j++) {
-		   if ( Math.abs(TBEX[index_aux][j]) > epsilon )  {
-			   return j;
+	 
+	
+	 //a fronte dell'indice della riga i dove la variabile ausiliaria e' in base, vedo se c'è qualche Aij =! 0 
+	 private int existVarOrigOutBase(int index_aux) {
+		   for (int j = 0; j < n ; j++) {
+			   if ( Math.abs(TBEX[index_aux][j]) > epsilon )  {
+				   return j;
+			   }
 		   }
-	   }
-	   return -1;
- }
- 
- //se ce in base una variabile con indice  >=n e' ausiliaria
- private int existAuxBase() {
-	   for (int i = 0; i < basis.length; i++) {
-			if(basis[i] >= n) return i ;
-		}
-	   return -1;
- }
+		   return -1;
+	 }
+	 
+	 //se ce in base una variabile con indice  >=n e' ausiliaria
+	 private int existAuxBaseCorr(int start) {
+		 //System.out.println("riparto da:"+(start));
+		   for (int i = start; i < basis.length; i++) {
+				if(basis[i] >= n) {
+					//System.out.println("trovata al rigo:"+i +" var:"+basis[i]);
+					return i ;
+				}
+			}
+		   return -1;
+	 }
  
 	public Matrix pulish() throws MatrixException { 
 		//se c'e' una variabile ausiliaria in base (naturalmente degenere) si fa uscire 
 		//se quelle presenti hanno zero sulle variabili reali.  Si tolgono le righe 
 		// si cancellano le colonne relative alle ausiliaria  
 		
+		
+		//System.out.println("dimensione n:"+this.n +" aux:"+this.n_aux);
 		Pulish pulish=new Pulish();
 		pulish.exitAuxFromBase();
 		double[][] table_pulish=pulish.deleteRowAux(TBEX);
@@ -241,17 +250,41 @@ final class Phase1 extends Phase {
 
  private final class Pulish {
 	   
-	   double[][] deleteRowAux(double[][] table_pulish) {
-			int index_aux_out = 0;
-			while (((index_aux_out = existAuxBase()) != -1) && ifAllCoeffZeroAux(index_aux_out)) {
-				//System.out.println("delete row");
+	   double[][] deleteRowAux_old(double[][] table_pulish) {
+			int index_aux_out = -1;
+			while (((index_aux_out = existAuxBaseCorr(index_aux_out+1)) != -1) && ifAllCoeffZeroAuxCaz(index_aux_out)) {
+				System.out.println("delete row:"+index_aux_out);
 				table_pulish=deleteSingleRowAux(index_aux_out,table_pulish);
 				updateBase(index_aux_out);
 			}
 		    return table_pulish;
 	   }
 	   
-	    void updateBase(int row_canc ) {
+	   double[][] deleteRowAux(double[][] table_pulish) {
+			int index_aux_out = -1;
+			ArrayList<Integer> lista_del=new ArrayList<Integer>();
+			while (((index_aux_out = existAuxBaseCorr(index_aux_out+1)) != -1) && ifAllCoeffZeroAuxCaz(index_aux_out)) {
+				//System.out.println("delete row_new:"+index_aux_out);
+				lista_del.add(index_aux_out);
+			}
+			
+			int new_dimension=table_pulish.length - lista_del.size();
+			double[][] new_table=new double[new_dimension][] ;
+			int new_basis[]=new int[basis.length - lista_del.size()];
+			int index=0;
+			for(int i=0;i<table_pulish.length;i++) {
+				if(!lista_del.contains(i))  { 
+					new_table[index]=table_pulish[i];
+					if(i!=table_pulish.length-1) new_basis[index]=basis[i] ;
+					index++;
+				}
+				//else System.out.println("saltato:"+i);
+			}
+			basis=new_basis;
+		    return new_table;
+	   }
+	   
+	   void updateBase(int row_canc ) {
 		   int new_basis[]=new int[basis.length-1];
 		   int index_row = 0;
 		   for (int i = 0; i < basis.length; i++) {
@@ -262,12 +295,10 @@ final class Phase1 extends Phase {
 		   basis=new_basis;
 	   }
 	    
-	    private boolean ifAllCoeffZeroAux(int index) {
+	    private boolean ifAllCoeffZeroAuxCaz(int index) {
 	 	   for (int j = 0; j < n ; j++) {
-	 		   //System.out.println("=>"+Math.abs(TBEX[index][j]));
 	 		   if( Math.abs(TBEX[index][j]) > epsilon  ) {
-	 			  //System.out.println("azzo=>"+Math.abs(TBEX[index][j]));
-	 			  logger.log(SscLevel.WARNING,"Esiste alla fine di Fase 1, una variabile artificiale in base che non è stata eliminata !");
+	 			  logger.log(SscLevel.WARNING,"Esiste alla fine di Fase 1, una variabile artificiale in base che non è stata eliminata ! : ");
 	 			  return false;
 	 		   }
 	 	   }
@@ -276,16 +307,26 @@ final class Phase1 extends Phase {
 	    
 	    //non tocca numero righe o colonne
 	    private void exitAuxFromBase() {
-	 	   int index_aux_out = 0, index_orig_in = 0;
+	 	 
 	 	   //se esiste una variabile ausiliaria in base e se sulla riga di questa c'è un Aij =! 0 , faccio pivoting per farla uscire
 	 	   //finche non escono tutte. 
-	 	   while (((index_aux_out = existAuxBase()) != -1) && ((index_orig_in = existVarOrigOutBase(index_aux_out)) != -1)) {
-	 		   //printTable2();
-	 		   pivoting(index_aux_out, index_orig_in);
-	 		   setBases(index_aux_out,index_orig_in);
-	 		   Phase1.this.iteration++;
-	 	   }
-	    }
+	    	int index_aux_out = -1, index_orig_in = 0;
+	    	while ((index_aux_out = existAuxBaseCorr(index_aux_out+1)) != -1) {
+	    		//verifico se esiste qualche Aij !=0 (anche negativo) sul rigo della aux e 
+	    		//relativo ad una variabile legittima
+	    		if ((index_orig_in = existVarOrigOutBase(index_aux_out)) != -1) {
+	    			//printTable2();
+			 		//System.out.println("PULIZIA: riga aux uscente:"+index_aux_out);
+			 		//System.out.println("PULIZIA: indice var entrante:"+index_orig_in);
+			 		   
+			 		pivoting(index_aux_out, index_orig_in);
+			 		setBases(index_aux_out,index_orig_in);
+			 		Phase1.this.iteration++;
+			 		index_aux_out = -1;
+	    		}   
+		 		//else  System.out.println("No pulizia,tutte zero:"+index_aux_out);
+	    	}
+	 	}
 	    
 	    /*
 	     * versione da testare , con annullamento riga

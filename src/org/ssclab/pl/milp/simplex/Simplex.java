@@ -103,6 +103,7 @@ import org.ssclab.pl.milp.SolutionType;
 			throw new SimplexException("Attenzione, la regione ammissibile del problema e' vuota. Non esistono soluzioni !");
 		}
 		
+		//System.out.println("INIZIO PULIZIA");
 		Matrix A_phase_one=phase_one.pulish(); //resettta TBEX=null e crea la nuova matrice per fase 2
 		this.num_iteration_phase_one=phase_one.getNumIteration(); //N. iterazioni aggiornate fase 1 dopo pulizia (eventuali pivoting)
 		

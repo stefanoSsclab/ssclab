@@ -634,6 +634,8 @@ public final class LP implements FormatTypeInput {
 		logger.log(SscLevel.INFO,RB.format("it.ssc.pl.milp.LP.msg11")+threadsNumber.getThread());
 		logger.log(Level.INFO,  "---------------------------------------------");
 		
+		//l'oggetto simplex crea la tabella estesa per fase I da A e poi la svuoto subito dopo 
+		//aver creato la tabella
 		SimplexInterface simplex =new Simplex(vectors_pl.A, vectors_pl.B, vectors_pl.C,epsilon,cepsilon);
 		simplex.setNumIterationMax(num_max_iteration);
 		simplex.setThreadsNumber(threadsNumber) ;

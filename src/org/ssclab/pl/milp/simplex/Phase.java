@@ -43,7 +43,7 @@ abstract class Phase {
 	}
 	
 	//usato dalla fase 1
-	protected Phase(EPSILON epsilon,EPSILON cepsilon) {
+	protected Phase(EPSILON epsilon,EPSILON cepsilon) { 
 		this.cepsilon=cepsilon.getValue();
 		this.epsilon=epsilon.getValue();
 	}
@@ -294,12 +294,19 @@ abstract class Phase {
 
 	//Test variabile entrante (senza Bland)
 	//Sulla riga dei costi io ho espresso, a differenza di Simeone, i coefficienti con il segno originale. 
-	//Mentre su Simeone sono cambiati di segno.  Quindi io faccio test che se sono <= 0 Allora : Soluzione ottina. 
-	protected final int test_var_incoming() {
+	//Mentre su Simeone sono cambiati di segno.  Quindi io faccio test che se sono <= 0 Allora : Soluzione ottina.
+	
+	//10/04/2024 Provo ad far entrare in base solo variabili non artificiali, quelle uscite di artificiali 
+	//10/04/2024cerco di lasciarel fuori
+	protected final int test_var_incoming(boolean isPhase1, int n_aux) {
 		double TBEX_M[]=TBEX[_M];
 		double value_cj_var_incoming=0.0;
 		int index_var_incoming = 0;
-		for (int j = 0; j < _N; j++) {
+		int _N_Corretto=_N;
+		//System.out.println("ORIGINALE:"+_N_Corretto);
+		if( isPhase1) _N_Corretto=_N - n_aux;
+		//System.out.println("corrretto:"+_N_Corretto);
+		for (int j = 0; j < _N_Corretto; j++) {
 			//controllo se c'e' un qualche coefficente sulla f.o. maggiore di ZERO
 			//naturalmente relativo alle variabili non basiche. E prendo quello con valore più alto. 
 			if (TBEX_M[ j]> (value_cj_var_incoming) ) { 
@@ -325,6 +332,7 @@ abstract class Phase {
 			//10/08/2018
 			//Uso epsilon in quanto valori infinitesimali dei coefficienti danno incrementi infinitesimali 
 			//della fuinzione obiettivo. => Quindi uso epsilon. ?????????
+			//System.out.println("bland");
 			if (TBEX_M[j] > epsilon) {           
 				return j;
 			}

@@ -51,7 +51,8 @@ import org.ssclab.pl.milp.SolutionType;
 			*/
 			
 			if(isBaseDegenerate())  var_incoming = test_var_incoming_bland();
-			else var_incoming = test_var_incoming();
+			//passo false perche non e' la fase 1
+			else var_incoming = test_var_incoming(false,0);
 			
 			if (var_incoming == -1) {	
 				return SolutionType.OPTIMUM; 

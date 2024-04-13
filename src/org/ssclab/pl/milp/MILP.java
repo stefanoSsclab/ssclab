@@ -168,7 +168,7 @@ public final class MILP implements FormatTypeInput {
 		
 	    String line_fo=new CheckSintaxText(inequality).getLineFO();
 		ArrayList<String> list_var=new ScanVarFromText(inequality).getListNomiVar();
-		for(String namev:list_var) System.out.println("name_ord :"+namev);
+		//for(String namev:list_var) System.out.println("name_ord :"+namev);
 		ScanFoFromLine fo_from_string=new ScanFoFromLine(line_fo,list_var);
 		LinearObjectiveFunction fo=fo_from_string.getFOFunction();
 		ScanConstraintFromLine scan_const=new ScanConstraintFromLine(inequality,list_var);
