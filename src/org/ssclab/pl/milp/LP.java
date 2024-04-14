@@ -59,6 +59,8 @@ public final class LP implements FormatTypeInput {
 	private PersistensePLProblem persistencePl;
 	private LPThreadsNumber threadsNumber=LPThreadsNumber.N_1;
 	private boolean isStopPhase2=false;
+	
+	
 	private EPSILON epsilon=EPSILON._1E_M10;
 	private EPSILON cepsilon=EPSILON._1E_M8;
 	

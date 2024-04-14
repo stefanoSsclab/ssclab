@@ -3,9 +3,7 @@ package org.ssclab.pl.milp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeSet;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import org.ssclab.datasource.DataSource;
 import org.ssclab.datasource.DataSourceException;
 import org.ssclab.i18n.RB;
@@ -17,11 +15,9 @@ import static org.ssclab.pl.milp.InternalConstraint.TYPE_CONSTR;
 	 
 	 private static final Logger logger=SscLogger.getLogger();
 	 
-	 
 	 protected static PLProblem create(LinearObjectiveFunction f,
 			 ArrayList<InternalConstraint> constraints, ArrayList<String> nomi_var,ArrayProblem arrayProb,
 			 boolean isMilp) throws Exception  {
-
 
 		 //checkDimensionProblem(f,constraints);
 

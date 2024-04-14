@@ -1,8 +1,6 @@
 package org.ssclab.pl.milp;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -42,73 +40,25 @@ public final class MILP implements FormatTypeInput {
 	
 	public static double NaN=Double.NaN;
 	
-	private static final EPSILON epsilon=EPSILON._1E_M10;
-	private static final EPSILON iepsilon=EPSILON._1E_M10; 
-	private static final EPSILON cepsilon=EPSILON._1E_M8;
+	private Epsilons epsilons=new Epsilons();
 	private static final Logger logger=SscLogger.getLogger(); 
 	
 	private MilpManager milp_initiale;
-	private LB lb;
+	private LB lb=new LB();;
 	private int num_max_simplex  =1_000_000;
 	private int num_max_iteration=10_000_000;
 	private boolean isJustTakeFeasibleSolution;
 	private MILPThreadsNumber threadNumber=MILPThreadsNumber.N_1;
 	//private double stepDisadvantage=0.0;
-	
 	protected PLProblem father_pl_original_zero;
-	
 
 	{
-		lb=new LB();
 		logger.log(Level.INFO,  "##############################################");
 		logger.log(Level.INFO,  RB.getString("it.ssc.context.Session_Impl.msg0"));
 		logger.log(Level.INFO,  "##############################################");
 	}
 	
-	/*
-	 * Costruttore di un oggetto MILP per la risoluzione di problemi formulati in formato a disequazioni contenute in stringhe. 
-	 * In questo formato le variabili devono necessariamente chiamarsi X<sub>j</sub>, con l'indice j che parte da 1. Il terzo parametro 
-	 * &egrave; la lista dei vincoli che non sono di tipo EQ,LE,GE, ma UPPER e LOWER e vanno rappresentati come oggetti Constraint. 
-	 * 
-	 * @param inequality Lista dei vincoli di tipo EQ, GE, LE sotto forma di disequazioni contenute in stringhe
-	 * @param constraints Lista dei vincoli di tipo UPPER e LOWER rappresentati come oggetti Constraint
-	 * @param fo  Un oggetto LinearObjectiveFunction che rappresenta la funzione obiettivo
-	 * @throws Exception  Viene generata una eccezione se il problema non &egrave; formulato correttamente
-	 */
 	
-	/*
-	
-	public MILP(ArrayList<String> inequality,ArrayList<Constraint> constraints,LinearObjectiveFunction fo) throws Exception  { 
-		if(constraints==null || constraints.isEmpty()) throw new LPException(RB.getString("it.ssc.pl.milp.MILP.msg5"));
-		int dimension=fo.getC().length;
-		ConstraintFromString cfs=new ConstraintFromString(dimension, inequality,constraints);
-		ArrayList<Constraint> new_constraints=cfs.getConstraint();
-		this.milp_initiale = new MilpManager(fo, new_constraints);
-		setAllEpsilon();
-	}
-	*/
-	
-	/*
-	 * Costruttore di un oggetto MILP per la risoluzione di problemi formulati in formato a disequazioni contenute in stringhe. 
-	 * In questo formato le variabili devono necessariamente chiamarsi X<sub>j</sub>, con l'indice j che parte da 1. 
-	 * 
-	 * @param inequality  Lista dei vincoli di tipo (EQ,GE,LE) sotto forma di disequazioni contenute in stringhe
-	 * @param fo Un oggetto LinearObjectiveFunction che rappresenta la funzione obiettivo
-	 * @throws Exception Viene generata una eccezione se il problema non &egrave; formulato correttamente 
-	 */
-	
-	/*
-	public MILP(ArrayList<String> inequality,LinearObjectiveFunction fo) throws Exception  { 
-		if(inequality==null || inequality.isEmpty()) throw new LPException(RB.getString("it.ssc.pl.milp.MILP.msg6"));
-		int dimension=fo.getC().length;
-		ConstraintFromString cfs=new ConstraintFromString(dimension, inequality);
-		ArrayList<Constraint> new_constraints=cfs.getConstraint();
-		this.milp_initiale = new MilpManager(fo, new_constraints);
-		setAllEpsilon();
-	}
-	*/
-	
-
 	/**
 	 * Constructor of a MILP object for solving problems formulated in inequality format contained in
 	 * an external file.
@@ -124,11 +74,8 @@ public final class MILP implements FormatTypeInput {
 		ArrayList<String> list_var;
 		LinearObjectiveFunction fo;
 		try {
-			
-			//File file =new File(path);
 			br= new BufferedReader(new StringReader(pl_text));
-			//br = new BufferedReader(new FileReader(file));
-		    String line_fo=new CheckSintaxText(br).getLineFO();
+			String line_fo=new CheckSintaxText(br).getLineFO();
 		    br.close();br=null;
 		    br= new BufferedReader(new StringReader(pl_text));
 			list_var=new ScanVarFromText(br).getListNomiVar();
@@ -147,13 +94,6 @@ public final class MILP implements FormatTypeInput {
 		this.milp_initiale = new MilpManager(fo,list_constraints,list_var,scan_const.getArraysProb(),this);
 		setAllEpsilon();
 	}
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	/**
@@ -193,10 +133,7 @@ public final class MILP implements FormatTypeInput {
 		ArrayList<String> list_var;
 		LinearObjectiveFunction fo;
 		try {
-			
-			//File file =new File(path);
 			br=Files.newBufferedReader(path);
-			//br = new BufferedReader(new FileReader(file));
 		    String line_fo=new CheckSintaxText(br).getLineFO();
 		    br.close();br=null;
 		    br=Files.newBufferedReader(path);
@@ -211,7 +148,6 @@ public final class MILP implements FormatTypeInput {
 		finally {
 			if (br != null ) br.close();
 		}
-		
 		ArrayList<InternalConstraint> list_constraints=scan_const.getConstraints();
 		this.milp_initiale = new MilpManager(fo,list_constraints,list_var,scan_const.getArraysProb(),this);
 		setAllEpsilon();
@@ -229,7 +165,6 @@ public final class MILP implements FormatTypeInput {
 	
 	public MILP(LinearObjectiveFunction fo,ArrayList<Constraint> constraints) throws  Exception {
 		this.milp_initiale = new MilpManager(fo, constraints,this);
-		
 		setAllEpsilon();
 	}
 	
@@ -335,9 +270,8 @@ public final class MILP implements FormatTypeInput {
 	}
 
 	private void setAllEpsilon() {
-		this.milp_initiale.setEpsilon(epsilon);
-		this.milp_initiale.setIEpsilon(iepsilon); 
-		this.milp_initiale.setCEpsilon(cepsilon); 
+		this.milp_initiale.setEpsilons(epsilons);
+	
 	}
 	
 	/**
@@ -353,7 +287,7 @@ public final class MILP implements FormatTypeInput {
 	 */
 	
 	public void setEpsilon(EPSILON epsilon) {
-		this.milp_initiale.setEpsilon(epsilon);
+		epsilons.epsilon= epsilon;
 	}
 	
 	/**
@@ -365,7 +299,7 @@ public final class MILP implements FormatTypeInput {
 	 */
 	
 	public void setCEpsilon(EPSILON cepsilon) {
-		this.milp_initiale.setCEpsilon(cepsilon);
+		epsilons.cepsilon= cepsilon;
 	}
 	
 		
@@ -380,7 +314,7 @@ public final class MILP implements FormatTypeInput {
 	 */
 	
 	public void setIEpsilon(EPSILON iepsilon) {
-		this.milp_initiale.setIEpsilon(iepsilon); 
+		 epsilons.iepsilon= iepsilon; 
 	}
 	
 	/**
@@ -670,7 +604,20 @@ public final class MILP implements FormatTypeInput {
 		this.isJustTakeFeasibleSolution = isJustTakeFeasibleSolution;
 	}
 
+	public  EPSILON getEpsilon() {
+		return epsilons.epsilon;
+	}
+
+	public  EPSILON getIepsilon() {
+		return epsilons.iepsilon;
+	}
+
+	public  EPSILON getCepsilon() {
+		return epsilons.cepsilon;
+	}
 	
+	
+
 	/*
 	 * Permette di impostare uno step (valore di tolleranza sacrificabile sul valore della 
 	 * funzione obiettivo, per cui questo valore &egrave; da esprimere nelle stesse unit&agrave; di misura con cui si esprime la f.o.) 

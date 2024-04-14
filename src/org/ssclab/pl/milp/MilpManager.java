@@ -4,11 +4,9 @@ package org.ssclab.pl.milp;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import org.ssclab.context.Session;
 import org.ssclab.context.exception.InvalidSessionException;
 import org.ssclab.datasource.DataSource;
-import org.ssclab.i18n.RB;
 import org.ssclab.log.SscLogger;
 import org.ssclab.pl.milp.FormatTypeInput.FormatType;
 import org.ssclab.pl.milp.ObjectiveFunction.TARGET_FO;
@@ -32,11 +30,7 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 	private static PLProblem pl_original_zero;
 	private int num_iteration;
 	private final boolean isMilp=true;
-
-	private EPSILON epsilon;
-	private EPSILON iepsilon; 
-	private EPSILON cepsilon;
-	
+	private Epsilons epsilons;
 	private SolutionImpl solution_pl;
 	private SolutionType solutionType;
 	private MILP father;
@@ -62,25 +56,20 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 	 * 
 	 */
 	
-	
-	
 	MilpManager(LinearObjectiveFunction f,ArrayList<Constraint> constraints, MILP father) throws InvalidSessionException, Exception {
 		id=createId(); 
 		pl_current=CreatePLProblem.create(f,constraints,isMilp);
 		pl_current.configureInteger();
 		pl_current.configureSemicont();
-		
 		this.father=father;
 		this.father.father_pl_original_zero=pl_current.clone(); 
 	}
-	
 	
 	MilpManager(LinearObjectiveFunction f,ArrayList<InternalConstraint> constraints,ArrayList<String> nomi_var,ArrayProblem arrayProb,  MILP father) throws InvalidSessionException, Exception {
 		id=createId(); 
 		pl_current=CreatePLProblem.create(f,constraints,nomi_var,arrayProb,isMilp);  
 		pl_current.configureInteger();
 		pl_current.configureSemicont();
-		
 		this.father=father;
 		this.father.father_pl_original_zero=pl_current.clone(); 
 	}
@@ -92,21 +81,12 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 		pl_current=CreatePLProblem.create(milp_data_source,isMilp);
 		pl_current.configureInteger();
 		pl_current.configureSemicont();
-		
 		this.father=father;
 		this.father.father_pl_original_zero=pl_current.clone(); 
 	}
 	
-	void setEpsilon(EPSILON epsilon) {
-		this.epsilon=epsilon;
-	}
-	
-	void setIEpsilon(EPSILON epsilon) {
-		this.iepsilon=epsilon; 
-	}
-	
-	void setCEpsilon(EPSILON epsilon) {
-		this.cepsilon=epsilon; 
+	void setEpsilons(Epsilons epsilons) {
+		this.epsilons=epsilons;
 	}
 	
 	void setMaxIteration(int num_iteration) throws SimplexException  {
@@ -149,7 +129,8 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 		printTableV( vectors_pl.C);
 		*/
 			
-		SimplexInterface simplex=new Simplex(vectors_pl.A, vectors_pl.B, vectors_pl.C,epsilon,cepsilon);
+		SimplexInterface simplex=new Simplex(vectors_pl.A, vectors_pl.B, vectors_pl.C,
+											 epsilons.epsilon,epsilons.cepsilon);
 		simplex.setNumIterationMax(num_iteration);
 		simplex.setMilp(true);
 		
@@ -285,34 +266,6 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 		return -1;
 	}
 	
-	
-	/*
-	@SuppressWarnings("unused")
-	private int getIndexVarToBeIntegerNew2Test() {
-		int index =0;
-		int index_bono=-1;
-		double fraction=0.0;
-		Var[] variables= this.solution_pl.getVariables();
-		for(Var variable:variables) {
-			if(variable.getType()== TYPE_VAR.BINARY || variable.getType()== TYPE_VAR.INTEGER ) {
-				double value=variable.getValue();
-				if(!isInteger(value)) {
-					if(index_bono==-1) {
-						index_bono= index;
-						fraction= value % 1;
-					}
-					else if(fraction < (value % 1)) {
-						index_bono= index;
-						fraction= value % 1;
-					}
-				}
-			}
-			index++;
-		}
-		return index_bono;
-	}
-	*/
-	
 	public  boolean isProblemSemiContinusAmmisible()  {
 		boolean is_continus_ammisible=true;
 		Var[] variables= this.pl_current.getVariables();
@@ -351,7 +304,7 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 	private  boolean isInteger(double d) { 
 		  // Note that Double.NaN is not equal to anything, even itself.
 		  return  !Double.isInfinite(d) && 
-		          ( Math.abs(d - Math.rint(d))  <= iepsilon.getValue()  ) ;
+		          ( Math.abs(d - Math.rint(d))  <= epsilons.iepsilon.getValue()  ) ;
 	}
 	
 	
