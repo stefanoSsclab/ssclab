@@ -7,7 +7,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.ssclab.i18n.RB;
-import org.ssclab.pl.milp.LPException;
 import org.ssclab.pl.milp.ParseException;
 
 public class CheckSintaxText {
@@ -164,8 +163,8 @@ public class CheckSintaxText {
 			String[] tokens = resto.split("\\s*,\\s*");
 			for(String token:tokens) {  
 				//System.out.println("qua3:"+token);
-				if(!token.matches("\\s*(\\p{Alpha}+\\w*)\\s*"))
-					throw new ParseException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg4")+" ["+token+"]");
+				if(!token.matches("\\s*(\\p{Alpha}+\\w*)\\**\\s*"))
+					throw new ParseException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg4")+" ["+line+"] : error in "+token);
 			}	
 		}
 	}

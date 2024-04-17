@@ -159,12 +159,13 @@ public class ScanConstraintFromLine {
 
 	private void scanIntSecBin(String line) throws LPException { 
 
-		if (line.toLowerCase().contains("int")) {
+		int index=0;
+		if (line.toLowerCase().contains("int ")) {
 			//se ho trovato delle varaibil intere , memorizzo l'informazione nel caso mi trovi in ambito 
 			//non MILP, altrimenti Exception
 			arraysProb.isMilp=true;
 			
-			if(line.matches("\\s*(?i)(int)\\s*(?i)(all)\\s*")) {
+			if(line.matches("\\s*(?i)(int)\\s+(?i)(all)\\s*")) {
 				for(int j=0;j<arraysProb.array_int.length;j++) {
 					arraysProb.array_int[j]=1;
 				}
@@ -172,21 +173,33 @@ public class ScanConstraintFromLine {
 				return;
 			}
 			
-			
-			String line2=line.replaceAll("\\s*(?i)(int)\\s*", "").trim();
+			String line2=line.replaceAll("\\s*(?i)(int)\\s+", "").trim();
 			//System.out.println("@@@@@@@@@@@@::"+line);
 			String[] tokens = line2.split("\\s*,\\s*");
 			if(tokens.length==0) throw new LPException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg8")+"["+line+"]");
 			for(String none_var:tokens) {  
-				int index=nomi_var.indexOf(none_var.toUpperCase());
-				if(index==-1 ) throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromString.msg12", none_var));
-				arraysProb.array_int[index]=1;
+				//System.out.println("->"+none_var+"<-");
+				if(none_var.endsWith("*")) { 
+					String prefix=none_var.replace("*", "").toUpperCase();
+					for(String variabile:nomi_var) {
+						if(variabile.startsWith(prefix)) {
+							index=nomi_var.indexOf(variabile);
+							arraysProb.array_int[index]=1;
+							//System.out.println("->"+none_var+"<- 111");
+						}
+					}
+				}
+				else { 
+					index=nomi_var.indexOf(none_var.toUpperCase());
+					if(index==-1 ) throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromString.msg12", none_var));
+					arraysProb.array_int[index]=1;
+				}
 			}		 
 		} 
-		else if (line.toLowerCase().contains("bin")) {
+		else if (line.toLowerCase().contains("bin ")) {
 			arraysProb.isMilp=true;
 			
-			if(line.matches("\\s*(?i)(bin)\\s*(?i)(all)\\s*")) {
+			if(line.matches("\\s*(?i)(bin)\\s+(?i)(all)\\s*")) {
 				for(int j=0;j<arraysProb.array_bin.length;j++) {
 					arraysProb.array_bin[j]=1;
 				}
@@ -194,19 +207,31 @@ public class ScanConstraintFromLine {
 				return;
 			}
 			
-			String line2=line.replaceAll("\\s*(?i)(bin)\\s*", "").trim();
+			String line2=line.replaceAll("\\s*(?i)(bin)\\s+", "").trim();
 			//System.out.println("@@@@@@@@@@@@::"+line);
 			String[] tokens = line2.split("\\s*,\\s*");
 			if(tokens.length==0) throw new LPException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg10")+"["+line+"]");
 			for(String none_var:tokens) {  
-				int index=nomi_var.indexOf(none_var.toUpperCase());
-				if(index==-1 )  throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromString.msg2", none_var));
-				arraysProb.array_bin[index]=1;
+				if(none_var.endsWith("*")) { 
+					String prefix=none_var.replace("*", "").toUpperCase();
+					for(String variabile:nomi_var) {
+						if(variabile.startsWith(prefix)) {
+							index=nomi_var.indexOf(variabile);
+							arraysProb.array_bin[index]=1;
+							//System.out.println("->"+none_var+"<- 111");
+						}
+					}
+				}
+				else { 
+					index=nomi_var.indexOf(none_var.toUpperCase());
+					if(index==-1 )  throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromString.msg2", none_var));
+					arraysProb.array_bin[index]=1;
+				}	
 			}	
 		} 
-		else if (line.toLowerCase().contains("sec")) {
+		else if (line.toLowerCase().contains("sec ")) {
 			arraysProb.isMilp=true;
-			if(line.matches("\\s*(?i)(sec)\\s*(?i)(all)\\s*")) {
+			if(line.matches("\\s*(?i)(sec)\\s+(?i)(all)\\s*")) {
 				for(int j=0;j<arraysProb.array_sec.length;j++) {
 					arraysProb.array_sec[j]=1;
 				}
@@ -214,19 +239,31 @@ public class ScanConstraintFromLine {
 				return;
 			}
 			
-			String line2=line.replaceAll("\\s*(?i)(sec)\\s*", "").trim();
+			String line2=line.replaceAll("\\s*(?i)(sec)\\s+", "").trim();
 			//System.out.println("@@@@@@@@@@@@::"+line);
 			String[] tokens = line2.split("\\s*,\\s*");
 			if(tokens.length==0) throw new LPException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg9")+"["+line+"]");
 			for(String none_var:tokens) {  
-				int index=nomi_var.indexOf(none_var.toUpperCase());
-				if(index==-1 )  throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromString.msg2", none_var));
-				arraysProb.array_sec[index]=1;
+				if(none_var.endsWith("*")) { 
+					String prefix=none_var.replace("*", "").toUpperCase();
+					for(String variabile:nomi_var) {
+						if(variabile.startsWith(prefix)) {
+							index=nomi_var.indexOf(variabile);
+							arraysProb.array_sec[index]=1;
+							//System.out.println("->"+none_var+"<- 111");
+						}
+					}
+				}
+				else { 
+					index=nomi_var.indexOf(none_var.toUpperCase());
+					if(index==-1 )  throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromString.msg2", none_var));
+					arraysProb.array_sec[index]=1;
+				}	
 			}	
 		} 
 	}
 
-	public ArrayProblem getArraysProb() {
+	public ArrayProblem getArraysProblem() {
 		return arraysProb;
 	}
 	

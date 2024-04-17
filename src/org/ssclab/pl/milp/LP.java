@@ -110,7 +110,7 @@ public final class LP implements FormatTypeInput {
 		}
 		
 		ArrayList<InternalConstraint> list_constraints=scan_const.getConstraints();
-		PLProblem pl_original=CreatePLProblem.create(fo,list_constraints,list_var,scan_const.getArraysProb(),isMilp);
+		PLProblem pl_original=CreatePLProblem.create(fo,list_constraints,list_var,scan_const.getArraysProblem(),isMilp);
 		
 		//memorizza nella work il pl_original come oggetto prima di essere standardizzato. 
 		//pl original , non e' memorizzato in LP , una volta terminato questo metodo, 
@@ -172,7 +172,7 @@ public final class LP implements FormatTypeInput {
 		LinearObjectiveFunction fo=fo_from_string.getFOFunction();
 		ScanConstraintFromLine scan_const=new ScanConstraintFromLine(text,list_var);
 		ArrayList<InternalConstraint> list_constraints=scan_const.getConstraints();
-		PLProblem pl_original=CreatePLProblem.create(fo,list_constraints,list_var,scan_const.getArraysProb(),isMilp);
+		PLProblem pl_original=CreatePLProblem.create(fo,list_constraints,list_var,scan_const.getArraysProblem(),isMilp);
 		
 		//memorizza nella work il pl_original come oggetto prima di essere standardizzato. 
 		//pl original , non e' memorizzato in LP , una volta terminato questo metodo, 
@@ -240,7 +240,7 @@ public final class LP implements FormatTypeInput {
 		}
 		
 		ArrayList<InternalConstraint> list_constraints=scan_const.getConstraints();
-		PLProblem pl_original=CreatePLProblem.create(fo,list_constraints,list_var,scan_const.getArraysProb(),isMilp);
+		PLProblem pl_original=CreatePLProblem.create(fo,list_constraints,list_var,scan_const.getArraysProblem(),isMilp);
 		
 		//memorizza nella work il pl_original come oggetto prima di essere standardizzato. 
 		//pl original , non e' memorizzato in LP , una volta terminato questo metodo, 

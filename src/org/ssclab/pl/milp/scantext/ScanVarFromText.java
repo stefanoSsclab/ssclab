@@ -13,6 +13,9 @@ import org.ssclab.pl.milp.ParseException;
 public class ScanVarFromText {
 	
 	private ArrayList<String> list_nomi_var;
+	Pattern pattern2 = Pattern.compile("(([+-])\\s*(\\d+\\.?\\d*)?(\\p{Alpha}+\\w*)\\s*)",Pattern.CASE_INSENSITIVE);
+	Pattern pattern3 = Pattern.compile("([+-]\\s*(\\d+)(\\.?)(\\d*))\\s*",Pattern.CASE_INSENSITIVE);
+	Pattern pattern_up = Pattern.compile("\\s*(((([+-]?)\\s*(\\d+\\.?\\d*))|(\\.))\\s*(>|<)\\s*=)?\\s*(\\p{Alpha}+\\w*)\\s*((>|<)\\s*=\\s*((([+-]?)\\s*(\\d+\\.?\\d*))|(\\.)))?\\s*",Pattern.CASE_INSENSITIVE);
 	
 	public ScanVarFromText(ArrayList<String> pl_problem) throws  ParseException {
 		list_nomi_var=new ArrayList<String>();
@@ -69,9 +72,7 @@ public class ScanVarFromText {
 	    	 }
     	 }
 		
-    	Pattern pattern2 = Pattern.compile("(([+-])\\s*(\\d+\\.?\\d*)?(\\p{Alpha}+\\w*)\\s*)",Pattern.CASE_INSENSITIVE);
-		Pattern pattern3 = Pattern.compile("([+-]\\s*(\\d+)(\\.?)(\\d*))\\s*",Pattern.CASE_INSENSITIVE);
-		int end2=0;
+    	int end2=0;
 		
 		//controllo lunghezz ==2
 		//for(String meta:disequation)	 {
@@ -103,8 +104,8 @@ public class ScanVarFromText {
 	private void scanUpper(String line) throws ParseException  {
 		
 		line=  line.replaceAll("\\s*(\\p{Alpha}+\\w*\\s*:)\\s*", "");
-		Pattern pattern_2 = Pattern.compile("\\s*(((([+-]?)\\s*(\\d+\\.?\\d*))|(\\.))\\s*(>|<)\\s*=)?\\s*(\\p{Alpha}+\\w*)\\s*((>|<)\\s*=\\s*((([+-]?)\\s*(\\d+\\.?\\d*))|(\\.)))?\\s*",Pattern.CASE_INSENSITIVE);                               
-		Matcher upper = pattern_2.matcher(line);	
+		                               
+		Matcher upper = pattern_up.matcher(line);	
 		if (upper.matches()) {
 			String nome_var=upper.group(8).toUpperCase();
 			if(nome_var.equals("BIN") || nome_var.equals("INT") ||  nome_var.equals("SEC") || 

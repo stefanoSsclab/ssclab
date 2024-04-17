@@ -56,16 +56,16 @@ import static org.ssclab.pl.milp.InternalConstraint.TYPE_CONSTR;
 			 xj=lp_original.getVar(_j);
 
 			 //System.out.println("VAR  "+_j +"  "+type);
-			 if(arrayProb.array_int[_j]==1.0) { 
+			 if(arrayProb.array_int[_j]==1) { 
 				 if(xj.getType()==Var.TYPE_VAR.BINARY) throw new LPException(RB.format("it.ssc.pl.milp.CreateMilpProblem.msg9", (_j+1)));
 				 xj.setType(Var.TYPE_VAR.INTEGER);
 			 }
-			 if(arrayProb.array_bin[_j]==1.0) { 
+			 if(arrayProb.array_bin[_j]==1) { 
 				 if(xj.getType()==Var.TYPE_VAR.INTEGER) throw new LPException(RB.format("it.ssc.pl.milp.CreateMilpProblem.msg10", (_j+1)));
 				 xj.setType(Var.TYPE_VAR.BINARY);
 			 }
 
-			 if(arrayProb.array_sec[_j]==1.0) { 
+			 if(arrayProb.array_sec[_j]==1) { 
 				 if(xj.getType()==Var.TYPE_VAR.BINARY) throw new LPException(RB.format("it.ssc.pl.milp.CreateMilpProblem.msg11", (_j+1)));
 				 xj.setSemicon(true);;
 			 }

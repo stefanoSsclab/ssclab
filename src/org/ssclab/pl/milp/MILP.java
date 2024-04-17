@@ -91,7 +91,7 @@ public final class MILP implements FormatTypeInput {
 		}
 		
 		ArrayList<InternalConstraint> list_constraints=scan_const.getConstraints();
-		this.milp_initiale = new MilpManager(fo,list_constraints,list_var,scan_const.getArraysProb(),this);
+		this.milp_initiale = new MilpManager(fo,list_constraints,list_var,scan_const.getArraysProblem(),this);
 		setAllEpsilon();
 	}
 	
@@ -113,7 +113,7 @@ public final class MILP implements FormatTypeInput {
 		LinearObjectiveFunction fo=fo_from_string.getFOFunction();
 		ScanConstraintFromLine scan_const=new ScanConstraintFromLine(inequality,list_var);
 		ArrayList<InternalConstraint> list_constraints=scan_const.getConstraints();
-		this.milp_initiale = new MilpManager(fo,list_constraints,list_var,scan_const.getArraysProb(),this);
+		this.milp_initiale = new MilpManager(fo,list_constraints,list_var,scan_const.getArraysProblem(),this);
 		setAllEpsilon();
 	}
 	
@@ -149,7 +149,7 @@ public final class MILP implements FormatTypeInput {
 			if (br != null ) br.close();
 		}
 		ArrayList<InternalConstraint> list_constraints=scan_const.getConstraints();
-		this.milp_initiale = new MilpManager(fo,list_constraints,list_var,scan_const.getArraysProb(),this);
+		this.milp_initiale = new MilpManager(fo,list_constraints,list_var,scan_const.getArraysProblem(),this);
 		setAllEpsilon();
 	}
 	
