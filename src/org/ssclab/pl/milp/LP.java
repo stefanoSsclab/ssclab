@@ -59,11 +59,12 @@ public final class LP implements FormatTypeInput {
 	private PersistensePLProblem persistencePl;
 	private LPThreadsNumber threadsNumber=LPThreadsNumber.N_1;
 	private boolean isStopPhase2=false;
+	private Epsilons epsilons=new Epsilons();
 	
-	
+	/*
 	private EPSILON epsilon=EPSILON._1E_M10;
 	private EPSILON cepsilon=EPSILON._1E_M8;
-	
+	*/
 	
 	static {
 		logger.log(Level.INFO,  " ");
@@ -576,7 +577,7 @@ public final class LP implements FormatTypeInput {
 
 	
 	public void setEpsilon(EPSILON epsilon)   {  
-		this.epsilon=epsilon;
+		this.epsilons.epsilon=epsilon;
 	}
 	
 	
@@ -590,11 +591,21 @@ public final class LP implements FormatTypeInput {
 	*/
 	
 	public void setCEpsilon(EPSILON epsilon)  { 
-		this.cepsilon=epsilon;
+		this.epsilons.cepsilon=epsilon;
 	}
 	
-		
 	
+	public EPSILON getEpsilon() {
+		return this.epsilons.epsilon;
+	}
+
+
+
+	public EPSILON getCEpsilon() {
+		return this.epsilons.cepsilon;
+	}
+
+
 	/**
 	*
 	*This method allows limiting the maximum number of simplex iterations (phase 1 iterations + phase 2 iterations)
@@ -638,7 +649,7 @@ public final class LP implements FormatTypeInput {
 		
 		//l'oggetto simplex crea la tabella estesa per fase I da A e poi la svuoto subito dopo 
 		//aver creato la tabella
-		SimplexInterface simplex =new Simplex(vectors_pl.A, vectors_pl.B, vectors_pl.C,epsilon,cepsilon);
+		SimplexInterface simplex =new Simplex(vectors_pl.A, vectors_pl.B, vectors_pl.C,epsilons);
 		simplex.setNumIterationMax(num_max_iteration);
 		simplex.setThreadsNumber(threadsNumber) ;
 		

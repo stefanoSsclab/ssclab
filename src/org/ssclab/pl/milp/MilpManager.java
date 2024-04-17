@@ -129,8 +129,7 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 		printTableV( vectors_pl.C);
 		*/
 			
-		SimplexInterface simplex=new Simplex(vectors_pl.A, vectors_pl.B, vectors_pl.C,
-											 epsilons.epsilon,epsilons.cepsilon);
+		SimplexInterface simplex=new Simplex(vectors_pl.A, vectors_pl.B, vectors_pl.C,epsilons); 
 		simplex.setNumIterationMax(num_iteration);
 		simplex.setMilp(true);
 		

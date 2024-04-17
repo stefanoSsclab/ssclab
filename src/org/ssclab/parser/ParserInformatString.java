@@ -157,7 +157,7 @@ public class ParserInformatString extends GenericParser {
 			Matcher matcher_azioni = pattern_azioni.matcher(input_step);
 			
 			//pattern per i gruppi di variabili 
-			Pattern pattern_group_var = Pattern.compile("((\\p{Alpha}[\\p{Alpha}_]+)(\\d+)\\s*\\-\\s*(\\p{Alpha}[\\p{Alpha}_]+)(\\d+)\\s*):(.+)"); 
+			Pattern pattern_group_var = Pattern.compile("((\\p{Alpha}[\\p{Alpha}_]*)(\\d+)\\s*\\-\\s*(\\p{Alpha}[\\p{Alpha}_]*)(\\d+)\\s*):(.+)"); 
 			Matcher matcher_group_var = pattern_group_var.matcher(input_step);
 
 			if (matcher_dich_var.matches()) {
@@ -190,8 +190,8 @@ public class ParserInformatString extends GenericParser {
 				for(int a=0;a<=matcher_group_var.groupCount();a++) {
 				    System.out.println("KKKKK>>>>>" + matcher_group_var.group(a) + "<-:"+a);
 			    } */
-				 System.out.println("KKKKK>>>>>" + nome_variabile_da);
-				 System.out.println("KKKKK>>>>>" + nome_variabile_a);
+				 //System.out.println("KKKKK>>>>>" + nome_variabile_da);
+				 //System.out.println("KKKKK>>>>>" + nome_variabile_a);
 				if(!nome_variabile_da.equals(nome_variabile_a)) {
 					throw new InvalidInformatStringException("Range variabili da "+nome_variabile_da+num_da+" a "+nome_variabile_a+num_a+" devono avere lo stesso prefisso alfabetico.");
 				}
@@ -226,7 +226,8 @@ public class ParserInformatString extends GenericParser {
 				this.list_input_step.add(single_input_dic_act);
 			}
 			else  {
-				throw new InvalidInformatStringException("ERRORE. Errato formato di input o uso di caratteri non consentiti" +informat_string ); 
+				// System.out.println("KKKKK>>>>>" + input_step);
+				throw new InvalidInformatStringException("ERRORE. Errato formato di input o uso di caratteri non consentiti :" +informat_string ); 
 			}
 		}
 		scanner.close();
