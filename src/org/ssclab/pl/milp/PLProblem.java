@@ -315,7 +315,7 @@ import org.ssclab.pl.milp.util.VectorsPL;
 		}
 	}
 	
-	public void configureInteger() throws LPException {
+	public void configureBinary() throws LPException {
 		boolean is_present_upper_or_lower_in_var_binary=false; 
 		for(Var var:array_var) {
 			if(var.getType()==Var.TYPE_VAR.BINARY) {

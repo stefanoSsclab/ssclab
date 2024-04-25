@@ -5,7 +5,7 @@ import org.ssclab.pl.milp.util.LPThreadsNumber;
 import org.ssclab.vector_spaces.Matrix;
 import org.ssclab.vector_spaces.MatrixException;
 import org.ssclab.vector_spaces.Vector;
-import org.ssclab.pl.milp.EPSILON;
+
 import org.ssclab.pl.milp.Epsilons;
 import org.ssclab.pl.milp.SolutionType;
 
@@ -14,11 +14,6 @@ import org.ssclab.pl.milp.SolutionType;
 	private Matrix A;
 	private Vector B;
 	private Vector C;
-		
-	/*
-	private EPSILON epsilon;
-	private EPSILON cepsilon;
-	*/
 	private Epsilons epsilons;
 	
 	private boolean isMilp=false;
@@ -86,6 +81,8 @@ import org.ssclab.pl.milp.SolutionType;
 		phase_one=new Phase1(A,B,epsilons.epsilon,epsilons.cepsilon);
 		phase_one.setMilp(isMilp); 
 		phase_one.setThreadsNumber(threadsNumber);
+		
+		//phase_one.printTable2();
 
 		this.type_solution_phase_one=phase_one.resolve(this.num_iteration_max);
 		this.num_iteration_phase_one=phase_one.getNumIteration(); //iterazioni fase 1 
@@ -112,7 +109,7 @@ import org.ssclab.pl.milp.SolutionType;
 		
 		Phase2 phase_two=new Phase2(A_phase_one,phase_one.getBasis(),C,num_iteration_phase_one,epsilons.epsilon);
 		phase_two.setThreadsNumber(threadsNumber);
-		phase_one.resetTBEX();
+		//phase_one.resetTBEX();
 		type_solution_phase_two=phase_two.resolve(this.num_iteration_max);
 		
 		this.basis=phase_two.getBasisClone();

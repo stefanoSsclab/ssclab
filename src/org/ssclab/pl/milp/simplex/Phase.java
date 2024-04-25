@@ -148,7 +148,7 @@ abstract class Phase {
 
 	
 	
-	/**
+	/*
 	 * Versione A 
 	 * 
 	 * @param var_incoming
@@ -388,10 +388,11 @@ abstract class Phase {
 		return basis.clone();
 	}
 	
+	/*
 	public void resetTBEX() {
 		TBEX=null;
 	}
-	
+	*/
 	public int[] getBasis() {
 		return basis;
 	}

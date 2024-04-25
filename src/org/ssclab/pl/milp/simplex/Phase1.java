@@ -226,7 +226,6 @@ final class Phase1 extends Phase {
 		//se quelle presenti hanno zero sulle variabili reali.  Si tolgono le righe 
 		// si cancellano le colonne relative alle ausiliaria  
 		
-		
 		//System.out.println("dimensione n:"+this.n +" aux:"+this.n_aux);
 		Pulish pulish=new Pulish();
 		pulish.exitAuxFromBase();
@@ -352,7 +351,7 @@ final class Phase1 extends Phase {
 		   }
 	    
 	    
-	    /**
+	    /*
 	     * Versione con riutilizzo della stessa matrice
 	     * @param A_all_column
 	     * @return
@@ -360,7 +359,7 @@ final class Phase1 extends Phase {
 	     */
 	    
 	    
-	   
+	    /*
 		@SuppressWarnings("unused")
 		private Matrix deleteColumnAux(double[][]  A_all_column) throws MatrixException {
 			   int n_row = A_all_column.length;
@@ -373,15 +372,17 @@ final class Phase1 extends Phase {
 					   subarray[index_col]= A_all_column[i][j]; 
 					   index_col++;
 				   }
-				   A_all_column[i]=subarray;  //elimino riga per riga per liberare spazio il prima possibile
+				   A_all_column[i]=subarray;  
 			   }
-			   //A_all_column=null;
+			 
 			   return new Matrix(A_all_column);
 		   }
+		   */
 	    
 	    
 	    /**
-	     * Questo metodo sostituisce deleteColumnAux. Uso la stessa matrice mettendo a NaN le colonne aux non piu'
+	     * Questo metodo sostituisce deleteColumnAux. 
+	     * Uso la stessa matrice mettendo a NaN sulle colonne aux non piu'
 	     * utilizzate. 
 	     * 
 	     * @param A_all_column
@@ -393,8 +394,7 @@ final class Phase1 extends Phase {
 			   int n_row = A_all_column.length;
 			   for (int i = 0; i < n_row; i++) {
 				   
-				   /*
-				    * La nuova matrice deve avere n+1 colonne.
+				   /* La nuova matrice deve avere n+1 colonne.
 				    * Sulla colonna n+1, occorre scrivere i valori rhs (colonna n + n_aux) della matrice originaria. 
 				    * Fatto questo tutti i valore da n+2 in poi vanno messi a NaN
 				    */

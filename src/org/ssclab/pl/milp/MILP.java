@@ -317,14 +317,14 @@ public final class MILP implements FormatTypeInput {
 		 epsilons.iepsilon= iepsilon; 
 	}
 	
-	/**
+	/*
 	 * Executes the Branch and Bound algorithm.
 	 * 
 	 * @return The type of solution found
 	 * @throws Exception If the execution process generates an error
 	 */
 	
-	
+	/*
 	public SolutionType resolve() throws Exception {
 		
 		logger.log(SscLevel.INFO,RB.format("it.ssc.pl.milp.MILP.msg10")+threadNumber.getThread());
@@ -333,6 +333,7 @@ public final class MILP implements FormatTypeInput {
 		// else 
 		 return resolve2() ;
 	}
+	*/
 	
 	/*
 	private SolutionType resolveSingleThread() throws Exception {
@@ -400,8 +401,16 @@ public final class MILP implements FormatTypeInput {
 	}
 	*/
 	
+	/**
+	 * Executes the Branch and Bound algorithm.
+	 * 
+	 * @return The type of solution found
+	 * @throws Exception If the execution process generates an error
+	 */
 	
-	private SolutionType resolve2() throws Exception {
+	public SolutionType resolve() throws Exception {
+		
+		logger.log(SscLevel.INFO,RB.format("it.ssc.pl.milp.MILP.msg10")+threadNumber.getThread());
 		
 		int num_simplex_resolved=1;
 		long start=System.currentTimeMillis();

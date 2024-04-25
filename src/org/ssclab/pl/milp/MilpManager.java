@@ -41,7 +41,7 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 		DataSource milp_data_source=session.createDataSource(input_sparse);
 		if(format==FormatType.SPARSE) pl_current=CreatePLProblem.createFromSparse(milp_data_source,isMilp);
 		else if(format==FormatType.COEFF) pl_current=CreatePLProblem.create(milp_data_source,isMilp);
-		pl_current.configureInteger();
+		pl_current.configureBinary();
 		pl_current.configureSemicont();
 		
 		this.father=father;
@@ -59,7 +59,7 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 	MilpManager(LinearObjectiveFunction f,ArrayList<Constraint> constraints, MILP father) throws InvalidSessionException, Exception {
 		id=createId(); 
 		pl_current=CreatePLProblem.create(f,constraints,isMilp);
-		pl_current.configureInteger();
+		pl_current.configureBinary();
 		pl_current.configureSemicont();
 		this.father=father;
 		this.father.father_pl_original_zero=pl_current.clone(); 
@@ -68,7 +68,7 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 	MilpManager(LinearObjectiveFunction f,ArrayList<InternalConstraint> constraints,ArrayList<String> nomi_var,ArrayProblem arrayProb,  MILP father) throws InvalidSessionException, Exception {
 		id=createId(); 
 		pl_current=CreatePLProblem.create(f,constraints,nomi_var,arrayProb,isMilp);  
-		pl_current.configureInteger();
+		pl_current.configureBinary();
 		pl_current.configureSemicont();
 		this.father=father;
 		this.father.father_pl_original_zero=pl_current.clone(); 
@@ -79,7 +79,7 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 		id=createId(); 
 		DataSource milp_data_source=session.createDataSource(milp_input);
 		pl_current=CreatePLProblem.create(milp_data_source,isMilp);
-		pl_current.configureInteger();
+		pl_current.configureBinary();
 		pl_current.configureSemicont();
 		this.father=father;
 		this.father.father_pl_original_zero=pl_current.clone(); 

@@ -9,14 +9,15 @@ import java.util.regex.Pattern;
 import org.ssclab.i18n.RB;
 import org.ssclab.pl.milp.InternalConstraint.TYPE_CONSTR;
 
-final class ScanConstraintFromString {
+@Deprecated
+final class ScanConstraintFromStringa {
 	private ArrayList<InternalConstraint> new_constraints;
 	private ArrayList<String> nomi_var;
 	private int dimension;
 	private double Ai[];
 	private ArrayProblem arraysProb;
 	
-	public ScanConstraintFromString(ArrayList<String> inequality,ArrayList<String> nomi_var) throws  ParseException, LPException {
+	public ScanConstraintFromStringa(ArrayList<String> inequality,ArrayList<String> nomi_var) throws  ParseException, LPException {
 		this.nomi_var=nomi_var;
 		this.dimension=nomi_var.size();
 		this.new_constraints=new ArrayList<InternalConstraint>();
@@ -29,7 +30,7 @@ final class ScanConstraintFromString {
 	}
 	
 	//da file 
-	public ScanConstraintFromString(BufferedReader br,ArrayList<String> nomi_var) throws  IOException, ParseException, LPException {
+	public ScanConstraintFromStringa(BufferedReader br,ArrayList<String> nomi_var) throws  IOException, ParseException, LPException {
 		this.nomi_var=nomi_var;
 		this.dimension=nomi_var.size();
 		this.new_constraints=new ArrayList<InternalConstraint>();

@@ -1,36 +1,8 @@
-/*
- * Copyright (c) 2003, 2016, Oracle and/or its affiliates. All rights reserved.
- * ORACLE PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- */
+
 
 package org.ssclab.math;
 
-/**
- * This class contains additional constants documenting limits of the
- * {@code double} type.
- *
- * @author Joseph D. Darcy
- */
+
 
 public class DoubleConsts {
     /**
