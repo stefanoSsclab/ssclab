@@ -79,7 +79,7 @@ public final class LP implements FormatTypeInput {
 	
 	/**
 	* 
-	*@param text The text where the file containing the LP problem formulated with the text 
+	*@param pl_text The text where the file containing the LP problem formulated with the text 
 	*format is located
 	*@throws Exception An exception is thrown if the problem is not correctly formulated or 
 	*if the file does not exist
@@ -209,7 +209,7 @@ public final class LP implements FormatTypeInput {
 	
 	/**
 	* 
-	*@param Path The path where the file containing the LP problem formulated with the text 
+	*@param path The path where the file containing the LP problem formulated with the text 
 	*format is located
 	*@throws Exception An exception is thrown if the problem is not correctly formulated or 
 	*if the file does not exist
@@ -492,13 +492,13 @@ public final class LP implements FormatTypeInput {
 	/**
 	*
 	*Constructor of an LP object for solving problems expressed in coefficient format.
-	*@param input_natural The problem formulated in coefficient format
+	*@param input The problem formulated in coefficient format
 	*@throws Exception An exception is thrown if the problem is not formulated correctly
 	*/
 
-	public LP(Input input_natural) throws Exception {
+	public LP(Input input) throws Exception {
 		
-		this(input_natural, Context.createNewSession());
+		this(input, Context.createNewSession());
 		this.toCloseSessionInternal=true;
 		//logger.log(Level.INFO,RB.getString("it.ssc.pl.milp.LP.msg1")); 
 		//session.close();
@@ -508,16 +508,16 @@ public final class LP implements FormatTypeInput {
 	/**
 	*
 	*Constructor of an LP object for solving problems expressed in coefficient format.
-	*@param input_natural The problem formulated in coefficient format
+	*@param input The problem formulated in coefficient format
 	*@param session An SSC working session
 	*@throws Exception An exception is thrown if the problem is not formulated correctly
 	*/
 	
-	public LP(Input input_natural,Session session) throws Exception {
+	public LP(Input input,Session session) throws Exception {
 		
 		this.session=session;
 		this.toCloseSessionInternal=false;
-		DataSource milp_data_source=session.createDataSource(input_natural);
+		DataSource milp_data_source=session.createDataSource(input);
 		/*Crea im problema puro , cosi come dichiarato dall'utente A <=> b , f=C*/
 		PLProblem pl_original=CreatePLProblem.create(milp_data_source, isMilp);
 		
@@ -628,12 +628,14 @@ public final class LP implements FormatTypeInput {
 		return this.num_max_iteration;
 	}
 	
+	/*
 	private void createStandartProblem(PLProblem pl_original) throws InvalidSessionException, Exception {
 		String path_work=session.getFactoryLibraries().getLibraryWork().getAbsolutePath();
 		vectors_pl=pl_original.standardize(); 
 		//memorizza su disco la matrice A
 		amatrix=new A_DataMatrix(vectors_pl.A,path_work);
 	}
+	*/
 	
 	
 	/**
@@ -910,5 +912,4 @@ public final class LP implements FormatTypeInput {
 	
 	
 }
-/*
- * */
+

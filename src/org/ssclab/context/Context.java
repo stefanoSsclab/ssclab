@@ -21,9 +21,9 @@ import org.ssclab.library.exception.InvalidLibraryException;
  * Alcune proprieta' di ogni sessione di lavoro sono impostate configurando il file config.xml. 
  * In questo file di configurazione possono essere preallocate delle librerie, effettuate connessioni al db, 
  * definito il path dell'area di work, etc. 
- * <br/><br/>
- * <font color="red">
- * Nel file config.xml mettere un tag per la gestione della versione <version >  o 
+
+ 
+ * Nel file config.xml mettere un tag per la gestione della versione o 
  * come attributo <config version="1.2"> . Il file config.xml deve soddisfare un DTD o 
  * uno schema. 
  * </font>

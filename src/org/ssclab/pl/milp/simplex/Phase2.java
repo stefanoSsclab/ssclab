@@ -49,6 +49,7 @@ import org.ssclab.pl.milp.SolutionType;
 			printTable2();
 			printBases();
 			*/
+		
 			
 			if(isBaseDegenerate())  var_incoming = test_var_incoming_bland();
 			//passo false perche non e' la fase 1

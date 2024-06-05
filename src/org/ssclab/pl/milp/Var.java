@@ -23,7 +23,7 @@ final class Var implements Cloneable, Variable, Serializable {
 	private double value;
 	//Questa variabile mi serve per capire se il lower e stato modificato, 
 	//ovvero se esiste un valore lower definito dall'utente pwer questa variabile
-	//in quanto se lower non è stato definito e upper viene settato a  < 0 -> variabile libera 
+	//in quanto se lower non e' stato definito e upper viene settato a  < 0 -> variabile libera 
 	//e lower = -INFINITO
 	private boolean is_lower_modified;
 	private boolean isZeroSemicontVar;
@@ -125,7 +125,7 @@ final class Var implements Cloneable, Variable, Serializable {
 	}
 	
 	public void configureFree() throws LPException {
-		//se si dichiara solo l'upper, e questo è < 0 , automaticamente la variabile e' 
+		//se si dichiara solo l'upper, e questo e' < 0 , automaticamente la variabile e' 
 		//libera e lower = -inf (vedi quattro righe sotto)
 		if(this.is_lower_modified) {
 			if(this.lower > this.upper) throw new LPException(RB.format("it.ssc.pl.milp.Var.msg1", lower,upper));

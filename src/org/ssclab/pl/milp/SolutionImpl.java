@@ -44,7 +44,7 @@ final class SolutionImpl implements Solution {
 				 }
 				else var.setValue(values[index_base]);
 			}
-			//la variabile non è in base , ma occorre sommarci il lower, in quanto se ha avuto valore zero, occorre sommarci il lower
+			//la variabile non e' in base , ma occorre sommarci il lower, in quanto se ha avuto valore zero, occorre sommarci il lower
 			else if(!Double.isInfinite(var.getLower()) && var.getLower()!=0.0) {
 				var.setValue(var.getLower());
 			}
@@ -85,7 +85,7 @@ final class SolutionImpl implements Solution {
 				 }
 				else var.setValue(values[index_base]);
 			}
-			//la variabile non è in base , ma occorre sommarci il lower
+			//la variabile non e' in base , ma occorre sommarci il lower
 			else if(!Double.isInfinite(var.getLower())&& var.getLower()!=0.0) {
 				var.setValue(var.getLower());
 			}

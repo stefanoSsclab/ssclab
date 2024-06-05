@@ -30,7 +30,7 @@ import org.ssclab.pl.milp.util.VectorsPL;
 	}
 	
 	/**
-	 * Crea un oggetto PLProblem, questo è costituito da vincoli (InternalConstraint) intesi come 
+	 * Crea un oggetto PLProblem, questo e' costituito da vincoli (InternalConstraint) intesi come 
 	 * rappresentanti delle disequazioni/equazioni del problema (Aj,bj), un f.o.
 	 * che rappresenta anche i coefficienti Ci, e degli oggetti Var che 
 	 * rappresentano le caratteristiche delle variabili del problema.

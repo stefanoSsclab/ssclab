@@ -63,7 +63,7 @@ public final class MILP implements FormatTypeInput {
 	 * Constructor of a MILP object for solving problems formulated in inequality format contained in
 	 * an external file.
 	 * 
-	 * @param text String containing the problem in text format
+	 * @param pl_text String containing the problem in text format
 	 * @throws Exception if the problem is not correctly formulated
 	 */
 	
@@ -201,28 +201,28 @@ public final class MILP implements FormatTypeInput {
 	/**
 	 * Constructor of a MILP object for solving problems expressed in either sparse or coefficient format.
 	 * 
-	 * @param input_sparse The problem formulated in sparse or coefficient format
+	 * @param input The problem formulated in sparse or coefficient format
 	 * @param session An SSC working session 
 	 * @param format The type of format used (FormatType.SPARSE or FormatType.COEFF)
 	 * @throws Exception An exception is thrown if the problem is not formulated correctly
 	 */
 	
-	public MILP(Input input_sparse,Session session, FormatType format) throws Exception {
-		this.milp_initiale = new MilpManager(input_sparse, session,format,this); 
+	public MILP(Input input,Session session, FormatType format) throws Exception {
+		this.milp_initiale = new MilpManager(input, session,format,this); 
 		setAllEpsilon();
 	}
 	
 	/**
 	 * Constructor of a MILP object for solving problems expressed in sparse or coefficient format.
 	 * 
-	 * @param input_sparse The problem formulated in sparse format
+	 * @param input The problem formulated in sparse format
 	 * @param format The type of format used (FormatType.SPARSE or FormatType.COEFF)
 	 * @throws Exception An exception is thrown if the problem is not formulated correctly
 	 */
 	
-	public MILP(Input input_sparse,FormatType format) throws  Exception {
+	public MILP(Input input,FormatType format) throws  Exception {
 		Session session=Context.createNewSession();
-		this.milp_initiale = new MilpManager(input_sparse, session,format,this);
+		this.milp_initiale = new MilpManager(input, session,format,this);
 		logger.log(Level.INFO,RB.getString("it.ssc.pl.milp.MILP.msg1"));
 		session.close();
 		setAllEpsilon();
@@ -308,7 +308,7 @@ public final class MILP implements FormatTypeInput {
 	 * determining if a number should be considered integer or not. This check
 	 * occurs when at the end of the simplex the solution found is evaluated to satisfy the integer condition
 	 * on the variables that must be integers. Let x be a number and Int(x) the nearest integer to x, if
-	 *  | Int(x) - x | &lt; epsilon -&gt; x &#x2208; &#x2124;
+	 *  | Int(x) - x | &lt; epsilon -&gt; x &#x2208; Z
 	 * 
 	 * @param iepsilon Tolerance to consider a number as integer. Default value 1E-10
 	 */
@@ -474,7 +474,7 @@ public final class MILP implements FormatTypeInput {
 					for(MilpManager lp_curent:scarti_to_separe) {
 						MilpManager.populateArrayListBySeparation(listMangerMilpToRun,lp_curent);
 					}
-					//gestione a più thread
+					//gestione a piu thread
 					if(threadNumber!=MILPThreadsNumber.N_1) {
 
 						//Gestione Thread

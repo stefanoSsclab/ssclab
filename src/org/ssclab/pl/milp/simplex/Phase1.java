@@ -52,7 +52,7 @@ final class Phase1 extends Phase {
 		
 		basis = new int[m];
 		//questo vettore dovra' determinare se nella riga iesima esiste gia una variabile 
-		//che può essere utilizzata per far diventare il sistema in forma canonica ( Aij =1)
+		//che puo' essere utilizzata per far diventare il sistema in forma canonica ( Aij =1)
 		//se non le trova, vengono create con valore tupla a false
 		Tuple2<Integer,Boolean>[] var_canonical=new Tuple2[m];
 		
@@ -154,6 +154,7 @@ final class Phase1 extends Phase {
 			printBases();
 			*/
 			
+			
 			if(isBaseDegenerate()) var_incoming = test_var_incoming_bland();
 			//MODIFICA IL 10/04/2024 PASSO TRUE E N_AUX PER NON CONSIDERARE LE 
 			//VARIABILI ARTIFICIALI COME CANDIDATE NEL RIENTRARE IN BASE. 
@@ -199,7 +200,7 @@ final class Phase1 extends Phase {
 
 	 
 	
-	 //a fronte dell'indice della riga i dove la variabile ausiliaria e' in base, vedo se c'è qualche Aij =! 0 
+	 //a fronte dell'indice della riga i dove la variabile ausiliaria e' in base, vedo se c'e qualche Aij =! 0 
 	 private int existVarOrigOutBase(int index_aux) {
 		   for (int j = 0; j < n ; j++) {
 			   if ( Math.abs(TBEX[index_aux][j]) > epsilon )  {
@@ -297,7 +298,7 @@ final class Phase1 extends Phase {
 	    private boolean ifAllCoeffZeroAuxCaz(int index) {
 	 	   for (int j = 0; j < n ; j++) {
 	 		   if( Math.abs(TBEX[index][j]) > epsilon  ) {
-	 			  logger.log(SscLevel.WARNING,"Esiste alla fine di Fase 1, una variabile artificiale in base che non è stata eliminata ! : ");
+	 			  logger.log(SscLevel.WARNING,"Esiste alla fine di Fase 1, una variabile artificiale in base che non e' stata eliminata ! : ");
 	 			  return false;
 	 		   }
 	 	   }
@@ -307,7 +308,7 @@ final class Phase1 extends Phase {
 	    //non tocca numero righe o colonne
 	    private void exitAuxFromBase() {
 	 	 
-	 	   //se esiste una variabile ausiliaria in base e se sulla riga di questa c'è un Aij =! 0 , faccio pivoting per farla uscire
+	 	   //se esiste una variabile ausiliaria in base e se sulla riga di questa c'e un Aij =! 0 , faccio pivoting per farla uscire
 	 	   //finche non escono tutte. 
 	    	int index_aux_out = -1, index_orig_in = 0;
 	    	while ((index_aux_out = existAuxBaseCorr(index_aux_out+1)) != -1) {

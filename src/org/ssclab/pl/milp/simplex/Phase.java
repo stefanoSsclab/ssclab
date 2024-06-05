@@ -308,7 +308,7 @@ abstract class Phase {
 		//System.out.println("corrretto:"+_N_Corretto);
 		for (int j = 0; j < _N_Corretto; j++) {
 			//controllo se c'e' un qualche coefficente sulla f.o. maggiore di ZERO
-			//naturalmente relativo alle variabili non basiche. E prendo quello con valore più alto. 
+			//naturalmente relativo alle variabili non basiche. E prendo quello con valore piu alto. 
 			if (TBEX_M[ j]> (value_cj_var_incoming) ) { 
 				value_cj_var_incoming = TBEX_M[ j]; 
 				index_var_incoming = j;
@@ -325,7 +325,7 @@ abstract class Phase {
 		
 		double TBEX_M[]=TBEX[_M];
 		for (int j = 0; j < _N; j++) {
-			//Cerco la variabile entrante. La candidata dovrebbe essere quella con il costo più elevato. 
+			//Cerco la variabile entrante. La candidata dovrebbe essere quella con il costo piu elevato. 
 			//?? Ma per la regola di Bland prendo la prima 
 			//controllo se c'e' un qualche coefficente sull f.o. maggiore di ZERO
 			//naturalmente relativo alle variabili non basiche.

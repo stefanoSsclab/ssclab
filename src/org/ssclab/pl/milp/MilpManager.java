@@ -50,7 +50,7 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 	
 	
 	/*
-	 * Il MilpManager è la classe che gestisce il MILP. 
+	 * Il MilpManager e' la classe che gestisce il MILP. 
 	 * Durante la fase del costruttore genera un primo PLProblem chiamato pl_current
 	 * 
 	 * 
