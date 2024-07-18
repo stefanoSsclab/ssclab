@@ -7,7 +7,7 @@
   <a target="_new" href="http://www.ssclab.org">SSC Software www.sscLab.org</a> 
  *
  * @since 1.0
- * @author baeldung
+ * @author Stefano Scarioli
  * @version 4
  */
 package org.ssclab.pl.milp;
