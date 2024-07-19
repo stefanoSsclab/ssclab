@@ -46,6 +46,7 @@ final class Engine {
 		return listaArchi;
 	}
 
+	/*
 	HashMap<Integer, Route> costruisciPercorsi(HashMap<Integer, Node> nodi, List<Edge> archi_ordinati_per_sij,
 			int maxStopsPerVehicle) {
 		HashMap<Integer, Route> percorsi = new HashMap<Integer, Route>();
@@ -93,6 +94,7 @@ final class Engine {
 		return percorsi;
 	}
 	
+	*/
 	/**
 	 * Costruisce tutti i percorsi costituenti la soluzione , partendo daalla
 	 * lista degli archi ordinati con guadagni
@@ -140,12 +142,18 @@ final class Engine {
 			//se la capacita' dei veicoli e' la stessa devo solo verificare, 
 			//per accettare una soluzione, che la domanda del nuovo percorso
 			//sia minore alla capacita del veicolo (tutti uguali) 
-			if (vehicleCapacities.length == 1)
+			if (vehicleCapacities.length == 1) 
 				valida = domandaNuovoPercorso <= vehicleCapacities[0];
-			else
-				valida = verificaCapacitaRotta(percorsi, rotta_i.index, rotta_j.index, 
+			
+			else valida = verificaCapacitaRotta(percorsi, rotta_i.index, rotta_j.index, 
 						domandaNuovoPercorso, vehicleCapacities);
-
+			/*
+			System.out.println("validita arco "+arco +"  OK:"+valida);
+			
+			  try { Thread.sleep(2000); } catch (InterruptedException e) {
+			  e.printStackTrace(); }
+			*/
+		
 			if (valida) {
 				// System.out.println("capacita' OK ");
 				nuovaRotta = combinaPercorsi(rotta_i, rotta_j, arco.i, arco.j, nodi);
@@ -280,5 +288,52 @@ final class Engine {
 			k--;
 		}
 		return true;
+	}
+	
+	Solution costruisciPercorsi(HashMap<Integer, Node> nodi, List<Edge> archiOrdinatiSij, int maxStopsPerVehicle) {
+		Solution percorsi = new Solution();
+		// Assegna ogni cliente a un percorso individuale iniziale con il deposito
+		Route rotta = null;
+		for (int i = 0; i < nodi.size(); i++) {
+			if (i != depotIndex) {
+				rotta = new Route();
+				rotta.add(depotIndex);
+				rotta.add(nodi.get(i).numNode);
+				rotta.add(depotIndex);
+				percorsi.put(rotta.index, rotta);
+			}
+		}
+
+		// Itera attraverso la lista ordinata dei guadagni
+		Route rotta_i, rotta_j, nuovaRotta;
+		int numeroFermateNew=0;
+		for (Edge arco : archiOrdinatiSij) {
+			// System.out.println("testo arco : "+arco);
+			rotta_i = nodi.get(arco.i).route;
+			rotta_j = nodi.get(arco.j).route;
+			// System.out.println("trovati percorsi: "+percorso_i.getKey() +" -
+			// "+percorso_j.getKey());
+			if (rotta_i.index == rotta_j.index) {
+				// System.out.println("continue ");
+				continue;
+			}
+
+			numeroFermateNew = rotta_i.getNumStop() + rotta_j.getNumStop();
+			// System.out.println("capacita totale' "+capacitaNuovoPercorso);
+			if (numeroFermateNew <= maxStopsPerVehicle) {
+				// System.out.println("capacita' OK ");
+				nuovaRotta = combinaPercorsi(rotta_i, rotta_j, arco.i, arco.j, nodi);
+				if (nuovaRotta != null) {
+					percorsi.remove(rotta_i.index);
+					percorsi.remove(rotta_j.index);
+					percorsi.put(nuovaRotta.index, nuovaRotta);
+				}
+			}
+			if (percorsi.size() == numberOfVehicles) {
+				// System.out.println("raggiunto numero di veicoli");
+				break;
+			}
+		}
+		return percorsi;
 	}
 }

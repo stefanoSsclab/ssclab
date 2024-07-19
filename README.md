@@ -8,7 +8,7 @@ https://www.ssclab.org/en/index.html
 
 ### Maven
 
-Aggiungi la seguente dipendenza al tuo `pom.xml`:
+Add the following dependency to your `pom.xml`:
 
 ```xml
 <dependency>
