@@ -1,25 +1,29 @@
 package org.ssclab.vrp;
 
- final class Node {
+ public final class Node {
   
-	int numNode;
-    double domanda;
+	public final int numNode;
+    @Override
+	public String toString() {
+		return String.valueOf(numNode) ;
+	}
+	public final double demand;
     Route route;
 
     Node(int numNode, double domanda) {
         this.numNode = numNode;
-        this.domanda = domanda;
+        this.demand = domanda;
         route=null;
     }
     Node(int numNode) {
         this.numNode = numNode;
-        this.domanda = 0;
+        this.demand = 0;
         route=null;
     }
     public int getNode() {
   		return numNode;
   	}
   	public double getDomand() {
-  		return domanda;
+  		return demand;
   	}
 }

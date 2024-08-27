@@ -35,6 +35,9 @@ public class VRP {
 	 *                           determinazione di una successiva migliore.
 	 */
 	public void setNumberOfIterations(int numberOfIterations) {
+		if (numberOfIterations < 0) {
+			throw new InvalidCVRPInputException("Number of iterations have negative values.");
+		}
 		this.numberOfIterations = numberOfIterations;
 	}
 
@@ -57,6 +60,9 @@ public class VRP {
 	 * @param depotIndex the index of the depot in the distance matrix.
 	 */
 	public void setDepotIndex(int depotIndex) {
+		if (depotIndex < 0 || depotIndex >= distanceMatrix.length) {
+			throw new InvalidCVRPInputException("The depot index if out of range.");
+		}
 		this.depotIndex = depotIndex;
 	}
 	
@@ -116,7 +122,9 @@ public class VRP {
 			newArchiConGuadagni = engine.generaNuovaListaOrdinata(archiConGuadagni);
 			newSolution = engine.costruisciPercorsi(nodi, newArchiConGuadagni, maxStopsForVehicleLocal);
 			newtotalCost = newSolution.getCostoTotale();
-			
+			//System.out.println("iterazione:"+iterazioni);
+			//System.out.println("fermatePerVeicoliCalcolato:"+fermatePerVeicoliCalcolato);
+			//System.out.println("maxStopsForVehicleLocal:"+maxStopsForVehicleLocal);
 			if ( newtotalCost < totalCost) {
 				if((ottimizzato && newSolution.size()==this.numberOfVehicles) || !ottimizzato) {
 					archiConGuadagni = newArchiConGuadagni;
@@ -126,7 +134,7 @@ public class VRP {
 			} 
 			iterazioni--;
 			
-			if(iterazioni==0 && fermatePerVeicoliCalcolato < maxStopsForVehicleLocal) {
+			if(iterazioni==0 && fermatePerVeicoliCalcolato < maxStopsForVehicleLocal && maxStopsForVehicle!=MAX_STOP) {
 				iterazioni=numberOfIterations;
 				maxStopsForVehicleLocal--;
 				ottimizzato=true;

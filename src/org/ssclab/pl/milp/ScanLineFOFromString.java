@@ -27,7 +27,7 @@ import org.ssclab.i18n.RB;
  * 
  * 
  */
-@Deprecated
+
 final class ScanLineFOFromString {
 	
 	private ArrayList<String> list_nomi_var;

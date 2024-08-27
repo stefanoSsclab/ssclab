@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 import org.ssclab.i18n.RB;
 import org.ssclab.pl.milp.InternalConstraint.TYPE_CONSTR;
 
-@Deprecated
+
 final class ScanConstraintFromStringa {
 	private ArrayList<InternalConstraint> new_constraints;
 	private ArrayList<String> nomi_var;

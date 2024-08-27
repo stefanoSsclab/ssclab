@@ -12,7 +12,7 @@ final public class Route {
 	int index;
 	private static int depotIndex = 0;
 	private static int indexCounter = 1; // contatore statico
-	// private static double maxCapacity;
+
 
 	// DA CAMBIARE RENDERE COME METODO FABBRICATORE
 	Route(Route percorso_i, Route percorso_j) {
@@ -36,35 +36,6 @@ final public class Route {
 		this.index = indexCounter++;
 	}
 
-	/*
-	Route(Integer[] nodiRotta) {
-		listRouteNodes = new ArrayList<Integer>();
-		this.index = indexCounter++;
-		for (int num_nodo : nodiRotta) {
-			listRouteNodes.add(num_nodo);
-			if (num_nodo != Route.depotIndex) listAllNodes.get(num_nodo).route = this;
-		}
-	}
-	
-
-	Route(Route rotta) {
-		listRouteNodes = new ArrayList<Integer>();
-		this.index = indexCounter++;
-		for (int num_nodo : rotta.listRouteNodes) {
-			listRouteNodes.add(num_nodo);
-			if (num_nodo != Route.depotIndex) listAllNodes.get(num_nodo).route = this;
-		}
-	}
-
-	Route(List<Integer> rotta) {
-		listRouteNodes = new ArrayList<Integer>();
-		this.index = indexCounter++;
-		for (int num_nodo : rotta) {
-			listRouteNodes.add(num_nodo);
-			if (num_nodo != Route.depotIndex) listAllNodes.get(num_nodo).route = this;
-		}
-	}
-    */
 	void add(Integer num_nodo) {
 		// assegno il nodo alla rotta ...
 		listRouteNodes.add(num_nodo);
@@ -133,22 +104,11 @@ final public class Route {
 		Route.depotIndex = depotIndex;
 	}
 
-	/*
-	static double getCapacity(Object[] nodiRotta1) {
-		double capacita = 0;
-		for (Object nodo : nodiRotta1) {
-			if ((Integer) nodo != depotIndex) capacita += listAllNodes.get(nodo).domanda;
-
-		}
-		return capacita;
-	}
-	*/
-
 	public double getTotalDemand() {
 		double demand = 0;
 		for (int id_nodo : listRouteNodes) {
 			if (id_nodo != depotIndex)
-				demand += listAllNodes.get(id_nodo).domanda;
+				demand += listAllNodes.get(id_nodo).demand;
 		}
 		return demand;
 	}

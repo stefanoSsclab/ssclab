@@ -168,6 +168,33 @@ public final class MILP implements FormatTypeInput {
 		setAllEpsilon();
 	}
 	
+	
+	
+	
+	
+	
+	
+	
+	/**
+	 * Constructor of a MILP object for solving problems expressed in matrix format.
+	 * 
+	 * @param fo A LinearObjectiveFunction object representing the objective function
+	 * @param listconstraints The list of constraints
+	 * @throws Exception An exception is thrown if the problem is not correctly formulated
+	 */
+	
+	public MILP(LinearObjectiveFunction fo,ListConstraints constraints) throws  Exception {
+		this.milp_initiale = new MilpManager(fo, constraints.getListConstraint(),this);
+		setAllEpsilon();
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 
 	/**
 	 * Constructor of a MILP object for solving problems expressed in coefficient format.

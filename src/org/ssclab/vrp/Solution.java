@@ -17,11 +17,9 @@ public final class Solution extends HashMap<Integer, Route>{
 	}
 
 	double  getCostoTotale() {
-		// System.out.println("Output dei percorsi iniziali");
 		double costoTotale = 0;
 		for (Route percorso : this.values()) {
 			costoTotale += percorso.getCost();
-			// System.out.println(costo);
 		}
 		return costoTotale;
 	}

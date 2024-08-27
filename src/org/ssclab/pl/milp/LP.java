@@ -49,7 +49,7 @@ public final class LP implements FormatTypeInput {
 	public static double NaN=Double.NaN;
 	private static final Logger logger=SscLogger.getLogger();
 	private SolutionImpl solution_pl;
-	private int num_max_iteration=10_000_000;
+	private int num_max_iteration=100_000_000;
 	private VectorsPL vectors_pl;
 	private Session session;
 	private final boolean isMilp=false;

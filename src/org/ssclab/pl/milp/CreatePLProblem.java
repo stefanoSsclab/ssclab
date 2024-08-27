@@ -112,6 +112,9 @@ import static org.ssclab.pl.milp.InternalConstraint.TYPE_CONSTR;
 
 			 if(rel==ConsType.EQ || rel==ConsType.GE || rel==ConsType.LE) {
 				 InternalConstraint constraint_i=new InternalConstraint(N); 
+				 String name=constraint.getName();
+				 if(name!=null) constraint_i.setName(name);
+				 
 				 double_b=constraint.getRhs();
 				 if(Double.isNaN(double_b)) throw new LPException(RB.getString("it.ssc.pl.milp.CreateMilpProblem.msg1"));
 				 constraint_i.setBi(double_b);

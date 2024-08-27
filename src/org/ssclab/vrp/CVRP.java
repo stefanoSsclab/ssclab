@@ -91,8 +91,7 @@ public class CVRP {
 	/**
 	 * Sets the number of iterations for the algorithm.
 	 *
-	 * @param numberOfIterations the number of iterations tra una soluzione e la
-	 *                           determinazione di una successiva migliore.
+	 * @param numberOfIterations the number of iterations 
 	 */
 	public void setNumberOfIterations(int numberOfIterations) {
 		this.numberOfIterations = numberOfIterations;

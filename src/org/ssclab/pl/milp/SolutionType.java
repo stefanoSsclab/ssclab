@@ -39,6 +39,7 @@ public enum SolutionType {
 	
 	public static final SolutionType INFEASIBLE=VUOTUM;
 	public static final SolutionType UNLIMITED=ILLIMITATUM;
+	public static final SolutionType UNBOUNDED=ILLIMITATUM;
 	public static final SolutionType OPTIMAL=OPTIMUM;
 	public static final SolutionType MAX_ITERATIONS=MAX_ITERATIUM;
 	
