@@ -179,7 +179,7 @@ public final class MILP implements FormatTypeInput {
 	 * Constructor of a MILP object for solving problems expressed in matrix format.
 	 * 
 	 * @param fo A LinearObjectiveFunction object representing the objective function
-	 * @param listconstraints The list of constraints
+	 * @param constraints The list of constraints
 	 * @throws Exception An exception is thrown if the problem is not correctly formulated
 	 */
 	

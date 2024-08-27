@@ -609,8 +609,7 @@ public final class LP implements FormatTypeInput {
 	/**
 	*
 	*This method allows limiting the maximum number of simplex iterations (phase 1 iterations + phase 2 iterations)
-	*@param num_max_iteration The maximum number of iterations to be executed.
-	*Default value 10,000,000.
+	*@param num_max_iteration The maximum number of iterations to be executed. Default value 100,000,000.
 	*@throws LPException If an incorrect number (zero or negative) is set
 	*/
 	public void setNumMaxIteration(int num_max_iteration) throws LPException  { 
