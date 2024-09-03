@@ -3,8 +3,6 @@
 package org.ssclab.pl.milp;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Files;
@@ -15,7 +13,6 @@ import java.util.logging.Logger;
 
 import org.ssclab.context.Context;
 import org.ssclab.context.Session;
-import org.ssclab.context.exception.InvalidSessionException;
 import org.ssclab.datasource.DataSource;
 import org.ssclab.i18n.RB;
 import org.ssclab.log.SscLevel;

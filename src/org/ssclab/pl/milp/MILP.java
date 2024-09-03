@@ -583,9 +583,10 @@ public final class MILP implements FormatTypeInput {
 	 * @return the optimal integer, mixed-integer, or binary solution
 	 */
 	
-	public Solution getSolution()  {
-		if(lb.milp!=null) return lb.milp.getSolution();
-		else return null;
+	public Solution getSolution()  throws SimplexException {
+		if(lb.milp==null)  throw new SimplexException(RB.getString("it.ssc.pl.milp.LP.msg10"));
+		return lb.milp.getSolution();
+		
 	}
 	
 	/**
@@ -596,9 +597,10 @@ public final class MILP implements FormatTypeInput {
 	 * @throws SimplexException If the optimal solution is not present
 	 */
 	
-	public double[] getValuesSolution() throws SimplexException  {
-		if(lb.milp!=null) return lb.milp.getSolution().getValuesSolution();
-		else return null;
+	public double[] getValuesSolution() throws SimplexException   {
+		if(lb.milp==null)  throw new SimplexException(RB.getString("it.ssc.pl.milp.LP.msg10"));
+		return lb.milp.getSolution().getValuesSolution();
+		
 	}
 	
 	/**
