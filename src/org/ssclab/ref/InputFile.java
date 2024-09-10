@@ -67,7 +67,7 @@ public class InputFile implements Input , Cloneable {
 	 * @param informat_string formato di lettura 
 	 */
 	
-	public void setInputFormat(String informat_string) throws InvalidInformatStringException {
+	public InputFile setInputFormat(String informat_string) throws InvalidInformatStringException {
 		/*Creare un oggetto ParseInformatString che andra a popolare    */
 		/*un oggetto con tutte le informazioni per effettuare la parte */
 		/*di input di un passo di step*/
@@ -75,6 +75,7 @@ public class InputFile implements Input , Cloneable {
 		ParserInformatString parse_string=new ParserInformatString();
 		parse_string.parser(informat_string);
 		info_input = parse_string.createInputDichiarationInfo(); 
+		return this;
 	}
 	
 		

@@ -9,7 +9,7 @@ import java.util.concurrent.CyclicBarrier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.ssclab.context.Context;
+import org.ssclab.context.Context; 
 import org.ssclab.context.Session;
 import org.ssclab.i18n.RB;
 import org.ssclab.log.SscLevel;
@@ -32,7 +32,7 @@ import org.ssclab.pl.milp.scantext.ScanVarFromText;
  * is the simplex method combined with the Branch and Bound method.
  * 
  * @author Stefano Scarioli
- * @version 4.0
+ * @version 4.2
  * @see <a target="_new" href="http://www.ssclab.org">SSC Software www.sscLab.org</a> 
  */
 
@@ -270,11 +270,13 @@ public final class MILP implements FormatTypeInput {
 	 * 
 	 * @param num_max_iteration The maximum number of iterations that each simplex can execute
 	 * @throws SimplexException If an error occurs during the process
+	 * @return the MILP instance (this) on which the method call is being made
 	 */
 
-	public void setNumMaxIterationForSingleSimplex(int num_max_iteration) throws SimplexException {
+	public MILP setNumMaxIterationForSingleSimplex(int num_max_iteration) throws SimplexException {
 		if(num_max_iteration <= 0) throw new SimplexException(RB.getString("it.ssc.pl.milp.MILP.msg7"));
 		this.num_max_iteration = num_max_iteration;
+		return this;
 	}
 	
 	/**
@@ -311,10 +313,12 @@ public final class MILP implements FormatTypeInput {
 	 *    Also to determine if the base is degenerate.
 	 * 
 	 * @param epsilon Tolerance used in various phases of the simplex. Default value 1E-10
+	 * @return the MILP instance (this) on which the method call is being made
 	 */
 	
-	public void setEpsilon(EPSILON epsilon) {
+	public MILP setEpsilon(EPSILON epsilon) {
 		epsilons.epsilon= epsilon;
+		return this;
 	}
 	
 	/**
@@ -323,10 +327,12 @@ public final class MILP implements FormatTypeInput {
 	 * feasible solutions for the problem.
 	 * 
 	 * @param cepsilon Tolerance of phase 1 solution with respect to zero. Default value 1E-8
+	 * @return the MILP instance (this) on which the method call is being made
 	 */
 	
-	public void setCEpsilon(EPSILON cepsilon) {
+	public MILP setCEpsilon(EPSILON cepsilon) {
 		epsilons.cepsilon= cepsilon;
+		return this;
 	}
 	
 		
@@ -338,10 +344,12 @@ public final class MILP implements FormatTypeInput {
 	 *  | Int(x) - x | &lt; epsilon -&gt; x &#x2208; Z
 	 * 
 	 * @param iepsilon Tolerance to consider a number as integer. Default value 1E-10
+	 * @return the MILP instance (this) on which the method call is being made
 	 */
 	
-	public void setIEpsilon(EPSILON iepsilon) {
+	public MILP setIEpsilon(EPSILON iepsilon) {
 		 epsilons.iepsilon= iepsilon; 
+		 return this;
 	}
 	
 	/*
@@ -581,6 +589,7 @@ public final class MILP implements FormatTypeInput {
 	 * This method returns, if it exists, the optimal integer, mixed-integer, or binary solution.
 	 * 
 	 * @return the optimal integer, mixed-integer, or binary solution
+	 * @throws SimplexException if the problem has not solution 
 	 */
 	
 	public Solution getSolution()  throws SimplexException {
@@ -616,10 +625,12 @@ public final class MILP implements FormatTypeInput {
 	 * This method allows setting the number of threads to use for executing the Branch and Bound.
 	 * 
 	 * @param lthreadNumber Enumeration for setting the number of Threads
+	 * @return the MILP instance (this) on which the method call is being made
 	 */
 
-	public void setThreadNumber(MILPThreadsNumber lthreadNumber) {
+	public MILP setThreadNumber(MILPThreadsNumber lthreadNumber) {
 		threadNumber = lthreadNumber;
+		return this;
 	}
 	
 	/**
@@ -636,10 +647,12 @@ public final class MILP implements FormatTypeInput {
 	 * Setting it to true allows interrupting the Branch and Bound in order to determine
 	 * not an optimal solution but only a feasible solution to the problem.
 	 * @param isJustTakeFeasibleSolution true to interrupt the Branch and Bound and obtain only a feasible solution.
+	 * @return the MILP instance (this) on which the method call is being made
 	 */
 
-	public void setJustTakeFeasibleSolution(boolean isJustTakeFeasibleSolution) {
+	public MILP setJustTakeFeasibleSolution(boolean isJustTakeFeasibleSolution) {
 		this.isJustTakeFeasibleSolution = isJustTakeFeasibleSolution;
+		return this;
 	}
 
 	public  EPSILON getEpsilon() {

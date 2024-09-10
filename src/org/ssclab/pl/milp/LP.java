@@ -75,6 +75,7 @@ public final class LP implements FormatTypeInput {
 	
 	
 	/**
+	* Constructor for use with the problem statement in text format stored in an String.
 	* 
 	*@param pl_text The text where the file containing the LP problem formulated with the text 
 	*format is located
@@ -151,6 +152,7 @@ public final class LP implements FormatTypeInput {
 	
 	
 	/**
+	 * Constructor for use with the problem statement in text format stored in an ArrayList.
 	*
 	* @param text An ArrayList (of String objects) containing the problem formulation in the 
 	* form of text
@@ -205,6 +207,8 @@ public final class LP implements FormatTypeInput {
 	
 	
 	/**
+	 * Constructor for use with the problem statement in text format stored in
+	 *  an external file.
 	* 
 	*@param path The path where the file containing the LP problem formulated with the text 
 	*format is located
@@ -569,14 +573,15 @@ public final class LP implements FormatTypeInput {
 	*epsilon is used to determine if it is possible to eliminate the rows and columns of these on the extended table. <br>
 	*During phase two, both in determining the entering variable and in determining the exiting variable with or without the Bland rule;
 	*it is also used to determine if the base is degenerate.
+	*@return the LP instance (this) on which the method call is being made
 	*@param epsilon Tolerance used in various phases of the simplex. Default value 1E-10
 	*/
 
 	
-	public void setEpsilon(EPSILON epsilon)   {  
+	public LP setEpsilon(EPSILON epsilon)   {  
 		this.epsilons.epsilon=epsilon;
+		return this;
 	}
-	
 	
 
 	
@@ -584,11 +589,13 @@ public final class LP implements FormatTypeInput {
 	*
 	*This method allows setting the epsilon value relative to the tolerance in determining if an optimal solution expressed by phase 1
 	*is close to or equal to zero and thus gives rise to feasible solutions for the initial problem.
+	*@return the LP instance (this) on which the method call is being made
 	*@param epsilon Tolerance of phase 1 solution with respect to zero. Default value 1E-8
 	*/
 	
-	public void setCEpsilon(EPSILON epsilon)  { 
+	public LP setCEpsilon(EPSILON epsilon)  { 
 		this.epsilons.cepsilon=epsilon;
+		return this;
 	}
 	
 	
@@ -607,11 +614,13 @@ public final class LP implements FormatTypeInput {
 	*
 	*This method allows limiting the maximum number of simplex iterations (phase 1 iterations + phase 2 iterations)
 	*@param num_max_iteration The maximum number of iterations to be executed. Default value 100,000,000.
+	*@return the LP instance (this) on which the method call is being made
 	*@throws LPException If an incorrect number (zero or negative) is set
 	*/
-	public void setNumMaxIteration(int num_max_iteration) throws LPException  { 
+	public LP setNumMaxIteration(int num_max_iteration) throws LPException  { 
 		if(num_max_iteration <= 0) throw new LPException("Il numero massimo di iterazioni deve essere un numero positivo");
 		this.num_max_iteration=num_max_iteration;
+		return this;
 	}
 	
 	/**
@@ -741,7 +750,7 @@ public final class LP implements FormatTypeInput {
 	*/
 	public Solution getSolution() throws SimplexException  {
 		if(this.solution_pl==null)  throw new SimplexException(RB.getString("it.ssc.pl.milp.LP.msg10"));
-		return this.solution_pl;
+		return this.solution_pl.setFeasibleSolution(this.isStopPhase2);
 	}
 	
 	
@@ -770,13 +779,18 @@ public final class LP implements FormatTypeInput {
 	
 	/**
 	*
-	*If the number of physical cores of the host on which SSc is running is greater than 4,
-	*the performance of the simplex can be improved by executing the optimization processes in parallel on multiple threads.
+	*If the number of physical cores of the host on which SSc is running is 
+	*greater than 4, the performance of the simplex can be improved by executing 
+	*the optimization processes in parallel on multiple threads. 
+	*The number of threads is set to set value is AUTO, the system decides 
+	*the number of threads to use.
+	*@return the LP instance on which the method call is being made
 	*@param isParallelSimplex True to activate parallelization
 	*/
-	public void setParallelSimplex(boolean isParallelSimplex) {
+	public LP setParallelSimplex(boolean isParallelSimplex) {
 		this.isParallelSimplex = isParallelSimplex;
 		if(isParallelSimplex==true) threadsNumber=LPThreadsNumber.AUTO;
+		return this;
 	}
 	
 		
@@ -795,10 +809,12 @@ public final class LP implements FormatTypeInput {
 	* If the set value is AUTO, the system decides the number of
 	threads to use.
 	* @param threadsNumber Sets the number of threads to use in the execution.
+	*@return the LP instance (this) on which the method call is being made
 	*/
-	public void setThreadsNumber(LPThreadsNumber threadsNumber) {
+	public LP setThreadsNumber(LPThreadsNumber threadsNumber) {
 		isParallelSimplex=true;
 		this.threadsNumber = threadsNumber;
+		return this;
 	}
 	
 
@@ -817,9 +833,11 @@ public final class LP implements FormatTypeInput {
 	* Setting to true allows interrupting the simplex at the end of phase 1, in order 
 	* to determine not an optimal solution but only a feasible solution of the problem.
 	* @param isStopPhase2 true to interrupt the simplex before phase 2.
+	*@return the LP instance (this) on which the method call is being made
 	*/
-	public void setJustTakeFeasibleSolution(boolean isStopPhase2) {
+	public LP setJustTakeFeasibleSolution(boolean isStopPhase2) {
 		this.isStopPhase2 = isStopPhase2;
+		return this;
 	}
 
 	
@@ -905,7 +923,5 @@ public final class LP implements FormatTypeInput {
 		
 		System.out.println("");
 	}
-	
-	
 }
 

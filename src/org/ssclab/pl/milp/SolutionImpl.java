@@ -2,12 +2,19 @@ package org.ssclab.pl.milp;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.ssclab.i18n.RB;
+import org.ssclab.log.SscLogger;
 
 final class SolutionImpl implements Solution {
 	
 	private Var[] variables;
 	private PLProblem milp_original;
 	private SolutionType type_solution;
+	private boolean isFeasibleSolution;
+	private static final Logger logger=SscLogger.getLogger(); 
 	
 	//Costruttore da usare sulla parte MILP
 	SolutionImpl(SolutionType type_solution,PLProblem milp_originall,  int basis[],double values[], Var[] variables_deep) {
@@ -102,6 +109,15 @@ final class SolutionImpl implements Solution {
 		}
 	}
 	
+	public boolean isFeasibleSolution() {
+		return isFeasibleSolution;
+	}
+
+	public SolutionImpl setFeasibleSolution(boolean isFeasibleSolution) {
+		this.isFeasibleSolution = isFeasibleSolution;
+		return this;
+	}
+
 	public SolutionType getTypeSolution() {
 		return type_solution;
 	}
@@ -125,7 +141,11 @@ final class SolutionImpl implements Solution {
 		return -1;
 	}
 	
+
 	public double getOptimumValue() {
+		if(this.isFeasibleSolution) logger.log(Level.WARNING,  
+				RB.getString("org.ssclab.pl.milp.SolutionImpl.msg1"));
+			
 		double z=0;
 		ObjectiveFunctionImpl fo=this.milp_original.getObjFunction();
 		for (int i = 0; i < variables.length; i++) {
