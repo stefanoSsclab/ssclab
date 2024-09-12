@@ -10,5 +10,4 @@ public class Epsilons {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-
 }

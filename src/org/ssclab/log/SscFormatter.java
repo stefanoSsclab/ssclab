@@ -10,7 +10,7 @@ import java.util.logging.LogRecord;
 import org.ssclab.context.Config;
 
 
-public final class SscFormatter extends Formatter { 
+ final class SscFormatter extends Formatter { 
 	
 	private static final DateFormat sdf = new SimpleDateFormat("dd/MM/yy kk:mm:ss"); 
 	private static final String LINE_SEPARATOR = Config.NL;
@@ -29,7 +29,7 @@ public final class SscFormatter extends Formatter {
 	
 	private static String replaceSevereWhitError(LogRecord arg0)  {
 		Level level=arg0.getLevel();
-		if(level.intValue()==Level.SEVERE.intValue()) return "ERROR SEVERE";
+		if(level.intValue()==Level.SEVERE.intValue()) return "ERROR";
 		return level.getName();
 	}
 }

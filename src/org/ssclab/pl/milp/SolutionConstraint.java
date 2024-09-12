@@ -2,7 +2,7 @@ package org.ssclab.pl.milp;
 
 /**
 
- * * This interface allows accessing a constraint of the LP problem where each unknown variable has been assigned
+ * This interface allows accessing a constraint of the LP problem where each unknown variable has been assigned
  * the optimal value. It is possible to obtain the LHS value of the constraint based on the optimal solution.
  * By LHS component we mean the linear equation that occupies the left-hand side of the constraint. 
  * Given a constraint X1 + 3X2 &#x2265; 7, the LHS component is given by the part X1 + 3X2.
