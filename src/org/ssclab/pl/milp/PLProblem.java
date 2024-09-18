@@ -182,50 +182,6 @@ import org.ssclab.pl.milp.util.VectorsPL;
 		return C;
 	}
 	
-	/*
-	private double[][]  getMatrixA_old(int new_dimension) {  
-		double Aij[][]=new double[list_constraint.size()][];
-		int index_contr=0;
-		int index_Ai=0;
-		int index_slack=0;
-		double aij;
-		
-		InternalConstraint constraint ;
-		Iterator<InternalConstraint> itr = list_constraint.listIterator();
-	    while (itr.hasNext()) {
-	    	//System.out.println("->"+index_contr);
-	    	constraint = itr.next();
-	    	Aij[index_contr]=new double[new_dimension];
-	    	//System.out.println(""+index_contr);
-			index_Ai=0;
-			for(int _a=0;_a<array_var.length;_a++) { 
-				aij=constraint.getAij(_a);
-				Aij[index_contr][index_Ai]=aij;
-				index_Ai++;
-				if(array_var[_a].isFree()) {
-					if(aij!=0) Aij[index_contr][index_Ai]=-aij;
-					else Aij[index_contr][index_Ai]=0.0;
-					index_Ai++;
-				}
-			}
-			
-			if(index_slack==0) index_slack=index_Ai;
-			if((constraint.getType()==InternalConstraint.TYPE_CONSTR.GE)) {
-				Aij[index_contr][index_slack]=-1.0;
-				index_slack++;
-			}
-			else if((constraint.getType()==InternalConstraint.TYPE_CONSTR.LE)) {
-				Aij[index_contr][index_slack]=1.0;
-				index_slack++;
-			}
-			
-			index_contr++;
-			//System.out.println(""+index_contr);
-	        itr.remove();
-	    }
-		return Aij;
-	}*/
-	
 	private double[][]  getMatrixA(int new_dimension) {  
 		double Aij[][]=new double[list_constraint.size()][];
 		int index_contr=0;

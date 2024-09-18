@@ -17,6 +17,10 @@ public final class InternalConstraint implements Cloneable,Serializable {
 	private String name;
 	
 	
+	public InternalConstraint() {
+		
+	}
+	
 	public InternalConstraint(int dimension) {
 		Ai=new double[dimension];
 	}

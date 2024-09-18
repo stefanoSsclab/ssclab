@@ -22,6 +22,8 @@ import org.ssclab.pl.milp.util.A_Matrix;
 import org.ssclab.pl.milp.util.LPThreadsNumber;
 import org.ssclab.ref.Input;
 import org.ssclab.pl.milp.util.VectorsPL;
+import org.ssclab.pl.milp.scanjson.ScanConstraintFromJson;
+import org.ssclab.pl.milp.scanjson.ScanSintaxJson;
 import org.ssclab.pl.milp.scantext.CheckSintaxText;
 import org.ssclab.pl.milp.scantext.ScanConstraintFromLine;
 import org.ssclab.pl.milp.scantext.ScanFoFromLine;
@@ -346,7 +348,7 @@ public final class LP implements FormatTypeInput {
 	public LP(LinearObjectiveFunction fo,ArrayList<Constraint> constraints) throws Exception { 
 		if(constraints==null ) throw new LPException(RB.getString("it.ssc.pl.milp.LP.msg13"));
 		this.session=Context.createNewSession();
-		PLProblem pl_original=CreatePLProblem.create(fo,constraints,isMilp);
+		PLProblem pl_original=CreatePLProblem.create(fo,constraints,isMilp,null);
 		
 		//memorizza nella work il pl_original come oggetto prima di essere standardizzato. 
 		//pl original , non e' memorizzato in LP , una volta terminato questo metodo, 
@@ -390,7 +392,7 @@ public final class LP implements FormatTypeInput {
 	
 	public LP(LinearObjectiveFunction fo,ListConstraints constraints) throws Exception  { 
 		this.session=Context.createNewSession();
-		PLProblem pl_original=CreatePLProblem.create(fo,constraints.getListConstraint(),isMilp);
+		PLProblem pl_original=CreatePLProblem.create(fo,constraints.getListConstraint(),isMilp,null);
 		
 		//memorizza nella work il pl_original come oggetto prima di essere standardizzato. 
 		//pl original , non e' memorizzato in LP , una volta terminato questo metodo, 
@@ -923,5 +925,71 @@ public final class LP implements FormatTypeInput {
 		
 		System.out.println("");
 	}
+	
+	
+	
+	
+	
+	public LP(JsonProblem pl_json) throws Exception { 
+		
+		
+		/*PArte nuova json*/
+		
+		BufferedReader br=null;
+		ArrayList<String> list_var=null;
+		LinearObjectiveFunction fo;
+		ScanConstraintFromJson scanCons=null;
+		try {
+			br= pl_json.getBufferedReader();
+			ScanSintaxJson scanJson=new ScanSintaxJson(br);
+		    br.close();br=null;
+			list_var=scanJson.getListNomiVar();
+			fo=scanJson.getFo();
+			br= pl_json.getBufferedReader();
+			//for(String namev:list_var) System.out.println("name_ord :"+namev);
+			scanCons=new ScanConstraintFromJson(br,list_var);
+			
+		}
+		finally {
+			if (br != null ) br.close();
+		}
+		ArrayList<Constraint> constraints=scanCons.getConstraints();
+		
+		/*PArte vecchia */
+	
+		if(constraints==null ) throw new LPException(RB.getString("it.ssc.pl.milp.LP.msg13"));
+		this.session=Context.createNewSession();
+		PLProblem pl_original=CreatePLProblem.create(fo,constraints,isMilp,list_var);
+		
+		//memorizza nella work il pl_original come oggetto prima di essere standardizzato. 
+		//pl original , non e' memorizzato in LP , una volta terminato questo metodo, 
+		//ogni riferimento e' perso. 
+		//Questo oggetto non contiene i vincoli aggiuntivi degli upper/lower e le slacks, 
+		//ne nessuna standardizzazione  
+		persistencePl=new PersistensePLProblem(pl_original,session.getFactoryLibraries().getLibraryWork().getAbsolutePath());
+		
+		//createStandartProblem(pl_original);
+		String path_work=session.getFactoryLibraries().getLibraryWork().getAbsolutePath();
+		
+		/*
+		 * Nella fase di standardizzazione : 
+		 * 
+		 * a) Cambio segno alla funzione obiettivo se essa e MIN - > MAX e Cj = -Cj
+		 * b) Essettuo traslazione del vincolo esistente  aggiornando bi, se esiste 
+		 *    una o piu' variabili con lower != 0 o da -inf.
+		 * c) Aggiungo nuovo vincolo nel caso esista un lower (Xj <= upper - appo_lower )  
+		 * d) Rende tutti i termini noti b positivi , cambiando segno a tutta la riga
+		 * 
+		 * e) Calcola il nuovo valore new_dimension che sara' poi la dimensione delle colonne di A 
+		 *    (la nuova matrice standard)
+		 * f) Crea la nuova matrice A aggiungendo anche le variabili libere (x=y-z) e le slacks, 
+		 *    e i vettori C e B
+		 */
+		
+		vectors_pl=pl_original.standardize(); 
+		
+		//memorizza su disco la matrice A
+		amatrix=new A_DataMatrix(vectors_pl.A,path_work);
+	}	
 }
 

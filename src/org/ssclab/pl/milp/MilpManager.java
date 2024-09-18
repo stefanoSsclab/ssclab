@@ -56,14 +56,16 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 	 * 
 	 */
 	
-	MilpManager(LinearObjectiveFunction f,ArrayList<Constraint> constraints, MILP father) throws InvalidSessionException, Exception {
+	MilpManager(LinearObjectiveFunction f,ArrayList<Constraint> constraints, MILP father,ArrayList<String> list_var) throws InvalidSessionException, Exception {
 		id=createId(); 
-		pl_current=CreatePLProblem.create(f,constraints,isMilp);
+		pl_current=CreatePLProblem.create(f,constraints,isMilp,list_var);
 		pl_current.configureBinary();
 		pl_current.configureSemicont();
 		this.father=father;
 		this.father.father_pl_original_zero=pl_current.clone(); 
 	}
+	
+
 	
 	MilpManager(LinearObjectiveFunction f,ArrayList<InternalConstraint> constraints,ArrayList<String> nomi_var,ArrayProblem arrayProb,  MILP father) throws InvalidSessionException, Exception {
 		id=createId(); 

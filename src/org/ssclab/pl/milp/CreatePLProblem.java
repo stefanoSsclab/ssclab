@@ -78,7 +78,8 @@ import static org.ssclab.pl.milp.InternalConstraint.TYPE_CONSTR;
 	 
 	 protected static PLProblem create(LinearObjectiveFunction f,
 			 						ArrayList<Constraint> constraints,
-			 						boolean isMilp) throws Exception  {
+			 						boolean isMilp,ArrayList<String> listVar) 
+			 								throws Exception  {
 
 		 boolean exist_integer_var=false;
 		 boolean is_set_row_upper=false;
@@ -92,9 +93,15 @@ import static org.ssclab.pl.milp.InternalConstraint.TYPE_CONSTR;
 		 double[] C=f.getC();
 		 int N=C.length;
 		 PLProblem lp_original=new PLProblem(N);
-		 for(int _j=0;_j<N; _j++)  {
-			 lp_original.setNameVar(_j, "X"+(_j+1));
-		 }
+		 
+		 if(listVar==null)
+			 for(int _j=0;_j<N; _j++)  {
+				 lp_original.setNameVar(_j, "X"+(_j+1));
+			 }
+		 else  
+			 for(int _j=0;_j<N; _j++)  {
+			 	lp_original.setNameVar(_j, listVar.get(_j));
+		 	}
 
 		 if(f.getType()==GoalType.MAX) lp_original.setTargetObjFunction(MAX);
 		 else if(f.getType()==GoalType.MIN) lp_original.setTargetObjFunction(MIN);
@@ -111,7 +118,10 @@ import static org.ssclab.pl.milp.InternalConstraint.TYPE_CONSTR;
 			 rel=constraint.getRel();
 
 			 if(rel==ConsType.EQ || rel==ConsType.GE || rel==ConsType.LE) {
-				 InternalConstraint constraint_i=new InternalConstraint(N); 
+				 //modificato il 17/09/2024
+				 //InternalConstraint constraint_i=new InternalConstraint(N); 
+				 //System.out.println("creato");
+				 InternalConstraint constraint_i=new InternalConstraint(); 
 				 String name=constraint.getName();
 				 if(name!=null) constraint_i.setName(name);
 				 

@@ -29,7 +29,7 @@ import org.ssclab.context.Config;
 	
 	private static String replaceSevereWhitError(LogRecord arg0)  {
 		Level level=arg0.getLevel();
-		if(level.intValue()==Level.SEVERE.intValue()) return "ERROR";
+		if(level.intValue()==Level.SEVERE.intValue()) return "ERROR SEVERE";
 		return level.getName();
 	}
 }

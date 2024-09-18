@@ -15,6 +15,8 @@ import org.ssclab.i18n.RB;
 import org.ssclab.log.SscLevel;
 import org.ssclab.log.SscLogger;
 import org.ssclab.pl.milp.ObjectiveFunction.TARGET_FO;
+import org.ssclab.pl.milp.scanjson.ScanConstraintFromJson;
+import org.ssclab.pl.milp.scanjson.ScanSintaxJson;
 import org.ssclab.pl.milp.util.MILPThreadsNumber;
 import org.ssclab.ref.Input;
 import org.ssclab.step.parallel.Task;
@@ -164,16 +166,12 @@ public final class MILP implements FormatTypeInput {
 	 */
 	
 	public MILP(LinearObjectiveFunction fo,ArrayList<Constraint> constraints) throws  Exception {
-		this.milp_initiale = new MilpManager(fo, constraints,this);
+		this.milp_initiale = new MilpManager(fo, constraints,this,null);
 		setAllEpsilon();
 	}
 	
 	
-	
-	
-	
-	
-	
+
 	
 	/**
 	 * Constructor of a MILP object for solving problems expressed in matrix format.
@@ -184,7 +182,7 @@ public final class MILP implements FormatTypeInput {
 	 */
 	
 	public MILP(LinearObjectiveFunction fo,ListConstraints constraints) throws  Exception {
-		this.milp_initiale = new MilpManager(fo, constraints.getListConstraint(),this);
+		this.milp_initiale = new MilpManager(fo, constraints.getListConstraint(),this,null);
 		setAllEpsilon();
 	}
 	
@@ -698,6 +696,38 @@ public final class MILP implements FormatTypeInput {
 	
 	*/
 	
+	/**
+	 * Constructor of a MILP object for solving problems formulated in json 
+	 * format.
+	 * 
+	 * @param pl_json JsonProblem object containing the problem in json format
+	 * @throws Exception if the problem is not correctly formulated
+	 */
 	
 	
+	public MILP(JsonProblem pl_json) throws Exception  { 
+		
+		/*PArte nuova json*/
+		BufferedReader br=null;
+		ArrayList<String> listVar=null;
+		LinearObjectiveFunction fo;
+		ScanConstraintFromJson scanCons=null;
+		try {
+			br= pl_json.getBufferedReader();
+			ScanSintaxJson scanJson=new ScanSintaxJson(br);
+		    br.close();br=null;
+		    listVar=scanJson.getListNomiVar();
+			fo=scanJson.getFo();
+			br= pl_json.getBufferedReader();
+			//for(String namev:list_var) System.out.println("name_ord :"+namev);
+			scanCons=new ScanConstraintFromJson(br,listVar);
+		}
+		finally {
+			if (br != null ) br.close();
+		}
+		
+		/*PArte vecchia*/
+		this.milp_initiale = new MilpManager(fo, scanCons.getConstraints(),this,listVar);
+		setAllEpsilon();
+	}
 }
