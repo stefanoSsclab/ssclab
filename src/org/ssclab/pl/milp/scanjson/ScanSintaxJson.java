@@ -176,10 +176,11 @@ public class ScanSintaxJson {
 		
 		JsonObject coeff=this.fo.getJsonObject("coefficients");
 		for(String varNameFo:coeff.keySet()) {
-			int index=listNomiVar.indexOf(varNameFo.toUpperCase());
+			int index=listNomiVar.indexOf(varNameFo.toUpperCase());			//System.out.println("->"+varNameFo);
 			double cj=coeff.getJsonNumber(varNameFo).doubleValue();
+			//System.out.println("->"+cj);
 			if(index==-1) throw new ParseException(RB.getString("org.ssclab.pl.milp.scantext.ScanFoFromLine.msg1")+" ["+varNameFo+"]");
-			list_cj[index]=cj+list_cj[index];	
+			list_cj[index]=cj;	
 		}
 	}
 

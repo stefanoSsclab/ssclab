@@ -73,7 +73,7 @@ public class ScanConstraintFromJson {
 								for (String key : coef.keySet()) {
 									int index=nomi_var.indexOf(key);
 									value=coef.getJsonNumber(key).doubleValue();
-									Ai[index]=value+Ai[index];	
+									Ai[index]=value;	
 								}
 								//existConstraints = true;
 								ConsType relaz=null;
@@ -106,6 +106,20 @@ public class ScanConstraintFromJson {
 								jval = parser.getValue();
 								if (jval.getValueType() == JsonValue.ValueType.OBJECT) {
 									jsonObject = jval.asJsonObject();
+									
+									if(jsonObject.containsKey("upper")) {
+										if(jsonObject.isNull("upper")) upper[index]=Double.NaN;
+										else { 
+											upper[index]=jsonObject.getJsonNumber("upper").doubleValue();
+											if(upper[index] < 0) lower[index]=Double.NaN;
+										}
+									}
+									if(jsonObject.containsKey("lower")) {
+										if(jsonObject.isNull("lower")) lower[index]=Double.NaN;
+										else lower[index]=jsonObject.getJsonNumber("lower").doubleValue();
+									}
+									
+									/*
 									for (String kej : jsonObject.keySet()) {
 										if(kej.equals("upper")) {
 											if(jsonObject.isNull(kej)) upper[index]=Double.NaN;
@@ -115,7 +129,7 @@ public class ScanConstraintFromJson {
 											if(jsonObject.isNull(kej)) lower[index]=Double.NaN;
 											else lower[index]=jsonObject.getJsonNumber(kej).doubleValue();
 										}
-									}
+									}*/
 								}	
 							}
 						} 
