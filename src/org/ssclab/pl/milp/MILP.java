@@ -625,7 +625,11 @@ public final class MILP implements FormatTypeInput {
 	 * @param lthreadNumber Enumeration for setting the number of Threads
 	 * @return the MILP instance (this) on which the method call is being made
 	 */
-
+	public MILP setThreadsNumber(MILPThreadsNumber lthreadNumber) {
+		threadNumber = lthreadNumber;
+		return this;
+	}
+	@Deprecated
 	public MILP setThreadNumber(MILPThreadsNumber lthreadNumber) {
 		threadNumber = lthreadNumber;
 		return this;
