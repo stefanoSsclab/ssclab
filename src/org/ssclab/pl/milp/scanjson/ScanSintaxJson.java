@@ -48,9 +48,7 @@ public class ScanSintaxJson {
 
 		JsonParser parser = Json.createParser(br);
 		JsonParser.Event event = null;
-		
 		if (parser.hasNext())	event = parser.next();
-		
 		while (parser.hasNext()) {
 			event = parser.next();
 			if (event == KEY_NAME && parser.getString().toUpperCase().equals("OBJECTIVE")) {
@@ -155,17 +153,14 @@ public class ScanSintaxJson {
 	}
 	
 	private void check2() throws ParseException {
-		
 		if(!existObjective) throw new ParseException(RB.getString("org.ssclab.pl.milp.json.msg9"));
 		if(!existConstraints) throw new ParseException(RB.getString("org.ssclab.pl.milp.json.msg10"));
-		
 		if(listNomiVar.isEmpty()) {
 			throw new ParseException(RB.getString("org.ssclab.pl.milp.json.msg11"));
 		}
 		else {
 			for(String nomeVar:listNomiVarWithType) {
 				if(!listNomiVar.contains(nomeVar)) {
-					
 					throw new ParseException(RB.format("org.ssclab.pl.milp.json.msg12",nomeVar));
 				}
 			}
@@ -173,10 +168,9 @@ public class ScanSintaxJson {
 	}
 	
 	private void buildFoCoeff() throws ParseException {
-		
 		JsonObject coeff=this.fo.getJsonObject("coefficients");
 		for(String varNameFo:coeff.keySet()) {
-			int index=listNomiVar.indexOf(varNameFo.toUpperCase());			//System.out.println("->"+varNameFo);
+			int index=listNomiVar.indexOf(varNameFo.toUpperCase());
 			double cj=coeff.getJsonNumber(varNameFo).doubleValue();
 			//System.out.println("->"+cj);
 			if(index==-1) throw new ParseException(RB.getString("org.ssclab.pl.milp.scantext.ScanFoFromLine.msg1")+" ["+varNameFo+"]");

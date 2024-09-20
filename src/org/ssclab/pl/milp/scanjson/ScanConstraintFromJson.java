@@ -39,12 +39,9 @@ public class ScanConstraintFromJson {
 
 		JsonParser parser = Json.createParser(br);
 		JsonParser.Event event = null;
-		
 		if (parser.hasNext())	event = parser.next();
-
 		while (parser.hasNext()) {
 			event = parser.next();
-			
 			if (event == KEY_NAME && parser.getString().toUpperCase().equals("CONSTRAINTS")) {
 				if (parser.next() == START_ARRAY) {
 					JsonObject jsonObject=null,coef=null;
@@ -63,19 +60,13 @@ public class ScanConstraintFromJson {
 								if(jsonObject.containsKey("name")) 	{
 									name=jsonObject.getString("name");
 								}
-								/*
-								System.out.println(" 2.3 " + coef);
-								System.out.println(" 2.4 " + rel);
-								System.out.println(" 2.5 " + rhs);
-								System.out.println(" 2.5.1 " + name);
-							    */
+								
 								double value;
 								for (String key : coef.keySet()) {
 									int index=nomi_var.indexOf(key);
 									value=coef.getJsonNumber(key).doubleValue();
 									Ai[index]=value;	
 								}
-								//existConstraints = true;
 								ConsType relaz=null;
 								if(rel.equals("eq")) relaz=ConsType.EQ;
 								else if(rel.equals("le")) relaz=ConsType.LE;
@@ -106,7 +97,6 @@ public class ScanConstraintFromJson {
 								jval = parser.getValue();
 								if (jval.getValueType() == JsonValue.ValueType.OBJECT) {
 									jsonObject = jval.asJsonObject();
-									
 									if(jsonObject.containsKey("upper")) {
 										if(jsonObject.isNull("upper")) upper[index]=Double.NaN;
 										else { 
@@ -118,7 +108,6 @@ public class ScanConstraintFromJson {
 										if(jsonObject.isNull("lower")) lower[index]=Double.NaN;
 										else lower[index]=jsonObject.getJsonNumber("lower").doubleValue();
 									}
-									
 									/*
 									for (String kej : jsonObject.keySet()) {
 										if(kej.equals("upper")) {
