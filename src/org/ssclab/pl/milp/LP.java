@@ -31,6 +31,7 @@ import org.ssclab.pl.milp.scantext.ScanVarFromText;
 import org.ssclab.pl.milp.simplex.Simplex;
 import org.ssclab.pl.milp.simplex.SimplexInterface;
 import org.ssclab.pl.milp.simplex.SimplexException;
+import org.ssclab.pl.milp.FormatTypeInput.FormatType;
 
 
 
@@ -43,7 +44,7 @@ import org.ssclab.pl.milp.simplex.SimplexException;
  * @see <a target="_new" href="http://www.ssclab.org">SSC Software www.sscLab.org</a>
  */
 
-public final class LP implements FormatTypeInput {
+public final class LP /*implements FormatTypeInput*/ {
 	
 	public static double NaN=Double.NaN;
 	private static final Logger logger=SscLogger.getLogger();
@@ -782,7 +783,8 @@ public final class LP implements FormatTypeInput {
 	/**
 	*
 	*If the number of physical cores of the host on which SSc is running is 
-	*greater than 4, the performance of the simplex can be improved by executing 
+	*greater than 4 and and if the number of variables constraints and hundreds, 
+	*the performance of the simplex can be improved by executing 
 	*the optimization processes in parallel on multiple threads. 
 	*The number of threads is set to set value is AUTO, the system decides 
 	*the number of threads to use.

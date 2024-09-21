@@ -1,18 +1,16 @@
 package org.ssclab.pl.milp.scanjson;
 
-import static javax.json.stream.JsonParser.Event.KEY_NAME;
-import static javax.json.stream.JsonParser.Event.START_ARRAY;
-import static javax.json.stream.JsonParser.Event.START_OBJECT;
-import static javax.json.stream.JsonParser.Event.VALUE_STRING;
+import static jakarta.json.stream.JsonParser.Event.*;
+
 
 import java.io.BufferedReader;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonValue;
-import javax.json.stream.JsonParser;
+import jakarta.json.Json;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonValue;
+import jakarta.json.stream.JsonParser;
 
 import org.ssclab.i18n.RB;
 import org.ssclab.pl.milp.GoalType;
@@ -39,7 +37,7 @@ public class ScanSintaxJson {
 			this.list_cj=new double[listNomiVar.size()];
 			buildFoCoeff();
 		} 
-		catch (javax.json.stream.JsonParsingException jpe) {
+		catch (jakarta.json.stream.JsonParsingException jpe) {
 			throw new ParseException(RB.getString("org.ssclab.pl.milp.json.msg2") + jpe.getMessage());
 		}
 	}

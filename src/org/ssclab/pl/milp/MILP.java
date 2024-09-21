@@ -21,10 +21,9 @@ import org.ssclab.pl.milp.util.MILPThreadsNumber;
 import org.ssclab.ref.Input;
 import org.ssclab.step.parallel.Task;
 import org.ssclab.pl.milp.simplex.SimplexException;
-import org.ssclab.pl.milp.scantext.CheckSintaxText;
-import org.ssclab.pl.milp.scantext.ScanConstraintFromLine;
-import org.ssclab.pl.milp.scantext.ScanFoFromLine;
-import org.ssclab.pl.milp.scantext.ScanVarFromText;
+import org.ssclab.pl.milp.scantext.*;
+import org.ssclab.pl.milp.FormatTypeInput.FormatType;
+
 
 
 
@@ -38,7 +37,7 @@ import org.ssclab.pl.milp.scantext.ScanVarFromText;
  * @see <a target="_new" href="http://www.ssclab.org">SSC Software www.sscLab.org</a> 
  */
 
-public final class MILP implements FormatTypeInput {
+public final class MILP  {
 	
 	public static double NaN=Double.NaN;
 	
@@ -620,13 +619,14 @@ public final class MILP implements FormatTypeInput {
 	}
 	
 	/**
-	 * This method allows setting the number of threads to use for executing the Branch and Bound.
+	 * This method allows setting the number of threads to use for 
+	 * executing the Branch and Bound.
 	 * 
-	 * @param lthreadNumber Enumeration for setting the number of Threads
+	 * @param lpThreadsNumber Enumeration for setting the number of Threads
 	 * @return the MILP instance (this) on which the method call is being made
 	 */
-	public MILP setThreadsNumber(MILPThreadsNumber lthreadNumber) {
-		threadNumber = lthreadNumber;
+	public MILP setThreadsNumber(MILPThreadsNumber lpThreadsNumber) {
+		threadNumber = lpThreadsNumber;
 		return this;
 	}
 	@Deprecated
