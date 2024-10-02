@@ -72,8 +72,36 @@ public interface Variable {
     */
 	
 	public enum TYPE_VAR {
-		REAL, 
-		INTEGER, 
-		BINARY}; 
+		REAL("continuous"), 
+		INTEGER("integer"), 
+		BINARY("binary");
+		
+		private String value;
+		private TYPE_VAR(String value) { 
+			this.value=value;
+		}
+		
+		/**
+	     * Retrieves the value associated with the enumeration.
+	     * 
+	     * @return The value associated with the enumeration.
+	     */
+		
+		public String getValue() {
+			return this.value;
+		}
+		
+		 /**
+	     * Returns a string representation of the enumeration value.
+	     * 
+	     * @return A string representation of the enumeration value.
+	     */
+		
+		public String toString() {
+			return this.value;
+		}
+		
+		
+		}; 
 
 }

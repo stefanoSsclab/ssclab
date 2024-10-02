@@ -12,34 +12,67 @@ public enum  ConsType {
 	/**
 	 * To define a constraint of the type = 
 	 */
-	EQ, 
+	EQ("eq"), 
 	/**
 	 * To define a constraint of the type &lt; = 
 	 */
-	LE, 
+	LE("le"), 
 	/**
 	 * To define a constraint of the type &gt; = 
 	 */
-	GE, 
+	GE("ge"), 
 	/**
 	 * To define integer variables
 	 */
-	INT, 
+	INT("integer"), 
 	/**
 	 * To define binary variables
 	 */
-	BIN, 
+	BIN("binary"), 
 	/**
 	 * For defining Upper bounds 
 	 */
-	UPPER, 
+	UPPER("upper"), 
 	/**
 	 * For defining Lower bounds
 	 */
-	LOWER,
+	LOWER("lower"),
 	/**
 	 * To define semicontinuous variables
 	 */
-	SEMICONT
+	SEMICONT("semicont");
+	
+	/**
+     * Constructor for ConsType enumeration.
+     * 
+     * @param value The value associated with the enumeration.
+     */
+	
+	private String value;
+	private ConsType(String value) { 
+		this.value=value;
+	}
+	
+	/**
+     * Retrieves the value associated with the enumeration.
+     * 
+     * @return The value associated with the enumeration.
+     */
+	
+	public String getValue() {
+		return this.value;
+	}
+	
+	 /**
+     * Returns a string representation of the enumeration value.
+     * 
+     * @return A string representation of the enumeration value.
+     */
+	
+	public String toString() {
+		return this.value;
+	}
+	
+	
 	
 }

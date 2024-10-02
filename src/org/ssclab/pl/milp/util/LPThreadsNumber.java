@@ -22,7 +22,7 @@ public enum LPThreadsNumber {
 		this.value=threads;
 	}
 	
-	public int getThread() {
+	public int getNumberThread() {
 		return this.value;
 	}
 	

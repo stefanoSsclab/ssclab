@@ -176,7 +176,7 @@ final class SolutionImpl implements Solution {
 														 internal_const.getConsType(), 
 														 variables);
 			String name=internal_const.getName();
-			if(name==null) name="row"+_i;
+			if(name==null) name="constraint"+_i;
 			sol_const[_i-1].setName(name);
 			
 		}

@@ -57,7 +57,7 @@ abstract class Phase {
 		this.threadsNumber = threadsNumber;
 		if(threadsNumber==LPThreadsNumber.AUTO) fillListRow() ;
 		else if(threadsNumber!=LPThreadsNumber.N_1) {
-			num_thread=threadsNumber.getThread();
+			num_thread=threadsNumber.getNumberThread();
 			cb  = new CyclicBarrier(num_thread);
 		}
 	}

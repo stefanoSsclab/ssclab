@@ -32,6 +32,7 @@ import org.ssclab.pl.milp.simplex.Simplex;
 import org.ssclab.pl.milp.simplex.SimplexInterface;
 import org.ssclab.pl.milp.simplex.SimplexException;
 import org.ssclab.pl.milp.FormatTypeInput.FormatType;
+import org.ssclab.pl.milp.ObjectiveFunction.TARGET_FO;
 
 
 
@@ -60,6 +61,10 @@ public final class LP /*implements FormatTypeInput*/ {
 	private LPThreadsNumber threadsNumber=LPThreadsNumber.N_1;
 	private boolean isStopPhase2=false;
 	private Epsilons epsilons=new Epsilons();
+	private SolutionType type_solution;
+	private TARGET_FO target;
+	private Meta meta = new Meta();
+	private String title;
 	
 	/*
 	private EPSILON epsilon=EPSILON._1E_M10;
@@ -246,6 +251,7 @@ public final class LP /*implements FormatTypeInput*/ {
 		ArrayList<InternalConstraint> list_constraints=scan_const.getConstraints();
 		PLProblem pl_original=CreatePLProblem.create(fo,list_constraints,list_var,scan_const.getArraysProblem(),isMilp);
 		
+		this.target=pl_original.getTarget_fo();
 		//memorizza nella work il pl_original come oggetto prima di essere standardizzato. 
 		//pl original , non e' memorizzato in LP , una volta terminato questo metodo, 
 		//ogni riferimento e' perso. 
@@ -654,7 +660,9 @@ public final class LP /*implements FormatTypeInput*/ {
 	*/
 	public SolutionType resolve() throws Exception {
 		
-		logger.log(SscLevel.INFO,RB.format("it.ssc.pl.milp.LP.msg11")+threadsNumber.getThread());
+		if(title!=null) logger.log(SscLevel.INFO,RB.format("it.ssc.pl.milp.MILP.msg13")+" \""+title+"\"");
+		meta.put("threads", threadsNumber.getNumberThread());
+		logger.log(SscLevel.INFO,RB.format("it.ssc.pl.milp.LP.msg11")+threadsNumber.getNumberThread());
 		logger.log(Level.INFO,  "---------------------------------------------");
 		
 		//l'oggetto simplex crea la tabella estesa per fase I da A e poi la svuoto subito dopo 
@@ -664,12 +672,14 @@ public final class LP /*implements FormatTypeInput*/ {
 		simplex.setThreadsNumber(threadsNumber) ;
 		
 		long start_simplex=System.currentTimeMillis();
-		SolutionType type_solution=simplex.runPhaseOne();
+		type_solution=simplex.runPhaseOne();
 		long end_phase_one=System.currentTimeMillis();
 		long end_phase_two=end_phase_one;
 		
 		logger.log(SscLevel.TIME,RB.format("it.ssc.pl.milp.LP.msg2", RB.getHhMmSsMmm((end_phase_one-start_simplex))));
 		logger.log(SscLevel.INFO,RB.getString("it.ssc.pl.milp.LP.msg3")+simplex.getNumIterationPhaseOne());  
+		//iterazioni una prima volta, e poi dopo aggiorno se fase due 
+		meta.put("iterationsLP",simplex.getNumIterationPhaseOne());
 		
 		if(isStopPhase2 && type_solution==SolutionType.OPTIMUM) {
 			type_solution=SolutionType.FEASIBLE;
@@ -688,6 +698,7 @@ public final class LP /*implements FormatTypeInput*/ {
 			end_phase_two=System.currentTimeMillis(); 
 			logger.log(SscLevel.TIME,RB.format("it.ssc.pl.milp.LP.msg4",RB.getHhMmSsMmm(end_phase_two-end_phase_one)));
 			logger.log(SscLevel.INFO,RB.getString("it.ssc.pl.milp.LP.msg5")+simplex.getNumIterationPhaseTotal());
+			meta.put("iterationsLP",simplex.getNumIterationPhaseTotal());
 			
 			PLProblem pl_original=persistencePl.readObject();
 			this.solution_pl=new SolutionImpl(type_solution,
@@ -697,6 +708,9 @@ public final class LP /*implements FormatTypeInput*/ {
 											 );
 			
 		}	
+	
+		meta.put("optimizationDuration",RB.getHhMmSsMmm(end_phase_two-start_simplex));
+		
 		logger.log(SscLevel.TIME,RB.format("it.ssc.pl.milp.LP.msg6",RB.getHhMmSsMmm(end_phase_two-start_simplex)));
 		if(type_solution==SolutionType.FEASIBLE || type_solution==SolutionType.OPTIMUM) {
 			loggerAccurancy( amatrix, vectors_pl.B, simplex.getFinalBasis(),simplex.getFinalValuesBasis(),isStopPhase2);
@@ -872,6 +886,10 @@ public final class LP /*implements FormatTypeInput*/ {
 		logger.log(Level.INFO,  RB.getString("it.ssc.pl.milp.LP.msg8e")+best_error);
 		logger.log(Level.INFO,  "---------------------------------------------");
 		
+		meta.put("averageError", errore);
+		meta.put("maxError", best_error);
+		
+		
 		
 	}
 	
@@ -933,10 +951,8 @@ public final class LP /*implements FormatTypeInput*/ {
 	
 	
 	public LP(JsonProblem pl_json) throws Exception { 
-		
-		
+	
 		/*PArte nuova json*/
-		
 		BufferedReader br=null;
 		ArrayList<String> list_var=null;
 		LinearObjectiveFunction fo;
@@ -993,5 +1009,35 @@ public final class LP /*implements FormatTypeInput*/ {
 		//memorizza su disco la matrice A
 		amatrix=new A_DataMatrix(vectors_pl.A,path_work);
 	}	
+	
+	/**
+	 * Allows you to give a title to the current elaboration related to the LP problem to be solved
+	 * 
+	 * @param title The title of the linear programming problem 
+	 * @return
+	 */
+	
+	public LP setTitle(String title) {
+		this.title=title;
+		return this;
+	}
+	
+	/**
+	 * This method allows you to obtain a representation of the problem solution in json format
+	 * 
+	 * @param option It allows you to add additional information in the json, such as uppers and lowers, variable types, constraint values, etc.
+	 * @return an object that allows access to the solution in json format
+	 * @throws SimplexException if the build of object is invalid
+	 */
+	
+	public JsonSolution getSolutionAsJson(SolutionDetail... option) throws SimplexException {
+		Solution[] solution= {null};
+		meta.put("title", title);
+		if (this.type_solution == SolutionType.OPTIMAL || this.type_solution == SolutionType.FEASIBLE) {
+			 solution= new Solution[] {this.getSolution()};
+		}
+		return new JsonSolution(this.meta,this.target,type_solution,solution,option);
+	}
+	
 }
 

@@ -40,7 +40,7 @@ import org.ssclab.pl.milp.FormatTypeInput.FormatType;
 public final class MILP  {
 	
 	public static double NaN=Double.NaN;
-	
+	private SolutionType type_solution;
 	private Epsilons epsilons=new Epsilons();
 	private static final Logger logger=SscLogger.getLogger(); 
 	
@@ -52,6 +52,8 @@ public final class MILP  {
 	private MILPThreadsNumber threadNumber=MILPThreadsNumber.N_1;
 	//private double stepDisadvantage=0.0;
 	protected PLProblem father_pl_original_zero;
+	private Meta meta = new Meta();
+	private String title;
 
 	{
 		logger.log(Level.INFO,  "##############################################");
@@ -442,11 +444,13 @@ public final class MILP  {
 	
 	public SolutionType resolve() throws Exception {
 		
+		if(title!=null) logger.log(SscLevel.INFO,RB.format("it.ssc.pl.milp.MILP.msg13")+" \""+title+"\"");
 		logger.log(SscLevel.INFO,RB.format("it.ssc.pl.milp.MILP.msg10")+threadNumber.getThread());
+		meta.put("threads", threadNumber.getThread());
 		
 		int num_simplex_resolved=1;
 		long start=System.currentTimeMillis();
-		SolutionType type_solution=SolutionType.VUOTUM;
+		type_solution=SolutionType.VUOTUM;
 		//MilpManager milp_current=milp_initiale;        //commentato il 19/03/2024 DUPLICATO INUTILE
 		milp_initiale.setMaxIteration(num_max_iteration);
 		
@@ -463,6 +467,7 @@ public final class MILP  {
 		if(target==TARGET_FO.MAX)  lb.value=Double.NEGATIVE_INFINITY;    //per il max 
 		if(target==TARGET_FO.MIN)  lb.value=Double.POSITIVE_INFINITY;    //per il min 
 		//System.out.println("lb:"+milp_current.getOptimumValue());
+		if(type_solution_initial==SolutionType.ILLIMITATUM) type_solution=type_solution_initial;
 		
 		if(type_solution_initial==SolutionType.OPTIMUM) {
 			if(milp_initiale.isSolutionIntegerAmmisible() && milp_initiale.isProblemSemiContinusAmmisible()) {
@@ -562,7 +567,9 @@ public final class MILP  {
 		}
 		long end=System.currentTimeMillis();
 		logger.log(SscLevel.TIME,RB.format("it.ssc.pl.milp.MILP.msg2",RB.getHhMmSsMmm((end-start))));
+		meta.put("optimizationDuration", RB.getHhMmSsMmm((end-start)));
 		logger.log(SscLevel.INFO,RB.getString("it.ssc.pl.milp.MILP.msg3")+num_simplex_resolved);
+		meta.put("numberOfSimplices", num_simplex_resolved);
 		if(type_solution==SolutionType.OPTIMUM) logger.log(SscLevel.INFO,RB.getString("it.ssc.pl.milp.MILP.msg4"));
 		return type_solution;
 
@@ -578,7 +585,10 @@ public final class MILP  {
 	 */
 	
 	public Solution getRelaxedSolution()  {
-		if(milp_initiale!=null) return milp_initiale.getSolution();
+		if(milp_initiale!=null)  {
+			//System.out.println("qui:");
+			return milp_initiale.getSolution();
+		}
 		else return null;
 	}
 	
@@ -733,5 +743,35 @@ public final class MILP  {
 		/*PArte vecchia*/
 		this.milp_initiale = new MilpManager(fo, scanCons.getConstraints(),this,listVar);
 		setAllEpsilon();
+	}
+	
+	/**
+	 * Allows you to give a title to the current elaboration related to the LP problem to be solved
+	 * 
+	 * @param title The title of the linear programming problem 
+	 * @return
+	 */
+	
+	public MILP setTitle(String title) {
+		this.title=title;
+		return this;
+	}
+	
+	/**
+	 * This method allows you to obtain a representation of the problem solution in json format
+	 * 
+	 * @param option It allows you to add additional information in the json, such as uppers and lowers, variable types, constraint values, etc.
+	 * @return an object that allows access to the solution in json format
+	 * @throws SimplexException if the build of object is invalid
+	 */
+	
+	public JsonSolution getSolutionAsJson(SolutionDetail... option) throws SimplexException {
+		Solution[] solution= {null,null};
+		meta.put("title", title);
+		TARGET_FO target=milp_initiale.getTargetFoOriginal();
+		if (this.type_solution == SolutionType.OPTIMAL || this.type_solution == SolutionType.FEASIBLE) {
+			solution= new Solution[] {this.getSolution(),this.getRelaxedSolution()};
+		}	
+		return new JsonSolution(meta,target,type_solution,solution,option)  ;
 	}
 }

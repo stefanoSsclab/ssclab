@@ -13,11 +13,11 @@ public enum SolutionType {
 	/**
 	  * The problem has an optimal solution.
 	 */
-	OPTIMUM ("excellent solution"), 
+	OPTIMUM ("optimal solution"), 
 	/**
 	 * The problem has unlimited optimal solution.
 	 */
-	ILLIMITATUM ("Solution unlimited/excellent unlimited"), 
+	ILLIMITATUM ("Solution unlimited/optimal unlimited"), 
 	/**
 	 * The algorithm stopped because the maximum number of iterations was reached.
 	 */
@@ -46,12 +46,12 @@ public enum SolutionType {
 	/**
      * Constructor for SolutionType enumeration.
      * 
-     * @param epsilon The value associated with the enumeration.
+     * @param value The value associated with the enumeration.
      */
 	
 	private String value;
-	private SolutionType(String epsilon) { 
-		this.value=epsilon;
+	private SolutionType(String value) { 
+		this.value=value;
 	}
 	
 	/**
