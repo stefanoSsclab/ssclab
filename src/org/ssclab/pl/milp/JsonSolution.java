@@ -6,19 +6,59 @@ import java.io.StringWriter;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
-
 import org.ssclab.pl.milp.ObjectiveFunction.TARGET_FO;
+import org.ssclab.pl.milp.Variable.TYPE_VAR;
 
 import jakarta.json.*;
+
+/**
+ * This class represents the solution of a Linear Programming (LP) problem in JSON format.
+ * The generated JSON follows this structure:
+ * 
+ * <pre>
+ * {
+ *     "meta": {
+ *         // Information about the processing (duration, number of threads, etc.)
+ *     },
+ *     "objectiveType": "min",
+ *     "status": "optimal",
+ *     "solution": {
+ *         "objectiveValue": 1244.0,
+ *         "variables": {
+ *             // Variable values
+ *         }
+ *     },
+ *     "relaxedSolution": {
+ *         "objectiveValue": 1244.0,
+ *         "variables": {
+ *             // Relaxed solution variable values
+ *         }
+ *     }
+ * }
+ * </pre>
+ */
 
 public class JsonSolution {
 	JsonObject model;
 	SolutionDetail[] option;
 	SolutionType typeSolution;
+	
+	 /**
+     * Constructor that initializes the JSON representation of the solution.
+     * 
+     * @param meta Information related to the processing, such as duration, number of threads, etc.
+     * @param target The type of objective function (minimization or maximization).
+     * @param typeSolution Indicates the type of solution (optimal, feasible, infeasible, unbounded, etc.).
+     * @param solution An array containing the solution values, including the objective function variables and constraints.
+     *                 If the problem is a Mixed-Integer Linear Program (MILP), the array includes both the relaxed and full solutions.
+     * @param option A variable number of SolutionDetail options to include additional information in the JSON,
+     *               such as bounds, constraints, and meta data.
+     */
 
 	JsonSolution( Meta meta,TARGET_FO target,SolutionType typeSolution,Solution[] solution, SolutionDetail... option) {
 		// TODO Auto-generated constructor stub
 		String target_fo="min";
+
 		if(target==TARGET_FO.MAX) target_fo="max";
 		this.typeSolution=typeSolution;
 		ZonedDateTime now = ZonedDateTime.now();
@@ -35,7 +75,7 @@ public class JsonSolution {
 			.add("threads", (Integer)meta.getProperty("threads"))
 			.add("numberOfSimplices", (Integer)meta.getProperty("numberOfSimplices"))
 			.add("optimizationDuration",meta.getProperty("optimizationDuration").toString());
-		
+			
 		}
 		else { 
 			metaJsonBuilder
@@ -59,14 +99,21 @@ public class JsonSolution {
 		
 		jsonObjectBuild.add("objectiveType", target_fo)
 					   .add("status", statusolution)
-					   .add("solution", getSolution(solution[0]));
+					   .add("solution", getSolution(false,solution[0]));
 		if(solution.length==2 && Arrays.asList(option).contains(SolutionDetail.INCLUDE_RELAXED)) {
-			jsonObjectBuild.add("relaxedSolution",  getSolution(solution[1]));
+			jsonObjectBuild.add("relaxedSolution",  getSolution(true,solution[1]));
 		}
 		
 		model =jsonObjectBuild.build();
 	}
 
+	
+	/**
+     * Returns the JSON object built using the jakarta.json library.
+     * 
+     * @return JsonObject representing the solution.
+     */
+	
 	public JsonObject getJsonObject() {
 		return model;
 	}
@@ -92,7 +139,7 @@ public class JsonSolution {
 		}
 	}
 
-	private JsonObjectBuilder getSolution(Solution solution) {
+	private JsonObjectBuilder getSolution(boolean existRelaxed,Solution solution) {
 		if(solution==null ) return Json.createObjectBuilder();
 		JsonObjectBuilder jsonObject = Json.createObjectBuilder();
 		if (this.typeSolution == SolutionType.OPTIMAL || this.typeSolution == SolutionType.FEASIBLE) {
@@ -105,8 +152,12 @@ public class JsonSolution {
 				JsonObjectBuilder variable = Json.createObjectBuilder()
 						.add("value", var.getValue());
 						//.add("originalType",  var.getType().toString());
-				if (Arrays.asList(option).contains(SolutionDetail.INCLUDE_TYPEVAR))
-					variable.add("originalType",  var.getType().toString());
+				
+				
+				if (existRelaxed && Arrays.asList(option).contains(SolutionDetail.INCLUDE_TYPEVAR))
+					variable.add("type",TYPE_VAR.REAL.toString());
+				else if (Arrays.asList(option).contains(SolutionDetail.INCLUDE_TYPEVAR))
+					variable.add("type",  var.getType().toString());
 				
 				if (Arrays.asList(option).contains(SolutionDetail.INCLUDE_BOUNDS)) {
 					if (Double.isInfinite(lower)) variable.add("lower", JsonValue.NULL);
@@ -136,6 +187,13 @@ public class JsonSolution {
 		return jsonObject;
 	}
 	
+	/**
+     * Saves the JSON object to an external file.
+     * 
+     * @param path The file path where the JSON should be saved.
+     * @return The current JsonSolution instance.
+     * @throws IOException if an I/O error occurs during the writing process.
+     */
 	
 	public JsonSolution saveToFile(String path) throws IOException {
 		JsonWriter jsonWriter = Json.createWriter(new FileWriter(path));
@@ -143,6 +201,13 @@ public class JsonSolution {
 		jsonWriter.close();
 		return this;
 	}
+	
+	/**
+     * Returns the JSON representation of the solution as a String.
+     * 
+     * @return A String representation of the JSON solution.
+     */
+    @Override
 	
 	
 	public String toString() {

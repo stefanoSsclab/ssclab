@@ -32,7 +32,19 @@ final class Var implements Cloneable, Variable, Serializable {
 	private double upperSemicon; 
 	private double lowerSemicon; 
 	private boolean isSemicon;
+	//sta ad indicare che questa variabile e stata elaborata per la suddivisione, 
+	//altrimenti risulta senza nessun limite. 
+	//private boolean isElaborated; non serve
 	
+	/*
+	public boolean isElaborated() {
+		return isElaborated;
+	}
+
+	public void setElaborated(boolean isElaborated) {
+		this.isElaborated = isElaborated;
+	}
+	*/
 	public Var() {
 		lower=0.0;   
 		upper=Double.POSITIVE_INFINITY;
@@ -40,6 +52,7 @@ final class Var implements Cloneable, Variable, Serializable {
 		is_lower_modified=false;
 		isZeroSemicontVar=false;
 		is_free=false;
+	
 	}
 	
 	public boolean isZeroSemicontVar() {
@@ -89,9 +102,12 @@ final class Var implements Cloneable, Variable, Serializable {
 		this.name = name;
 	}
 
-	public TYPE_VAR getType() {
+
+	public TYPE_VAR getType() {  
 		return type;
 	}
+	
+	
 
 	public void setType(TYPE_VAR type) {
 		this.type = type;

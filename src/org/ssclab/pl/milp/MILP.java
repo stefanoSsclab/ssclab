@@ -351,89 +351,8 @@ public final class MILP  {
 		 return this;
 	}
 	
-	/*
-	 * Executes the Branch and Bound algorithm.
-	 * 
-	 * @return The type of solution found
-	 * @throws Exception If the execution process generates an error
-	 */
 	
-	/*
-	public SolutionType resolve() throws Exception {
-		
-		logger.log(SscLevel.INFO,RB.format("it.ssc.pl.milp.MILP.msg10")+threadNumber.getThread());
-		
-		//if(threadNumber==MILPThreadsNumber.N_1) return resolveSingleThread();
-		// else 
-		 return resolve2() ;
-	}
-	*/
 	
-	/*
-	private SolutionType resolveSingleThread() throws Exception {
-		
-		int num_simplex_resolved=1;
-		long start=System.currentTimeMillis();
-		
-		SolutionType type_solution=SolutionType.VUOTUM;
-		ArrayList<MilpManager> listMangerMilpToRun=null;
-		
-		MilpManager milp_current=milp_initiale;    //INIZIALMENTE E' QUELLO INIZIALE (!)
-		milp_current.setMaxIteration(num_max_iteration);
-		
-		SolutionType type_solution_initial=milp_current.resolve(); 
-		TARGET_FO target=milp_initiale.getTargetFoOriginal();
-		TreeV3 tree=new TreeV3(target);
-		
-		if(target==TARGET_FO.MAX)  lb.value=Double.NEGATIVE_INFINITY;    //per il max 
-		if(target==TARGET_FO.MIN)  lb.value=Double.POSITIVE_INFINITY;    //per il min 
-		
-		if(type_solution_initial==SolutionType.OPTIMUM) {
-			tree.addNode(milp_current);
-		}	 
-		
-		while(!tree.isEmpty()) {
-			
-			milp_current=tree.getMilpBestUP();  
-			if(milp_current.isSolutionIntegerAmmisible() && milp_current.isProblemSemiContinusAmmisible()) {
-				milp_current.setIntegerIfOptimal();
-							
-				if(  (target==TARGET_FO.MAX && lb.value < milp_current.getOptimumValue())     //max 
-				  || (target==TARGET_FO.MIN && lb.value > milp_current.getOptimumValue())) {  //questo vale per il min
-					
-					lb.value= milp_current.getOptimumValue();
-					lb.milp=milp_current;
-					type_solution=SolutionType.OPTIMUM; 
-				}
-			}
-			else {
-				listMangerMilpToRun = new ArrayList<>();
-				MilpManager.populateArrayListBySeparation(listMangerMilpToRun,milp_current);
-				
-				for(MilpManager milp:listMangerMilpToRun) {
-					milp.resolve();
-					if(milp.getSolutionType()==SolutionType.OPTIMUM) {
-						tree.addNode(milp);
-					}
-					num_simplex_resolved+=1;	
-				}
-				tree.deleteNodeWhitUPnotValide(lb.value); 
-			}
-			
-			if(num_simplex_resolved >= num_max_simplex) { 
-				logger.log(SscLevel.WARNING,RB.format("it.ssc.pl.milp.MILP.msg8")+num_max_simplex);
-				logger.log(SscLevel.NOTE,RB.format("it.ssc.pl.milp.MILP.msg9"));
-				return SolutionType.MAX_NUM_SIMPLEX;
-			}
-		}
-		
-		long end=System.currentTimeMillis();
-		logger.log(SscLevel.TIME,RB.format("it.ssc.pl.milp.MILP.msg2",RB.getHhMmSsMmm((end-start))));
-		logger.log(SscLevel.INFO,RB.getString("it.ssc.pl.milp.MILP.msg3")+num_simplex_resolved);
-		if(type_solution==SolutionType.OPTIMUM) logger.log(SscLevel.INFO,RB.getString("it.ssc.pl.milp.MILP.msg4"));
-		return type_solution;
-	}
-	*/
 	
 	/**
 	 * Executes the Branch and Bound algorithm.
@@ -458,7 +377,8 @@ public final class MILP  {
 			throw new LPException(RB.format("it.ssc.pl.milp.MILP.msg12"));
 		}
 		
-		SolutionType type_solution_initial=milp_initiale.resolve(); 
+		SolutionType type_solution_initial=milp_initiale.resolve(true); 
+		//System.out.println("lb:"+milp_initiale.getOptimumValue());
 		
 		//lo chiamo dopo resolve perche' il target lo recupera dal milp_zero, che e' valorizzato dopo il resolve
 		TARGET_FO target=milp_initiale.getTargetFoOriginal();
@@ -466,7 +386,7 @@ public final class MILP  {
 		
 		if(target==TARGET_FO.MAX)  lb.value=Double.NEGATIVE_INFINITY;    //per il max 
 		if(target==TARGET_FO.MIN)  lb.value=Double.POSITIVE_INFINITY;    //per il min 
-		//System.out.println("lb:"+milp_current.getOptimumValue());
+		
 		if(type_solution_initial==SolutionType.ILLIMITATUM) type_solution=type_solution_initial;
 		
 		if(type_solution_initial==SolutionType.OPTIMUM) {
@@ -526,7 +446,7 @@ public final class MILP  {
 					else {
 						//System.out.println("un trhea");
 						for(MilpManager milp:listMangerMilpToRun) {
-							milp.resolve();
+							milp.resolve(true);
 						}
 					}
 					//RISULTATO
@@ -749,7 +669,7 @@ public final class MILP  {
 	 * Allows you to give a title to the current elaboration related to the LP problem to be solved
 	 * 
 	 * @param title The title of the linear programming problem 
-	 * @return
+	 * @return This instance of MILP
 	 */
 	
 	public MILP setTitle(String title) {
@@ -758,11 +678,25 @@ public final class MILP  {
 	}
 	
 	/**
-	 * This method allows you to obtain a representation of the problem solution in json format
+	 * Returns a {@link JsonSolution} object that represents the solution of the Linear Programming (LP) or 
+	 * Mixed-Integer Linear Programming (MILP) problem in JSON format.
 	 * 
-	 * @param option It allows you to add additional information in the json, such as uppers and lowers, variable types, constraint values, etc.
-	 * @return an object that allows access to the solution in json format
-	 * @throws SimplexException if the build of object is invalid
+	 * This method constructs the solution JSON, including optional sections based on the 
+	 * {@link SolutionDetail} values provided as arguments. The solution can represent either 
+	 * the optimal or feasible solution, depending on the problem's outcome.
+	 * 
+	 * The `SolutionDetail` enum values can specify additional information to include in the JSON output:
+	 * <ul>
+	 *   <li>{@code INCLUDE_BOUNDS}: Includes the variable bounds (upper and lower limits) in the JSON.</li>
+	 *   <li>{@code INCLUDE_RELAXED}: Adds the relaxed solution (when applicable) alongside the integer solution.</li>
+	 *   <li>{@code INCLUDE_CONSTRAINT}: Includes the Left-Hand Side (LHS) and Right-Hand Side (RHS) values for constraints in the JSON.</li>
+	 *   <li>{@code INCLUDE_META}: Inserts metadata information like runtime, threads, iterations, etc.</li>
+	 *   <li>{@code INCLUDE_TYPEVAR}: Shows the original type of each variable (e.g., integer, binary, continuous) in the JSON.</li>
+	 * </ul>
+	 * 
+	 * @param option A variable number of {@link SolutionDetail} enum values to customize the JSON output.
+	 * @return A {@link JsonSolution} object representing the problem's solution in JSON format.
+	 * @throws SimplexException If there is an error in the Simplex execution or problem-solving process.
 	 */
 	
 	public JsonSolution getSolutionAsJson(SolutionDetail... option) throws SimplexException {
@@ -774,4 +708,35 @@ public final class MILP  {
 		}	
 		return new JsonSolution(meta,target,type_solution,solution,option)  ;
 	}
+	
+	
+	
+	/**
+	 * Solves the linear programming (MILP) problem and returns the current instance of the MILP object.
+	 * This method is designed to allow method chaining by returning 'this' rather than a result type.
+	 * 
+	 * <p>By passing 'null' to this method, the standard resolve method is bypassed, and this
+	 * version of the method is invoked. The 'nullable' parameter exists to differentiate 
+	 * between the standard resolve method and this version, which enables method chaining.</p>
+	 * 
+	 * <p>For example, this method can be used as follows:</p>
+	 * 
+	 * <pre>{@code
+	 * new MILP(pl_string).resolve(null).getSolutionAsJson().saveToFile("solution.json");
+	 * }</pre>
+	 * 
+	 * <p>In the above code, the 'resolve()' method solves the MILP problem, and 'saveSolutionToJson()' 
+	 * is chained to save the resulting solution to a JSON file.</p>
+	 * 
+	 * @param nullable an object that is intentionally ignored; passing 'null' to this parameter
+	 *                 ensures that this version of the resolve method is invoked.
+	 * @return the current instance of the MILP object for method chaining.
+	 * @throws Exception if an error occurs during the resolution process.
+	 */
+    public MILP resolve(Object nullable) throws Exception {
+        // Logica per risolvere il problema
+        	this.resolve();
+        	return this;
+    }
+	
 }

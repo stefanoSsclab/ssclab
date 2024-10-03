@@ -67,7 +67,8 @@ import static org.ssclab.pl.milp.InternalConstraint.TYPE_CONSTR;
 
 			 if(arrayProb.array_sec[_j]==1) { 
 				 if(xj.getType()==Var.TYPE_VAR.BINARY) throw new LPException(RB.format("it.ssc.pl.milp.CreateMilpProblem.msg11", (_j+1)));
-				 xj.setSemicon(true);;
+				 xj.setSemicon(true);
+				 //xj.setType(Var.TYPE_VAR.SEMICONT);
 			 }
 		 }
 		 
@@ -204,7 +205,8 @@ import static org.ssclab.pl.milp.InternalConstraint.TYPE_CONSTR;
 						 
 						 if(rel==ConsType.SEMICONT)  {
 							 if(xj.getType()==Var.TYPE_VAR.BINARY) throw new LPException(RB.format("it.ssc.pl.milp.CreateMilpProblem.msg11", (_j+1)));
-							 xj.setSemicon(true);;
+							 xj.setSemicon(true);
+							 //xj.setType(Var.TYPE_VAR.SEMICONT);
 						 }
 						 
 					 }
@@ -398,6 +400,7 @@ import static org.ssclab.pl.milp.InternalConstraint.TYPE_CONSTR;
 								if(xj.getType()==Var.TYPE_VAR.BINARY) throw new LPException(RB.format("it.ssc.pl.milp.CreateMilpProblem.msg25", name));
 								//essere semicontinua e intera contemporaneamente e' possibile
 								xj.setSemicon(true);
+								//xj.setType(Var.TYPE_VAR.SEMICONT);
 							}
 						}
 						else if(type_var==null || type_var!=0.0) {
@@ -680,6 +683,7 @@ import static org.ssclab.pl.milp.InternalConstraint.TYPE_CONSTR;
 							if(type_row.equalsIgnoreCase(SEMICONT)) { 
 								if(xj.getType()==Var.TYPE_VAR.BINARY) throw new LPException(RB.format("it.ssc.pl.milp.CreateMilpProblem.msg25", col));
 								xj.setSemicon(true);
+								//xj.setType(Var.TYPE_VAR.SEMICONT);
 							}
 						}
 						else if(type_var==null || type_var!=0.0) {

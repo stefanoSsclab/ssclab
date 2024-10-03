@@ -2,15 +2,12 @@ package org.ssclab.pl.milp;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import org.ssclab.i18n.RB;
 import org.ssclab.log.SscLogger;
 import org.ssclab.pl.milp.ObjectiveFunction.TARGET_FO;
 import org.ssclab.pl.milp.util.VectorsPL;
-
 
  final class PLProblem implements Costant , Cloneable, Serializable {
 	 

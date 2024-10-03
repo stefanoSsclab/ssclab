@@ -96,10 +96,10 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 	}
 	
 	public void run() throws Exception {
-		resolve();
+		resolve(false);
 	}
 	
-	SolutionType resolve() throws Exception {
+	SolutionType resolve(boolean isRelax) throws Exception {
 		
 		//necessario clonare ?  Si il pl_current non viene mai eseguito, ne standardizzato, 
 		//ma viene standardizzato ed eseguito un suo clone, quindi il MilpManager ha un riferimento integro 
@@ -124,10 +124,12 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 		
 		VectorsPL vectors_pl=lp_standard.standardize(); 
 		
-		
 		/*
+		System.out.println("--------A");
 		printTableA( vectors_pl.A);
+		System.out.println("--------B");
 		printTableV( vectors_pl.B);
+		System.out.println("--------C");
 		printTableV( vectors_pl.C);
 		*/
 			
@@ -138,11 +140,18 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 		this.solutionType=simplex.runPhaseOne();
 		if(this.solutionType==SolutionType.OPTIMUM) { 
 			this.solutionType =simplex.runPhaseTwo();
-			this.solution_pl=new SolutionImpl(this.solutionType,
+			if(!isRelax)
+				this.solution_pl=new SolutionImpl(this.solutionType,
 											  pl_current, //dovevo passare un clone in quanto modifiva l'array di Var
 											  simplex.getFinalBasis(),
 											  simplex.getFinalValuesBasis(),
 											  pl_current.getVariables());
+			else 
+				this.solution_pl=new SolutionImpl(this.solutionType,
+					  pl_current, //dovevo passare un clone in quanto modifiva l'array di Var
+					  simplex.getFinalBasis(),
+					  simplex.getFinalValuesBasis());
+			
 		}	
 		
 		return this.solutionType;
@@ -162,6 +171,7 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 		MilpManager clone_separation=clone();
 		Var variable=clone_separation.pl_current.getVariables()[index_var];
 		variable.setSemicon(false);
+	
 		if(versus==VERSUS_SEPARATION.ZERO)  {
 			int num_tot_var= this.solution_pl.getVariables().length;
 			//System.out.println(index_var+":ZERO-ZERO"+"   ID_CLONE"+clone_separation.getId() );

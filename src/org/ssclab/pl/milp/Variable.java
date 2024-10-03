@@ -22,12 +22,14 @@ public interface Variable {
 	public String getName() ;
 	/**
 	 * 
-	 * Retrieves the type of variable (integer, binary, real).
+	 * Retrieves the type of the variable (integer, binary, continuous).
 	 * 
 	 * @return The type of variable
 	 */
-
-	public TYPE_VAR getType() ;
+	
+	
+	 public TYPE_VAR getType() ;
+	
 	/**
 	 * 
 	  * Retrieves its upper bound if set (by default it is + &infin;)
@@ -67,7 +69,7 @@ public interface Variable {
 	public double getValue() ;
 	
 	/**
-     * Defines the type of variable: integer, binary, or real.
+     * Defines the type of variable: integer, binary, or continuous.
      * 
     */
 	

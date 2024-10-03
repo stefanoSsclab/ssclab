@@ -564,16 +564,14 @@ public final class LP /*implements FormatTypeInput*/ {
 		/*
 		printTableAm(Amatrix);
 		System.out.println("--------A");
-		printTableA(A);
+		printTableA(vectors_pl.A);
 		System.out.println("--------B");
-		printTableV(B);
+		printTableV(vectors_pl.B);
 		System.out.println("--------C");
-		printTableV(C);
+		printTableV(vectors_pl.C);
 		*/
 	}
 	
-	
-
 	/**
 	*This method allows setting the epsilon value relative to the tolerance that intervenes in various contexts.
 	*It is used in the following cases: <br>
@@ -947,6 +945,13 @@ public final class LP /*implements FormatTypeInput*/ {
 	}
 	
 	
+	/**
+	 * Constructor of a LP object for solving problems formulated in json 
+	 * format.
+	 * 
+	 * @param pl_json JsonProblem object containing the problem in json format
+	 * @throws Exception if the problem is not correctly formulated
+	 */
 	
 	
 	
@@ -1014,7 +1019,7 @@ public final class LP /*implements FormatTypeInput*/ {
 	 * Allows you to give a title to the current elaboration related to the LP problem to be solved
 	 * 
 	 * @param title The title of the linear programming problem 
-	 * @return
+	 * @return This instance of LP
 	 */
 	
 	public LP setTitle(String title) {
@@ -1023,11 +1028,24 @@ public final class LP /*implements FormatTypeInput*/ {
 	}
 	
 	/**
-	 * This method allows you to obtain a representation of the problem solution in json format
+	 * Returns a {@link JsonSolution} object that represents the solution of the Linear Programming (LP) or 
+	 * Mixed-Integer Linear Programming (MILP) problem in JSON format.
 	 * 
-	 * @param option It allows you to add additional information in the json, such as uppers and lowers, variable types, constraint values, etc.
-	 * @return an object that allows access to the solution in json format
-	 * @throws SimplexException if the build of object is invalid
+	 * This method constructs the solution JSON, including optional sections based on the 
+	 * {@link SolutionDetail} values provided as arguments. The solution can represent either 
+	 * the optimal or feasible solution, depending on the problem's outcome.
+	 * 
+	 * The 'SolutionDetail' enum values can specify additional information to include in the JSON output:
+	 * <ul>
+	 *   <li>{@code INCLUDE_BOUNDS}: Includes the variable bounds (upper and lower limits) in the JSON.</li>
+	 *   <li>{@code INCLUDE_CONSTRAINT}: Includes the Left-Hand Side (LHS) and Right-Hand Side (RHS) values for constraints in the JSON.</li>
+	 *   <li>{@code INCLUDE_META}: Inserts metadata information like runtime, threads, iterations, etc.</li>
+	 *   <li>{@code INCLUDE_TYPEVAR}: Shows the original type of each variable (e.g., integer, binary, continuous) in the JSON.</li>
+	 * </ul>
+	 * 
+	 * @param option A variable number of {@link SolutionDetail} enum values to customize the JSON output.
+	 * @return A {@link JsonSolution} object representing the problem's solution in JSON format.
+	 * @throws SimplexException If there is an error in the Simplex execution or problem-solving process.
 	 */
 	
 	public JsonSolution getSolutionAsJson(SolutionDetail... option) throws SimplexException {
@@ -1039,5 +1057,33 @@ public final class LP /*implements FormatTypeInput*/ {
 		return new JsonSolution(this.meta,this.target,type_solution,solution,option);
 	}
 	
+	
+	/**
+	 * Solves the linear programming (LP) problem and returns the current instance of the LP object.
+	 * This method is designed to allow method chaining by returning 'this' rather than a result type.
+	 * 
+	 * <p>By passing 'null' to this method, the standard resolve method is bypassed, and this
+	 * version of the method is invoked. The 'nullable' parameter exists to differentiate 
+	 * between the standard resolve method and this version, which enables method chaining.</p>
+	 * 
+	 * <p>For example, this method can be used as follows:</p>
+	 * 
+	 * <pre>{@code
+	 * new LP(pl_string).resolve(null).getSolutionAsJson().saveToFile("solution.json");
+	 * }</pre>
+	 * 
+	 * <p>In the above code, the 'resolve()' method solves the LP problem, and 'saveSolutionToJson()' 
+	 * is chained to save the resulting solution to a JSON file.</p>
+	 * 
+	 * @param nullable an object that is intentionally ignored; passing 'null' to this parameter
+	 *                 ensures that this version of the resolve method is invoked.
+	 * @return the current instance of the LP object for method chaining.
+	 * @throws Exception if an error occurs during the resolution process.
+	 */
+    public LP resolve(Object nullable) throws Exception {
+        // Logica per risolvere il problema
+        	this.resolve();
+        	return this;
+    }
 }
 
