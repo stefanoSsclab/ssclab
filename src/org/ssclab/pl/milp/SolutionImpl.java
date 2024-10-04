@@ -16,6 +16,7 @@ final class SolutionImpl implements Solution {
 	private boolean isFeasibleSolution;
 	private static final Logger logger=SscLogger.getLogger(); 
 	
+	
 	//Costruttore da usare sulla parte MILP
 	SolutionImpl(SolutionType type_solution,PLProblem milp_originall,  int basis[],double values[], Var[] variables_deep) {
 		this.type_solution=type_solution;
@@ -65,7 +66,7 @@ final class SolutionImpl implements Solution {
 		}
 	}
 	
-	//Costruttore da usare sulla parte LP
+	//Costruttore da usare sulla parte LP , poi per tutti e due 
 	SolutionImpl(SolutionType type_solution,PLProblem milp_originall,  int basis[],double values[]) {
 		
 		this.type_solution=type_solution;

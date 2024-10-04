@@ -296,10 +296,14 @@ import org.ssclab.pl.milp.util.VectorsPL;
 				var.resetUpperLower();
 				var.setUpperSemicon(upper);
 				var.setLowerSemicon(lower);
+				if((lower <= 0.0 || upper <= 0.0)) {
+					throw new LPException(RB.format("it.ssc.pl.milp.MilpProblem.msg3", var.getName()));
+				}
 				//se semicontinua upper-lower non possono contenere lo zero
 				if((Double.isInfinite(lower) || lower <= 0.0) && (Double.isInfinite(upper) || upper >= 0.0)) {
 					throw new LPException(RB.format("it.ssc.pl.milp.MilpProblem.msg2", var.getName()));
 				}
+				
 			}
 		}
 	}

@@ -1072,7 +1072,7 @@ public final class LP /*implements FormatTypeInput*/ {
 	 * new LP(pl_string).resolve(null).getSolutionAsJson().saveToFile("solution.json");
 	 * }</pre>
 	 * 
-	 * <p>In the above code, the 'resolve()' method solves the LP problem, and 'saveSolutionToJson()' 
+	 * <p>In the above code, the 'resolve()' method solves the LP problem, and 'getSolutionAsJson()' 
 	 * is chained to save the resulting solution to a JSON file.</p>
 	 * 
 	 * @param nullable an object that is intentionally ignored; passing 'null' to this parameter

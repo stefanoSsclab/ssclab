@@ -54,6 +54,7 @@ public final class MILP  {
 	protected PLProblem father_pl_original_zero;
 	private Meta meta = new Meta();
 	private String title;
+	private Solution solutionForRelaxed;
 
 	{
 		logger.log(Level.INFO,  "##############################################");
@@ -377,7 +378,12 @@ public final class MILP  {
 			throw new LPException(RB.format("it.ssc.pl.milp.MILP.msg12"));
 		}
 		
-		SolutionType type_solution_initial=milp_initiale.resolve(true); 
+		//aggiunto il 01/10/2024 perche non dava soluzione rilassata giusta
+		MilpManager milp_relax=milp_initiale.clone();
+		milp_relax.resolve(true);
+		solutionForRelaxed=milp_relax.getSolution();
+		
+		SolutionType type_solution_initial=milp_initiale.resolve(false); 
 		//System.out.println("lb:"+milp_initiale.getOptimumValue());
 		
 		//lo chiamo dopo resolve perche' il target lo recupera dal milp_zero, che e' valorizzato dopo il resolve
@@ -446,7 +452,7 @@ public final class MILP  {
 					else {
 						//System.out.println("un trhea");
 						for(MilpManager milp:listMangerMilpToRun) {
-							milp.resolve(true);
+							milp.resolve(false);
 						}
 					}
 					//RISULTATO
@@ -505,10 +511,13 @@ public final class MILP  {
 	 */
 	
 	public Solution getRelaxedSolution()  {
+		/* cambiato il 04/01/2024 perche non dava sol giusta
 		if(milp_initiale!=null)  {
 			//System.out.println("qui:");
 			return milp_initiale.getSolution();
-		}
+			
+		}*/
+		if(solutionForRelaxed!=null) return solutionForRelaxed;
 		else return null;
 	}
 	
@@ -725,7 +734,7 @@ public final class MILP  {
 	 * new MILP(pl_string).resolve(null).getSolutionAsJson().saveToFile("solution.json");
 	 * }</pre>
 	 * 
-	 * <p>In the above code, the 'resolve()' method solves the MILP problem, and 'saveSolutionToJson()' 
+	 * <p>In the above code, the 'resolve()' method solves the MILP problem, and 'getSolutionAsJson()' 
 	 * is chained to save the resulting solution to a JSON file.</p>
 	 * 
 	 * @param nullable an object that is intentionally ignored; passing 'null' to this parameter

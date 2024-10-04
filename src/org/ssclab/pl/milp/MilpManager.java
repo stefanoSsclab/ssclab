@@ -34,7 +34,7 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 	private SolutionImpl solution_pl;
 	private SolutionType solutionType;
 	private MILP father;
-	
+
 	
 	MilpManager(Input input_sparse,Session session, FormatType format, MILP father) throws InvalidSessionException, Exception {
 		id=createId();  
@@ -140,18 +140,20 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 		this.solutionType=simplex.runPhaseOne();
 		if(this.solutionType==SolutionType.OPTIMUM) { 
 			this.solutionType =simplex.runPhaseTwo();
-			if(!isRelax)
-				this.solution_pl=new SolutionImpl(this.solutionType,
-											  pl_current, //dovevo passare un clone in quanto modifiva l'array di Var
-											  simplex.getFinalBasis(),
-											  simplex.getFinalValuesBasis(),
-											  pl_current.getVariables());
-			else 
-				this.solution_pl=new SolutionImpl(this.solutionType,
-					  pl_current, //dovevo passare un clone in quanto modifiva l'array di Var
-					  simplex.getFinalBasis(),
-					  simplex.getFinalValuesBasis());
 			
+			if(isRelax) { 
+				this.solution_pl=new SolutionImpl(this.solutionType,
+				pl_current, //dovevo passare un clone in quanto modifiva l'array di Var
+				simplex.getFinalBasis(),
+				simplex.getFinalValuesBasis());
+			}	
+			else  { 
+				this.solution_pl=new SolutionImpl(this.solutionType,
+				pl_current, //dovevo passare un clone in quanto modifiva l'array di Var
+				simplex.getFinalBasis(),
+				simplex.getFinalValuesBasis(),
+				pl_current.getVariables());
+			}
 		}	
 		
 		return this.solutionType;
