@@ -934,7 +934,7 @@ public final class LP /*implements FormatTypeInput*/ {
 		System.out.println("");
 	}
 	
-	@SuppressWarnings("unused")
+	@SuppressWarnings("unused") 
 	private void printTableV(double[] vector) {
 		for(int _j=0;_j<vector.length;_j++) {
 			double val=vector[_j];

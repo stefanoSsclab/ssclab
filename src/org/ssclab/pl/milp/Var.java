@@ -26,7 +26,9 @@ final class Var implements Cloneable, Variable, Serializable {
 	//in quanto se lower non e' stato definito e upper viene settato a  < 0 -> variabile libera 
 	//e lower = -INFINITO
 	private boolean is_lower_modified;
-	private boolean isZeroSemicontVar;
+	
+	//provo a toglierlo 06/10/2024
+	//private boolean isZeroSemicontVar;
 	
 	//parte per variabili semi-continue
 	private double upperSemicon; 
@@ -49,26 +51,42 @@ final class Var implements Cloneable, Variable, Serializable {
 		lower=0.0;   
 		upper=Double.POSITIVE_INFINITY;
 		lowerSemicon=0.0;
+		upperSemicon=Double.POSITIVE_INFINITY;
 		is_lower_modified=false;
-		isZeroSemicontVar=false;
+		//isZeroSemicontVar=false;
 		is_free=false;
 	
 	}
 	
+	/*
 	public boolean isZeroSemicontVar() {
 		return isZeroSemicontVar;
 	}
 	public void setZeroSemicontVar(boolean isZeroSemicontVar) {
 		this.isZeroSemicontVar = isZeroSemicontVar;
 	}
+	*/
 	
-	
+	/*questo metodo e utilizzato per resettare upper e lower */
 	public void resetUpperLower() {
 		lower=0.0;   
 		upper=Double.POSITIVE_INFINITY;
 		is_free=false;
 		is_lower_modified=false;
 	}
+	
+	
+	
+	/*questo metodo e utilizzato per resettare solo lower (06/10/2024)*/
+	public void resetLower() {
+		lower=0.0;   
+		is_free=false;
+		is_lower_modified=false;
+	}
+	
+	
+	
+	
 	
 	public double getUpperSemicon() {
 		return upperSemicon;

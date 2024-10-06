@@ -293,7 +293,8 @@ import org.ssclab.pl.milp.util.VectorsPL;
 			if(var.isSemicon()) { 
 				double upper=var.getUpper();
 				double lower=var.getLower();
-				var.resetUpperLower();
+				//var.resetUpperLower();
+				var.resetLower();
 				var.setUpperSemicon(upper);
 				var.setLowerSemicon(lower);
 				if((lower <= 0.0 || upper <= 0.0)) {

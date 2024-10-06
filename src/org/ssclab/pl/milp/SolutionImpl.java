@@ -104,13 +104,14 @@ final class SolutionImpl implements Solution {
 	
 	}	
 	
+	/*
 	private void passaZeroSemicontVar(Var[] variables_deep)  {
 		int index_var=0;
 		for(Var new_var:this.variables) {
 			new_var.setZeroSemicontVar(variables_deep[index_var].isZeroSemicontVar());
 			index_var++;
 		}
-	}
+	}*/
 	
 	public boolean isFeasibleSolution() {
 		return isFeasibleSolution;

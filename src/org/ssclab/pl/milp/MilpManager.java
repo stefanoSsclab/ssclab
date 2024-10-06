@@ -170,7 +170,8 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 			//System.out.println(index_var+":ZERO-ZERO"+"   ID_CLONE"+clone_separation.getId() );
 			InternalConstraint constraint=InternalConstraint.createConstraintFromVar(num_tot_var, index_var, 0.0, InternalConstraint.TYPE_CONSTR.LE);
 			clone_separation.pl_current.addConstraint(constraint);
-			variable.setZeroSemicontVar(true);
+			//tolto il 06/10/2024
+			//variable.setZeroSemicontVar(true);
 		}
 		else {
 			variable.setUpper(variable.getUpperSemicon());
@@ -370,7 +371,7 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 	}
 	
 	
-	@SuppressWarnings("unused")
+
 	private void printTableA(double[][] tabella) {
 		for(int _i=0;_i<tabella.length;_i++) {
 			System.out.println("");
@@ -382,7 +383,7 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 		System.out.println("");
 	}
 	
-	@SuppressWarnings("unused")
+
 	private void printTableV(double[] vector) {
 		for(int _j=0;_j<vector.length;_j++) {
 			double val=vector[_j];
