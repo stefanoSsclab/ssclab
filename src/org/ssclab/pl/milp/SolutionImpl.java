@@ -22,11 +22,10 @@ final class SolutionImpl implements Solution {
 		this.type_solution=type_solution;
 		this.milp_original=milp_originall;
 		this.variables= milp_original.getVariablesClone();
-		passaZeroSemicontVar(variables_deep);
+		//passaZeroSemicontVar(variables_deep);
 		int index_var=0;
 		int index_base=0,index_p1_base=0;
 		for(Var var:variables) {
-			
 			//se la variabile e' libera , vuol dire che e' negativa e  ha un lower bound indefiniti,  
 			if(var.isFree()) {			
 				double value_sum=0;
@@ -42,12 +41,15 @@ final class SolutionImpl implements Solution {
 			//La variabile non e' libera  ed e' in base e  quindi puo avere un lower bound, se ce l'ha occorre ritrasformare per rendere valore variabile effettivo
 			else if((index_base=getIndexInBase( basis,index_var))!=-1) {
 				
+				 /*
 				if(var.isSemicon() && !var.isZeroSemicontVar()) {
+					 System.out.println("entra:");
 					if(!Double.isInfinite(var.getLowerSemicon()) && var.getLowerSemicon()!=0.0) {
 						 var.setValue(values[index_base]+var.getLowerSemicon());
-					 }
+					}
 				}
-				else if(!Double.isInfinite(var.getLower()) && var.getLower()!=0.0) {
+				else */
+					if(!Double.isInfinite(var.getLower()) && var.getLower()!=0.0) {
 					 var.setValue(values[index_base]+var.getLower());
 				 }
 				else var.setValue(values[index_base]);
@@ -56,12 +58,12 @@ final class SolutionImpl implements Solution {
 			else if(!Double.isInfinite(var.getLower()) && var.getLower()!=0.0) {
 				var.setValue(var.getLower());
 			}
-			
+			/*
 			else if(var.isSemicon() && !var.isZeroSemicontVar()) {
 				if(!Double.isInfinite(var.getLowerSemicon()) && var.getLowerSemicon()!=0.0) {
 					 var.setValue(var.getLowerSemicon());
 				 }
-			}
+			}*/
 			index_var++;
 		}
 	}

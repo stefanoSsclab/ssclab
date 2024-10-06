@@ -96,10 +96,10 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 	}
 	
 	public void run() throws Exception {
-		resolve(false);
+		resolve();
 	}
 	
-	SolutionType resolve(boolean isRelax) throws Exception {
+	SolutionType resolve() throws Exception {
 		
 		//necessario clonare ?  Si il pl_current non viene mai eseguito, ne standardizzato, 
 		//ma viene standardizzato ed eseguito un suo clone, quindi il MilpManager ha un riferimento integro 
@@ -108,7 +108,7 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 		PLProblem lp_standard=pl_current.clone();  
 		
 		/*
-		 * pl_original_zero viane inizializzato la prima volta se e a null. 
+		 * pl_original_zero viene inizializzato la prima volta se e a null. 
 		 */
 		
 		 pl_original_zero=father.father_pl_original_zero;    //forse non occorre clonare ????? TOLTO clone 19/03/2024
@@ -140,20 +140,11 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 		this.solutionType=simplex.runPhaseOne();
 		if(this.solutionType==SolutionType.OPTIMUM) { 
 			this.solutionType =simplex.runPhaseTwo();
-			
-			if(isRelax) { 
-				this.solution_pl=new SolutionImpl(this.solutionType,
-				pl_current, //dovevo passare un clone in quanto modifiva l'array di Var
-				simplex.getFinalBasis(),
-				simplex.getFinalValuesBasis());
-			}	
-			else  { 
-				this.solution_pl=new SolutionImpl(this.solutionType,
+			this.solution_pl=new SolutionImpl(this.solutionType,
 				pl_current, //dovevo passare un clone in quanto modifiva l'array di Var
 				simplex.getFinalBasis(),
 				simplex.getFinalValuesBasis(),
 				pl_current.getVariables());
-			}
 		}	
 		
 		return this.solutionType;

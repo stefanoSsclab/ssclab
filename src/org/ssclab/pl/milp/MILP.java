@@ -375,15 +375,19 @@ public final class MILP  {
 		milp_initiale.setMaxIteration(num_max_iteration);
 		
 		if(!milp_initiale.existVarToBeIntegerOrSemicon()) {
-			throw new LPException(RB.format("it.ssc.pl.milp.MILP.msg12"));
+			throw new LPException(RB.format("it.ssc.pl.milp.MILP.msg12")); 
 		}
 		
 		//aggiunto il 01/10/2024 perche non dava soluzione rilassata giusta
+		/*
 		MilpManager milp_relax=milp_initiale.clone();
-		milp_relax.resolve(true);
+		milp_relax.resolve(false);
 		solutionForRelaxed=milp_relax.getSolution();
+		milp_relax=null;
+		*/
+		//fine aggiunto il 01/10/2024
 		
-		SolutionType type_solution_initial=milp_initiale.resolve(false); 
+		SolutionType type_solution_initial=milp_initiale.resolve(); 
 		//System.out.println("lb:"+milp_initiale.getOptimumValue());
 		
 		//lo chiamo dopo resolve perche' il target lo recupera dal milp_zero, che e' valorizzato dopo il resolve
@@ -413,33 +417,27 @@ public final class MILP  {
 			}
 			else tree.addNode(milp_initiale);
 		}	 
-		
 		CyclicBarrier cb =null;
 		Thread tgroup0 = null;
-		
 		ArrayList<MilpManager> list_best_candidate=null;
 		ArrayList<MilpManager> scarti_to_separe=null;
 		ArrayList<MilpManager> listMangerMilpToRun=null;
 		
 		b:	{
 			while(!tree.isEmpty()) {
-
 				list_best_candidate=tree.getMilpBestUP(threadNumber);  
 				scarti_to_separe=new ArrayList<MilpManager> ();
 				for(MilpManager lp_curent:list_best_candidate) {
 					scarti_to_separe.add(lp_curent);
 				}
-
 				if(!scarti_to_separe.isEmpty()) {
 					listMangerMilpToRun = new ArrayList<MilpManager>();
-
 					//prende il milp lp_curent
 					for(MilpManager lp_curent:scarti_to_separe) {
 						MilpManager.populateArrayListBySeparation(listMangerMilpToRun,lp_curent);
 					}
 					//gestione a piu thread
 					if(threadNumber!=MILPThreadsNumber.N_1) {
-
 						//Gestione Thread
 						cb = new CyclicBarrier(listMangerMilpToRun.size());
 						for(MilpManager lp_run:listMangerMilpToRun) {
@@ -452,7 +450,7 @@ public final class MILP  {
 					else {
 						//System.out.println("un trhea");
 						for(MilpManager milp:listMangerMilpToRun) {
-							milp.resolve(false);
+							milp.resolve();
 						}
 					}
 					//RISULTATO
@@ -511,13 +509,12 @@ public final class MILP  {
 	 */
 	
 	public Solution getRelaxedSolution()  {
-		/* cambiato il 04/01/2024 perche non dava sol giusta
+		
 		if(milp_initiale!=null)  {
-			//System.out.println("qui:");
 			return milp_initiale.getSolution();
-			
-		}*/
-		if(solutionForRelaxed!=null) return solutionForRelaxed;
+		}
+		/* cambiato il 04/01/2024 perche non dava sol giusta
+		if(solutionForRelaxed!=null) return solutionForRelaxed;*/
 		else return null;
 	}
 	
