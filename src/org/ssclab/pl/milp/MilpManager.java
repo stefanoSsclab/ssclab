@@ -168,7 +168,7 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 		if(versus==VERSUS_SEPARATION.ZERO)  {
 			int num_tot_var= this.solution_pl.getVariables().length;
 			//System.out.println(index_var+":ZERO-ZERO"+"   ID_CLONE"+clone_separation.getId() );
-			InternalConstraint constraint=InternalConstraint.createConstraintFromVar(num_tot_var, index_var, 0.0, InternalConstraint.TYPE_CONSTR.LE);
+			InternalConstraint constraint=InternalConstraint.createConstraintFromVar(num_tot_var, index_var, 0.0, InternalConstraint.TYPE_CONSTR.EQ);
 			clone_separation.pl_current.addConstraint(constraint);
 			//tolto il 06/10/2024
 			//variable.setZeroSemicontVar(true);
