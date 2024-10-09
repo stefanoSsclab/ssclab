@@ -9,7 +9,8 @@ import org.ssclab.datasource.DataSourceException;
 import org.ssclab.i18n.RB;
 import org.ssclab.log.SscLevel;
 import org.ssclab.log.SscLogger;
-import static org.ssclab.pl.milp.InternalConstraint.TYPE_CONSTR;
+import org.ssclab.pl.milp.InternalConstraint.TYPE_CONSTR;
+import org.ssclab.pl.milp.Variable.TYPE_VAR;
 
  final class CreatePLProblem implements Costant  {
 	 
@@ -20,10 +21,15 @@ import static org.ssclab.pl.milp.InternalConstraint.TYPE_CONSTR;
 			 boolean isMilp) throws Exception  {
 
 		 //checkDimensionProblem(f,constraints);
+		 
 
 		 double[] C=f.getC();
 		 int N=C.length;
 		 PLProblem lp_original=new PLProblem(N);
+		 
+		 if(!arrayProb.listSosGroup.isEmpty()) 
+			 lp_original.setSosGroup(arrayProb.listSosGroup);
+		 
 		 int _x=0;
 		 for(String nome:nomi_var)  {
 			 lp_original.setNameVar(_x++, nome);
@@ -34,7 +40,6 @@ import static org.ssclab.pl.milp.InternalConstraint.TYPE_CONSTR;
 		 for(int _j=0;_j<N; _j++)  {
 			 lp_original.setCjOF(_j, C[_j]);
 		 }
-
 
 		 for(InternalConstraint cons:constraints)  lp_original.addConstraint(cons);
 
@@ -57,16 +62,16 @@ import static org.ssclab.pl.milp.InternalConstraint.TYPE_CONSTR;
 
 			 //System.out.println("VAR  "+_j +"  "+type);
 			 if(arrayProb.array_int[_j]==1) { 
-				 if(xj.getType()==Var.TYPE_VAR.BINARY) throw new LPException(RB.format("it.ssc.pl.milp.CreateMilpProblem.msg9", (_j+1)));
-				 xj.setType(Var.TYPE_VAR.INTEGER);
+				 if(xj.getType()==TYPE_VAR.BINARY  || arrayProb.array_sos1[_j]==TYPE_VAR.BINARY) throw new LPException(RB.format("it.ssc.pl.milp.CreateMilpProblem.msg9", xj.getName()));
+				 xj.setType(TYPE_VAR.INTEGER);
 			 }
 			 if(arrayProb.array_bin[_j]==1) { 
-				 if(xj.getType()==Var.TYPE_VAR.INTEGER) throw new LPException(RB.format("it.ssc.pl.milp.CreateMilpProblem.msg10", (_j+1)));
-				 xj.setType(Var.TYPE_VAR.BINARY);
+				 if(xj.getType()==TYPE_VAR.INTEGER || arrayProb.array_sos1[_j]==TYPE_VAR.INTEGER) throw new LPException(RB.format("it.ssc.pl.milp.CreateMilpProblem.msg10", xj.getName()));
+				 xj.setType(TYPE_VAR.BINARY);
 			 }
 
 			 if(arrayProb.array_sec[_j]==1) { 
-				 if(xj.getType()==Var.TYPE_VAR.BINARY) throw new LPException(RB.format("it.ssc.pl.milp.CreateMilpProblem.msg11", (_j+1)));
+				 if(xj.getType()==TYPE_VAR.BINARY || arrayProb.array_sos1[_j]==TYPE_VAR.BINARY) throw new LPException(RB.format("it.ssc.pl.milp.CreateMilpProblem.msg11", xj.getName()));
 				 xj.setSemicon(true);
 				 //xj.setType(Var.TYPE_VAR.SEMICONT);
 			 }
@@ -195,16 +200,16 @@ import static org.ssclab.pl.milp.InternalConstraint.TYPE_CONSTR;
 					 if(!Double.isNaN(type_var) && type_var==1.0) {
 						 //System.out.println("VAR  "+_j +"  "+type);
 						 if(rel==ConsType.INT) { 
-							 if(xj.getType()==Var.TYPE_VAR.BINARY) throw new LPException(RB.format("it.ssc.pl.milp.CreateMilpProblem.msg9", (_j+1)));
-							 xj.setType(Var.TYPE_VAR.INTEGER);
+							 if(xj.getType()==TYPE_VAR.BINARY) throw new LPException(RB.format("it.ssc.pl.milp.CreateMilpProblem.msg9", (_j+1)));
+							 xj.setType(TYPE_VAR.INTEGER);
 						 }
 						 if(rel==ConsType.BIN)  {
-							 if(xj.getType()==Var.TYPE_VAR.INTEGER) throw new LPException(RB.format("it.ssc.pl.milp.CreateMilpProblem.msg10", (_j+1)));
-							 xj.setType(Var.TYPE_VAR.BINARY);
+							 if(xj.getType()==TYPE_VAR.INTEGER) throw new LPException(RB.format("it.ssc.pl.milp.CreateMilpProblem.msg10", (_j+1)));
+							 xj.setType(TYPE_VAR.BINARY);
 						 }
 						 
 						 if(rel==ConsType.SEMICONT)  {
-							 if(xj.getType()==Var.TYPE_VAR.BINARY) throw new LPException(RB.format("it.ssc.pl.milp.CreateMilpProblem.msg11", (_j+1)));
+							 if(xj.getType()==TYPE_VAR.BINARY) throw new LPException(RB.format("it.ssc.pl.milp.CreateMilpProblem.msg11", (_j+1)));
 							 xj.setSemicon(true);
 							 //xj.setType(Var.TYPE_VAR.SEMICONT);
 						 }

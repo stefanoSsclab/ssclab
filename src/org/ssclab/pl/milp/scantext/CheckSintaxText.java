@@ -54,6 +54,10 @@ public class CheckSintaxText {
 		else if (line.matches("\\s*(?i)((bin)|(sec)|(int))\\s+((\\p{Alpha}+)(\\w*))\\s*(.*)")) {
 			checkSintassiInt(line);
 		}
+		else if (line.matches("\\s*(?i)((sos1)|(sos1_bin)|(sos1_int))\\s+((\\p{Alpha}+)(\\w*))\\s*(.*)")) {
+			System.out.println("SOS");
+			checkSintassiSOS1(line);
+		}
 		else { 
 			throw new ParseException(RB.getString("org.ssclab.pl.milp.scantext.CheckSintaxText.msg1")+" ["+line+"]");
 		}
@@ -168,5 +172,34 @@ public class CheckSintaxText {
 			}	
 		}
 	}
+	
+	
+	
+	
+	private void checkSintassiSOS1(String line) throws ParseException {
+
+		Pattern pattern_int = Pattern.compile("\\s*((sos1)|(sos1_bin)|(sos1_int))\\s+",Pattern.CASE_INSENSITIVE);
+		Matcher matcher_group_var = pattern_int.matcher(line);
+		int end=0;
+		//MAX o MIN
+		if (matcher_group_var.lookingAt()) {
+			end=matcher_group_var.end();
+		}	
+		else { 
+			throw new ParseException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg4")+" ["+line+"]");
+		}
+		String resto=line.substring(end);
+		resto=resto.trim();
+		//System.out.println("qua:"+resto);
+		if(!resto.equals("")) {
+			String[] tokens = resto.split("\\s*,\\s*");
+			for(String token:tokens) {  
+				System.out.println("qua3:"+token);
+				if(!token.matches("\\s*(\\p{Alpha}+\\w*)\\**\\s*"))
+					throw new ParseException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg4")+" ["+line+"] : error in "+token);
+			}	
+		}
+	}
+	
 
 }

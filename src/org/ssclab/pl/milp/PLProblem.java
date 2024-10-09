@@ -6,6 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.ssclab.i18n.RB;
 import org.ssclab.log.SscLogger;
+
 import org.ssclab.pl.milp.ObjectiveFunction.TARGET_FO;
 import org.ssclab.pl.milp.util.VectorsPL;
 
@@ -21,7 +22,18 @@ import org.ssclab.pl.milp.util.VectorsPL;
 	private ArrayList<InternalConstraint> list_constraint;  
 	private Var[] array_var;
 	private TARGET_FO target_fo= TARGET_FO.MAX;
+	private ArrayList<SosGroup> sosGroup;
+	
+	
 		
+	public ArrayList<SosGroup> getSosGroup() {
+		return sosGroup;
+	}
+
+	public void setSosGroup(ArrayList<SosGroup> sosGroup) {
+		this.sosGroup = sosGroup;
+	}
+
 	public ObjectiveFunctionImpl getObjFunction() {
 		return fo;                                
 	}
