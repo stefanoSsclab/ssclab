@@ -26,8 +26,8 @@ public class ScanConstraintFromLine {
 	Pattern pattern_gen1 = Pattern.compile("\\s*(\\p{Alpha}+\\w*\\s*:)?\\s*(((([+-]?)\\s*(\\d+\\.?\\d*))|(\\.))\\s*<\\s*=)?\\s*(\\p{Alpha}+\\w*)\\s*(<\\s*=\\s*((([+-]?)\\s*(\\d+\\.?\\d*))|(\\.)))?\\s*",Pattern.CASE_INSENSITIVE);
 	Pattern pattern_gen2 = Pattern.compile("\\s*(\\p{Alpha}+\\w*\\s*:)?\\s*(((([+-]?)\\s*(\\d+\\.?\\d*))|(\\.))\\s*>\\s*=)?\\s*(\\p{Alpha}+\\w*)\\s*(>\\s*=\\s*((([+-]?)\\s*(\\d+\\.?\\d*))|(\\.)))?\\s*",Pattern.CASE_INSENSITIVE);
 	Pattern pattern_gen3 = Pattern.compile("\\s*((bin)|(sec)|(int))\\s+((\\p{Alpha}+)(\\w*))\\s*",Pattern.CASE_INSENSITIVE);
-	Pattern pattern_gen4 = Pattern.compile("\\s*((sos1)|(sos1_bin)|(sos1_int))\\s+((\\p{Alpha}+)(\\w*))\\s*",Pattern.CASE_INSENSITIVE);
-	Pattern pattern_upper1 = Pattern.compile("\\s*(((([+-]?)\\s*(\\d+\\.?\\d*))|(\\.))\\s*(>|<)\\s*=)?\\s*(\\p{Alpha}+\\w*)\\s*((>|<)\\s*=\\s*((([+-]?)\\s*(\\d+\\.?\\d*))|(\\.)))?\\s*",Pattern.CASE_INSENSITIVE);
+	Pattern pattern_gen4 = Pattern.compile("\\s*((sos[12])|(sos[12]\\s*:\\s*bin(\\s*:\\s*force)?)|(sos[12]\\s*:\\s*int))\\s+((\\p{Alpha}+)(\\w*))\\s*",Pattern.CASE_INSENSITIVE);
+	Pattern pattern_upper1= Pattern.compile("\\s*(((([+-]?)\\s*(\\d+\\.?\\d*))|(\\.))\\s*(>|<)\\s*=)?\\s*(\\p{Alpha}+\\w*)\\s*((>|<)\\s*=\\s*((([+-]?)\\s*(\\d+\\.?\\d*))|(\\.)))?\\s*",Pattern.CASE_INSENSITIVE);
 	Pattern pattern_cons1 = Pattern.compile("(([+-])\\s*(\\d+\\.?\\d*)?(\\p{Alpha}+\\w*)\\s*)",Pattern.CASE_INSENSITIVE);
 	Pattern pattern_cons2 = Pattern.compile("([+-]\\s*(\\d+)(\\.?)(\\d*))\\s*",Pattern.CASE_INSENSITIVE);
 
@@ -87,7 +87,6 @@ public class ScanConstraintFromLine {
 			//checkSintassiInt(inequality);
 			scanSos1(inequality);
 		}
-		
 		else if (int_bin_sec.lookingAt() ) {
 			//checkSintassiInt(inequality);
 			scanIntSecBin(inequality);
@@ -192,17 +191,24 @@ public class ScanConstraintFromLine {
 				//System.out.println("->"+none_var+"<-");
 				if(none_var.endsWith("*")) { 
 					String prefix=none_var.replace("*", "").toUpperCase();
+					boolean trovate=false;
 					for(String variabile:nomi_var) {
 						if(variabile.startsWith(prefix)) {
+							trovate=true;
 							index=nomi_var.indexOf(variabile);
+							if(arraysProb.array_int[index]==1) 
+								throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromString.msg16",variabile));
+							
 							arraysProb.array_int[index]=1;
-							//System.out.println("->"+none_var+"<- 111");
+							System.out.println("->"+none_var+"<- 111");
 						}
 					}
+					if(!trovate)  throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromString.msg22")+prefix+"*");
 				}
 				else { 
 					index=nomi_var.indexOf(none_var.toUpperCase());
 					if(index==-1 ) throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromString.msg12", none_var));
+					if(arraysProb.array_int[index]==1) throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromString.msg16",none_var));
 					arraysProb.array_int[index]=1;
 				}
 			}		 
@@ -225,17 +231,24 @@ public class ScanConstraintFromLine {
 			for(String none_var:tokens) {  
 				if(none_var.endsWith("*")) { 
 					String prefix=none_var.replace("*", "").toUpperCase();
+					boolean trovate=false;
 					for(String variabile:nomi_var) {
 						if(variabile.startsWith(prefix)) {
+							trovate=true;
 							index=nomi_var.indexOf(variabile);
+							if(arraysProb.array_bin[index]==1) 
+								throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromString.msg17",variabile));
+							
 							arraysProb.array_bin[index]=1;
 							//System.out.println("->"+none_var+"<- 111");
 						}
 					}
+					if(!trovate)  throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromString.msg22")+prefix+"*");
 				}
 				else { 
 					index=nomi_var.indexOf(none_var.toUpperCase());
 					if(index==-1 )  throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromString.msg2", none_var));
+					if(arraysProb.array_bin[index]==1) throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromString.msg17",none_var));
 					arraysProb.array_bin[index]=1;
 				}	
 			}	
@@ -257,17 +270,24 @@ public class ScanConstraintFromLine {
 			for(String none_var:tokens) {  
 				if(none_var.endsWith("*")) { 
 					String prefix=none_var.replace("*", "").toUpperCase();
+					boolean trovate=false;
 					for(String variabile:nomi_var) {
 						if(variabile.startsWith(prefix)) {
+							trovate=true;
 							index=nomi_var.indexOf(variabile);
+							if(arraysProb.array_sec[index]==1) 
+								throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromString.msg18",variabile));
+							
 							arraysProb.array_sec[index]=1;
 							//System.out.println("->"+none_var+"<- 111");
 						}
 					}
+					if(!trovate)  throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromString.msg22")+prefix+"*");
 				}
 				else { 
 					index=nomi_var.indexOf(none_var.toUpperCase());
 					if(index==-1 )  throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromString.msg2", none_var));
+					if(arraysProb.array_sec[index]==1) throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromString.msg18",none_var));
 					arraysProb.array_sec[index]=1;
 				}	
 			}	
@@ -362,144 +382,165 @@ public class ScanConstraintFromLine {
 	}
 	
 	
-	
-	
-	
 	private void scanSos1(String line) throws LPException { 
-
 		int index=0;
-		if (line.toLowerCase().contains("sos1 ")) {
-			//se ho trovato delle varaibil intere , memorizzo l'informazione nel caso mi trovi in ambito 
-			//non MILP, altrimenti Exception
+		if (line.toLowerCase().matches("\\s*sos[12]\\s*:\\s*bin(\\s*:\\s*force)?\\s*.*")) {
+			
 			arraysProb.isMilp=true;
 			
-			SosGroup group=new SosGroup(TYPE_VAR.REAL,TYPE_SOS_GROUP.SOS1);
-			System.out.println("gruppo:"+"<-real");
+			TYPE_SOS_GROUP typeSos;
+			if(line.toLowerCase().matches("\\s*sos1\\s*:\\s*bin\\s*:\\s*force\\s*.*"))  typeSos=TYPE_SOS_GROUP.SOS1_BIN_FORCE;
+			else if(line.toLowerCase().matches("\\s*sos2\\s*:\\s*bin\\s*:\\s*force\\s*.*"))   typeSos=TYPE_SOS_GROUP.SOS2_BIN_FORCE;
+			else if(line.toLowerCase().matches("\\s*sos1\\s*:\\s*bin\\s*.*"))  typeSos=TYPE_SOS_GROUP.SOS1_BIN;
+			else typeSos=TYPE_SOS_GROUP.SOS2_BIN;
 			
-			String line2=line.replaceAll("\\s*(?i)(sos1)\\s+", "").trim();
-			//System.out.println("@@@@@@@@@@@@::"+line);
+			SosGroup group=new SosGroup(typeSos);
+			
+			String line2=line.replaceAll("\\s*(?i)(sos[12]\\s*:\\s*bin(\\s*:\\s*force)?)\\s+","").trim();
 			String[] tokens = line2.split("\\s*,\\s*");
 			if(tokens.length==0) throw new LPException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg13")+"["+line+"]");
 			for(String none_var:tokens) {  
-				//System.out.println("->"+none_var+"<-");
-				if(none_var.endsWith("*")) { 
+				if(none_var.endsWith("*") && (typeSos==TYPE_SOS_GROUP.SOS1_BIN_FORCE || typeSos==TYPE_SOS_GROUP.SOS1_BIN)) { 
 					String prefix=none_var.replace("*", "").toUpperCase();
 					for(String variabile:nomi_var) {
 						if(variabile.startsWith(prefix)) {
 							index=nomi_var.indexOf(variabile);
-							if(arraysProb.array_sos1[index]!=null) 
+							if(arraysProb.array_sos[index]!=null) 
 								throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromString.msg14",variabile));
-							arraysProb.array_sos1[index]=TYPE_VAR.REAL;
-							group.listNomiVar.add(variabile.toUpperCase());
-							System.out.println(index+"->"+variabile+"<- SOSrel");
+							arraysProb.array_sos[index]=TYPE_VAR.BINARY;
+							if(typeSos==TYPE_SOS_GROUP.SOS1_BIN) arraysProb.array_bin[index]=1;
+							group.addVar(variabile.toUpperCase(), index);
 						}
 					}
+					if(group.size()==0) throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromString.msg22")+prefix+"*");
+				}
+				else if(none_var.endsWith("*") && (typeSos==TYPE_SOS_GROUP.SOS2_BIN_FORCE || typeSos==TYPE_SOS_GROUP.SOS2_BIN)) { 
+					throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromString.msg21"));
 				}
 				else { 
 					index=nomi_var.indexOf(none_var.toUpperCase());
-					if(arraysProb.array_sos1[index]!=null) 
+					if(index==-1 ) throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromString.msg15", none_var));
+					if(arraysProb.array_sos[index]!=null) 
 						throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromString.msg14",none_var));
 					
-					if(index==-1 ) throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromString.msg15", none_var));
-					arraysProb.array_sos1[index]=TYPE_VAR.REAL;
-					group.listNomiVar.add(none_var.toUpperCase());
-					System.out.println(index+"->"+none_var+"<- SOSreal");
+					arraysProb.array_sos[index]=TYPE_VAR.BINARY;
+					if(typeSos==TYPE_SOS_GROUP.SOS1_BIN || typeSos==TYPE_SOS_GROUP.SOS2_BIN)
+						arraysProb.array_bin[index]=1;
+					group.addVar(none_var.toUpperCase(), index);
 				}
 			}	
+			if(typeSos==TYPE_SOS_GROUP.SOS1_BIN || typeSos==TYPE_SOS_GROUP.SOS1_BIN_FORCE) {
+				if(group.size() < 2) 
+					 throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromString.msg19"));
+			}
+			else if(typeSos==TYPE_SOS_GROUP.SOS2_BIN || typeSos==TYPE_SOS_GROUP.SOS2_BIN_FORCE) {
+				if(group.size() < 3) 
+					 throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromString.msg20"));
+			}
 			arraysProb.listSosGroup.add(group);
 		} 
-		else if (line.toLowerCase().contains("sos1_bin ")) {
-			//se ho trovato delle varaibil intere , memorizzo l'informazione nel caso mi trovi in ambito 
-			//non MILP, altrimenti Exception
+		
+		else if (line.toLowerCase().matches("\\s*sos[12]\\s*:\\s*int\\s*.*")) {
+			
 			arraysProb.isMilp=true;
 			
-			SosGroup group=new SosGroup(TYPE_VAR.BINARY,TYPE_SOS_GROUP.SOS1);
-			System.out.println("gruppo:"+"<-bin");
+			TYPE_SOS_GROUP typeSos;
+			if(line.toLowerCase().matches("\\s*sos1\\s*:\\s*int\\s*.*"))  typeSos=TYPE_SOS_GROUP.SOS1_INT;
+			else  typeSos=TYPE_SOS_GROUP.SOS2_INT;
 			
-			String line2=line.replaceAll("\\s*(?i)(sos1_bin)\\s+", "").trim();
-			//System.out.println("@@@@@@@@@@@@::"+line);
+			SosGroup group=new SosGroup(typeSos);
+						
+			String line2=line.replaceAll("\\s*(?i)(sos[12]\\s*:\\s*int)\\s+", "").trim();
 			String[] tokens = line2.split("\\s*,\\s*");
 			if(tokens.length==0) throw new LPException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg13")+"["+line+"]");
 			for(String none_var:tokens) {  
-				//System.out.println("->"+none_var+"<-");
-				if(none_var.endsWith("*")) { 
+				if(none_var.endsWith("*") && typeSos==TYPE_SOS_GROUP.SOS1_INT) { 
 					String prefix=none_var.replace("*", "").toUpperCase();
 					for(String variabile:nomi_var) {
 						if(variabile.startsWith(prefix)) {
 							index=nomi_var.indexOf(variabile);
-							if(arraysProb.array_sos1[index]!=null) 
+							if(arraysProb.array_sos[index]!=null) 
 								throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromString.msg14",variabile));
-							arraysProb.array_sos1[index]=TYPE_VAR.BINARY;
-							group.listNomiVar.add(variabile.toUpperCase());
-							System.out.println(index+"->"+variabile+"<- SOSbin");
+							arraysProb.array_sos[index]=TYPE_VAR.INTEGER;
+							arraysProb.array_int[index]=1;
+							group.addVar(variabile.toUpperCase(), index);
 						}
 					}
+					if(group.size()==0)  throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromString.msg22")+prefix+"*");
+				}
+				else if(none_var.endsWith("*") && (typeSos==TYPE_SOS_GROUP.SOS2_INT)) { 
+					throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromString.msg21"));
 				}
 				else { 
 					index=nomi_var.indexOf(none_var.toUpperCase());
-					if(arraysProb.array_sos1[index]!=null) 
+					if(index==-1 ) throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromString.msg15", none_var));
+					if(arraysProb.array_sos[index]!=null) 
 						throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromString.msg14",none_var));
 					
-					if(index==-1 ) throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromString.msg15", none_var));
-					arraysProb.array_sos1[index]=TYPE_VAR.BINARY;
-					group.listNomiVar.add(none_var.toUpperCase());
-					System.out.println(index+"->"+none_var+"<- SOSbin");
+					arraysProb.array_sos[index]=TYPE_VAR.INTEGER;
+					arraysProb.array_int[index]=1;
+					group.addVar(none_var.toUpperCase(), index);
 				}
 			}	
+			if(typeSos==TYPE_SOS_GROUP.SOS1_INT) {
+				if(group.size() < 2) 
+					 throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromString.msg19"));
+			}
+			else if(typeSos==TYPE_SOS_GROUP.SOS2_INT) {
+				if(group.size() < 3) 
+					 throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromString.msg20"));
+			}
 			arraysProb.listSosGroup.add(group);
 		} 
-		
-		else if (line.toLowerCase().contains("sos1_int ")) {
-			//se ho trovato delle varaibil intere , memorizzo l'informazione nel caso mi trovi in ambito 
-			//non MILP, altrimenti Exception
+		else if (line.toLowerCase().contains("sos1 ") || line.toLowerCase().contains("sos2 ")) {
+			
 			arraysProb.isMilp=true;
+			TYPE_SOS_GROUP typeSos;
+			if(line.toLowerCase().contains("sos1 "))  typeSos=TYPE_SOS_GROUP.SOS1;
+			else  typeSos=TYPE_SOS_GROUP.SOS2;
 			
-			SosGroup group=new SosGroup(TYPE_VAR.INTEGER,TYPE_SOS_GROUP.SOS1);
-			System.out.println("gruppo:"+"<-int");
+			SosGroup group=new SosGroup(typeSos);
 			
-			String line2=line.replaceAll("\\s*(?i)(sos1_int)\\s+", "").trim();
-			//System.out.println("@@@@@@@@@@@@::"+line);
+			String line2=line.replaceAll("\\s*(?i)(sos[12])\\s+", "").trim();
 			String[] tokens = line2.split("\\s*,\\s*");
 			if(tokens.length==0) throw new LPException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg13")+"["+line+"]");
 			for(String none_var:tokens) {  
-				//System.out.println("->"+none_var+"<-");
-				if(none_var.endsWith("*")) { 
+				if(none_var.endsWith("*") && typeSos==TYPE_SOS_GROUP.SOS1) { 
 					String prefix=none_var.replace("*", "").toUpperCase();
 					for(String variabile:nomi_var) {
 						if(variabile.startsWith(prefix)) {
 							index=nomi_var.indexOf(variabile);
-							if(arraysProb.array_sos1[index]!=null) 
+							if(arraysProb.array_sos[index]!=null) 
 								throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromString.msg14",variabile));
-							arraysProb.array_sos1[index]=TYPE_VAR.INTEGER;
-							group.listNomiVar.add(variabile.toUpperCase());
-							System.out.println(index+"->"+variabile+"<- SOSint");
+							arraysProb.array_sos[index]=TYPE_VAR.REAL;
+							group.addVar(variabile.toUpperCase(), index);
 						}
 					}
+					if(group.size()==0)  throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromString.msg22")+prefix+"*");
+				}
+				else if(none_var.endsWith("*") && (typeSos==TYPE_SOS_GROUP.SOS2)) { 
+					throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromString.msg21"));
 				}
 				else { 
 					index=nomi_var.indexOf(none_var.toUpperCase());
-					if(arraysProb.array_sos1[index]!=null) 
+					if(index==-1 ) throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromString.msg15", none_var));
+					if(arraysProb.array_sos[index]!=null) 
 						throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromString.msg14",none_var));
 					
-					if(index==-1 ) throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromString.msg15", none_var));
-					arraysProb.array_sos1[index]=TYPE_VAR.INTEGER;
-					group.listNomiVar.add(none_var.toUpperCase());
-					System.out.println(index+"->"+none_var+"<- SOSint");
+					arraysProb.array_sos[index]=TYPE_VAR.REAL;
+					group.addVar(none_var.toUpperCase(), index);
 				}
 			}	
+			
+			if(typeSos==TYPE_SOS_GROUP.SOS1) {
+				if(group.size() < 2) 
+					 throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromString.msg19"));
+			}
+			else if(typeSos==TYPE_SOS_GROUP.SOS2) {
+				if(group.size() < 3) 
+					 throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromString.msg20"));
+			}
 			arraysProb.listSosGroup.add(group);
 		} 
-		
-		
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 }

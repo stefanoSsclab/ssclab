@@ -374,7 +374,8 @@ public final class MILP  {
 		//MilpManager milp_current=milp_initiale;        //commentato il 19/03/2024 DUPLICATO INUTILE
 		milp_initiale.setMaxIteration(num_max_iteration);
 		
-		if(!milp_initiale.existVarToBeIntegerOrSemicon()) {
+		//System.out.println("exist:"+milp_initiale.existGroupsSos());
+		if(!milp_initiale.existVarToBeIntegerOrSemicon() && !milp_initiale.existGroupsSos()) {
 			throw new LPException(RB.format("it.ssc.pl.milp.MILP.msg12")); 
 		}
 		
@@ -400,7 +401,9 @@ public final class MILP  {
 		if(type_solution_initial==SolutionType.ILLIMITATUM) type_solution=type_solution_initial;
 		
 		if(type_solution_initial==SolutionType.OPTIMUM) {
-			if(milp_initiale.isSolutionIntegerAmmisible() && milp_initiale.isProblemSemiContinusAmmisible()) {
+			if(milp_initiale.isSolutionIntegerAmmisible() && 
+					milp_initiale.isProblemSemiContinusAmmisible() && 
+					!milp_initiale.existGroupsSos()) {
 				//System.out.println("intera:"+milp.getOptimumValue());
 				if(  (target==TARGET_FO.MAX && lb.value < milp_initiale.getOptimumValue())     //max 
 				  || (target==TARGET_FO.MIN && lb.value > milp_initiale.getOptimumValue())) {  //questo vale per il min
@@ -419,22 +422,26 @@ public final class MILP  {
 		}	 
 		CyclicBarrier cb =null;
 		Thread tgroup0 = null;
-		ArrayList<MilpManager> list_best_candidate=null;
+		//commentato il 10/10/2024 questa variabile sembra duplicata con scarti_to_separe
+		//ArrayList<MilpManager> list_best_candidate=null;
 		ArrayList<MilpManager> scarti_to_separe=null;
 		ArrayList<MilpManager> listMangerMilpToRun=null;
 		
 		b:	{
 			while(!tree.isEmpty()) {
+				//commentato il 10/10/2024 questa variabile sembra duplicata con scarti_to_separe
+				/*
 				list_best_candidate=tree.getMilpBestUP(threadNumber);  
 				scarti_to_separe=new ArrayList<MilpManager> ();
 				for(MilpManager lp_curent:list_best_candidate) {
 					scarti_to_separe.add(lp_curent);
-				}
+				}*/
+				scarti_to_separe=tree.getMilpBestUP(threadNumber); 
 				if(!scarti_to_separe.isEmpty()) {
 					listMangerMilpToRun = new ArrayList<MilpManager>();
 					//prende il milp lp_curent
-					for(MilpManager lp_curent:scarti_to_separe) {
-						MilpManager.populateArrayListBySeparation(listMangerMilpToRun,lp_curent);
+					for(MilpManager milp_curent:scarti_to_separe) {
+						MilpManager.populateArrayListBySeparation(listMangerMilpToRun,milp_curent);
 					}
 					//gestione a piu thread
 					if(threadNumber!=MILPThreadsNumber.N_1) {
@@ -459,7 +466,7 @@ public final class MILP  {
 						if(milp.getSolutionType()==SolutionType.OPTIMUM) {
 							//System.out.println("VALUE:"+milp.getOptimumValue());
 											
-							if(milp.isSolutionIntegerAmmisible() && milp.isProblemSemiContinusAmmisible()) {
+							if(milp.isSolutionIntegerAmmisible() && milp.isProblemSemiContinusAmmisible() && !milp.existGroupsSos()) {
 								//System.out.println("intera:"+milp.getOptimumValue());
 								if(  (target==TARGET_FO.MAX && lb.value < milp.getOptimumValue())     //max 
 								  || (target==TARGET_FO.MIN && lb.value > milp.getOptimumValue())) {  //questo vale per il min

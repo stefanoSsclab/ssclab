@@ -40,23 +40,19 @@ public class CheckSintaxText {
 			this.exist_fo=true;
 		}
 		else if (line.matches("\\s*(\\p{Alpha}+\\w*\\s*:)?\\s*(((([+-]?)\\s*(\\d+\\.?\\d*))|(\\.))\\s*<\\s*=)?\\s*(\\p{Alpha}+\\w*)\\s*(<\\s*=\\s*((([+-]?)\\s*(\\d+\\.?\\d*))|(\\.)))?\\s*")) {
-			//System.out.println("Check sintasi upper1");  
 			//non sono presenti tutti i controlli, altri controlli li fa quando lo elabora
 		}
 		else if (line.matches("\\s*(\\p{Alpha}+\\w*\\s*:)?\\s*(((([+-]?)\\s*(\\d+\\.?\\d*))|(\\.))\\s*>\\s*=)?\\s*(\\p{Alpha}+\\w*)\\s*(>\\s*=\\s*((([+-]?)\\s*(\\d+\\.?\\d*))|(\\.)))?\\s*")) {
-			//System.out.println("Check sintasi upper2"); 
 			//non sono presenti tutti i controlli, altri controlli li fa quando lo elabora
 		}
 		else if (line.matches("(.+)((<\\s*=)|(>\\s*=)|(=))(.+)")) {
 			checkSintassiConstraint(line);
 		}
-		
 		else if (line.matches("\\s*(?i)((bin)|(sec)|(int))\\s+((\\p{Alpha}+)(\\w*))\\s*(.*)")) {
 			checkSintassiInt(line);
 		}
-		else if (line.matches("\\s*(?i)((sos1)|(sos1_bin)|(sos1_int))\\s+((\\p{Alpha}+)(\\w*))\\s*(.*)")) {
-			System.out.println("SOS");
-			checkSintassiSOS1(line);
+		else if (line.matches("\\s*(?i)((sos[12])|(sos[12]\\s*:\\s*bin(\\s*:\\s*force)?)|(sos[12]\\s*:\\s*int))\\s+((\\p{Alpha}+)(\\w*))\\s*(.*)")) {
+			checkSintassiSOS(line);
 		}
 		else { 
 			throw new ParseException(RB.getString("org.ssclab.pl.milp.scantext.CheckSintaxText.msg1")+" ["+line+"]");
@@ -173,33 +169,39 @@ public class CheckSintaxText {
 		}
 	}
 	
-	
-	
-	
-	private void checkSintassiSOS1(String line) throws ParseException {
+	private void checkSintassiSOS(String line) throws ParseException {
 
-		Pattern pattern_int = Pattern.compile("\\s*((sos1)|(sos1_bin)|(sos1_int))\\s+",Pattern.CASE_INSENSITIVE);
+		Pattern pattern_int  = Pattern.compile("\\s*((sos[12]\\s*:\\s*bin\\s*:\\s*force))\\s+",Pattern.CASE_INSENSITIVE);
 		Matcher matcher_group_var = pattern_int.matcher(line);
+		
+		Pattern pattern_int2 = Pattern.compile("\\s*((sos[12]\\s*:\\s*bin)|(sos[12]\\s*:\\s*int))\\s+",Pattern.CASE_INSENSITIVE);
+		Matcher matcher_group_var2 = pattern_int2.matcher(line);
+		
+		Pattern pattern_int3 = Pattern.compile("\\s*((sos[12]))\\s+",Pattern.CASE_INSENSITIVE);
+		Matcher matcher_group_var3 = pattern_int3.matcher(line);
+		
 		int end=0;
 		//MAX o MIN
 		if (matcher_group_var.lookingAt()) {
 			end=matcher_group_var.end();
 		}	
+		else if (matcher_group_var2.lookingAt()) {
+			end=matcher_group_var2.end();
+		}	
+		else if (matcher_group_var3.lookingAt()) {
+			end=matcher_group_var3.end();
+		}	
 		else { 
 			throw new ParseException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg4")+" ["+line+"]");
 		}
-		String resto=line.substring(end);
-		resto=resto.trim();
+		String resto=line.substring(end).trim();
 		//System.out.println("qua:"+resto);
 		if(!resto.equals("")) {
 			String[] tokens = resto.split("\\s*,\\s*");
 			for(String token:tokens) {  
-				System.out.println("qua3:"+token);
 				if(!token.matches("\\s*(\\p{Alpha}+\\w*)\\**\\s*"))
 					throw new ParseException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg4")+" ["+line+"] : error in "+token);
 			}	
 		}
 	}
-	
-
 }

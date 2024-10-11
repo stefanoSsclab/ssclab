@@ -9,7 +9,7 @@ public class ArrayProblem {
 	//se qualche variabile fa gia parte di un SOS non puo far parte di un altro gruppo
 	//con questa variabile faccio questo controllo. 0=nessun SOS sulla var. 1= primo gruppo
 	//2=secondo gruppo,3=terzo gruppo.
-	public TYPE_VAR array_sos1[];
+	public TYPE_VAR array_sos[];
 	public byte array_sec[];
 	public byte array_bin[];
 	public byte array_int[];
@@ -19,7 +19,7 @@ public class ArrayProblem {
 	public ArrayProblem(int dim) {
 		 array_upper=new Double[dim];
 		 array_lower=new Double[dim];
-		 array_sos1=new TYPE_VAR[dim];
+		 array_sos=new TYPE_VAR[dim];
 		 listSosGroup=new ArrayList<SosGroup>();
 		 array_sec=new byte[dim];
 		 array_bin=new byte[dim];

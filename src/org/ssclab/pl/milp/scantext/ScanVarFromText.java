@@ -36,6 +36,10 @@ public class ScanVarFromText {
 		if(line.trim().equals("")) return;
 		if (line.matches("\\s*(?i)(min|max)\\s*:(.+)")) return ;
 		
+		else if (line.matches("\\s*(?i)(bin|int|sec)\\s+(.+)")) return ;
+		
+		else if (line.matches("\\s*(?i)(sos[12])(.+)")) return ;
+		
 		else if (line.matches("\\s*(\\p{Alpha}+\\w*\\s*:)?\\s*(((([+-]?)\\s*(\\d+\\.?\\d*))|(\\.))\\s*<\\s*=)?\\s*(\\p{Alpha}+\\w*)\\s*(<\\s*=\\s*((([+-]?)\\s*(\\d+\\.?\\d*))|(\\.)))?\\s*")) {
 			scanUpper(line)   ;            
 		}

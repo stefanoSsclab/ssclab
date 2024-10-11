@@ -27,9 +27,10 @@ import org.ssclab.pl.milp.Variable.TYPE_VAR;
 		 int N=C.length;
 		 PLProblem lp_original=new PLProblem(N);
 		 
-		 if(!arrayProb.listSosGroup.isEmpty()) 
+		 if(!arrayProb.listSosGroup.isEmpty()) {
 			 lp_original.setSosGroup(arrayProb.listSosGroup);
-		 
+			 //System.out.println("passato:"+arrayProb.listSosGroup.size());
+		 }
 		 int _x=0;
 		 for(String nome:nomi_var)  {
 			 lp_original.setNameVar(_x++, nome);
@@ -62,16 +63,16 @@ import org.ssclab.pl.milp.Variable.TYPE_VAR;
 
 			 //System.out.println("VAR  "+_j +"  "+type);
 			 if(arrayProb.array_int[_j]==1) { 
-				 if(xj.getType()==TYPE_VAR.BINARY  || arrayProb.array_sos1[_j]==TYPE_VAR.BINARY) throw new LPException(RB.format("it.ssc.pl.milp.CreateMilpProblem.msg9", xj.getName()));
+				 if(xj.getType()==TYPE_VAR.BINARY  || arrayProb.array_sos[_j]==TYPE_VAR.BINARY) throw new LPException(RB.format("it.ssc.pl.milp.CreateMilpProblem.msg9", xj.getName()));
 				 xj.setType(TYPE_VAR.INTEGER);
 			 }
 			 if(arrayProb.array_bin[_j]==1) { 
-				 if(xj.getType()==TYPE_VAR.INTEGER || arrayProb.array_sos1[_j]==TYPE_VAR.INTEGER) throw new LPException(RB.format("it.ssc.pl.milp.CreateMilpProblem.msg10", xj.getName()));
+				 if(xj.getType()==TYPE_VAR.INTEGER || arrayProb.array_sos[_j]==TYPE_VAR.INTEGER) throw new LPException(RB.format("it.ssc.pl.milp.CreateMilpProblem.msg10", xj.getName()));
 				 xj.setType(TYPE_VAR.BINARY);
 			 }
 
 			 if(arrayProb.array_sec[_j]==1) { 
-				 if(xj.getType()==TYPE_VAR.BINARY || arrayProb.array_sos1[_j]==TYPE_VAR.BINARY) throw new LPException(RB.format("it.ssc.pl.milp.CreateMilpProblem.msg11", xj.getName()));
+				 if(xj.getType()==TYPE_VAR.BINARY || arrayProb.array_sos[_j]==TYPE_VAR.BINARY) throw new LPException(RB.format("it.ssc.pl.milp.CreateMilpProblem.msg11", xj.getName()));
 				 xj.setSemicon(true);
 				 //xj.setType(Var.TYPE_VAR.SEMICONT);
 			 }

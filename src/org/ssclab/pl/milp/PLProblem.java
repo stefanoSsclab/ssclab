@@ -256,6 +256,7 @@ import org.ssclab.pl.milp.util.VectorsPL;
 		try {
 			clone=(PLProblem)super.clone();
 			clone.array_var=array_var.clone();
+			if(sosGroup!=null) clone.sosGroup=(ArrayList<SosGroup>)sosGroup.clone();
 			for(int _a=0;_a<clone.array_var.length;_a++) {
 				clone.array_var[_a]=array_var[_a].clone();
 			}
@@ -316,12 +317,16 @@ import org.ssclab.pl.milp.util.VectorsPL;
 				if((Double.isInfinite(lower) || lower <= 0.0) && (Double.isInfinite(upper) || upper >= 0.0)) {
 					throw new LPException(RB.format("it.ssc.pl.milp.MilpProblem.msg2", var.getName()));
 				}
-				
 			}
 		}
 	}
 
 	public ArrayList<InternalConstraint> getListConstraint() {
 		return list_constraint;
+	}
+	
+	public boolean existGroupsSos() {
+		if(sosGroup==null || sosGroup.isEmpty()) return false;
+		return true;
 	}
 }

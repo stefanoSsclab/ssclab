@@ -10,6 +10,7 @@ import org.ssclab.datasource.DataSource;
 import org.ssclab.log.SscLogger;
 import org.ssclab.pl.milp.FormatTypeInput.FormatType;
 import org.ssclab.pl.milp.ObjectiveFunction.TARGET_FO;
+import org.ssclab.pl.milp.SosGroup.TYPE_SOS_GROUP;
 import org.ssclab.pl.milp.Variable.TYPE_VAR;
 import org.ssclab.pl.milp.util.VectorsPL;
 import org.ssclab.ref.Input;
@@ -180,7 +181,121 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 		}
 		return clone_separation;
 	}
-	
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 ArrayList<MilpManager>  getCloneByRemouvingGroupsSOS1(SosGroup group) throws CloneNotSupportedException, LPException {
+			
+		    //di tipo SOS1
+		 	ArrayList<MilpManager> clones_sep=new ArrayList<MilpManager> ();
+		 	int num_tot_var= this.solution_pl.getVariables().length;
+		 	
+		 	/*
+		 	ArrayList<Var> listaVarGroup=new ArrayList<Var> ();
+		    for(SosGroup.GroupVar varGroup:group.listNomiVar) {
+		    	System.out.println("nome originale:"+varGroup.name);
+		    	Var variable=this.pl_current.getVariables()[varGroup.index];
+		    	listaVarGroup.add(variable);
+		    	System.out.println("nome ricavata:"+variable.getName());
+		    }
+		    System.out.println("dimensione sol:"+num_tot_var);
+			System.out.println("dimensione pl_cur:"+pl_current.getVariables().length);
+			*/
+		    
+		    for (int i=0;i<group.size();i++)  {
+		    	MilpManager clone_separation=clone();
+		    	for (int j=0;j<group.size();j++)  {
+		    		
+		    		if(group.typeSos==TYPE_SOS_GROUP.SOS1_BIN_FORCE)  {
+			    		double value=0; 
+			    		if(i==j) value=1;  
+			    		InternalConstraint constraint=InternalConstraint.createConstraintFromVar(num_tot_var, group.listVar.get(j).index, value, InternalConstraint.TYPE_CONSTR.EQ);
+			    		clone_separation.pl_current.addConstraint(constraint); 
+		    		}	
+		    		
+		    		else if(group.typeSos==TYPE_SOS_GROUP.SOS1_BIN)  {
+			    		if(i!=j) {  
+			    			InternalConstraint constraint=InternalConstraint.createConstraintFromVar(num_tot_var, group.listVar.get(j).index, 0.0, InternalConstraint.TYPE_CONSTR.EQ);
+			    			clone_separation.pl_current.addConstraint(constraint);
+			    		}
+		    		}
+		    		else if(group.typeSos==TYPE_SOS_GROUP.SOS1 || group.typeSos==TYPE_SOS_GROUP.SOS1_INT)  {
+		    			if(i!=j) {  
+				    		InternalConstraint constraint=InternalConstraint.createConstraintFromVar(num_tot_var, group.listVar.get(j).index, 0.0, InternalConstraint.TYPE_CONSTR.EQ);
+				    		clone_separation.pl_current.addConstraint(constraint); 
+		    			}
+		    		}
+		    	 }
+		    	 clones_sep.add(clone_separation);
+		    }
+			return clones_sep;
+		}
+	 
+	 /*************************************SOS2*****************/
+	 ArrayList<MilpManager>  getCloneByRemouvingGroupsSOS2(SosGroup group) throws CloneNotSupportedException, LPException {
+			
+		    //di tipo SOS2
+		 	ArrayList<MilpManager> clones_sep=new ArrayList<MilpManager> ();
+		 	int num_tot_var= this.solution_pl.getVariables().length;
+		 	
+		 	/*
+			ArrayList<Var> listaVarGroup=new ArrayList<Var> ();
+		    for(SosGroup.GroupVar varGroup:group.listVar) {
+		    	System.out.println("SOS2 nome originale:"+varGroup.name);
+		    	Var variable=this.pl_current.getVariables()[varGroup.index];
+		    	listaVarGroup.add(variable);
+		    	System.out.println("SOS2 nome ricavata:"+variable.getName());
+		    }
+		    System.out.println("SOS2 dimensione sol:"+num_tot_var);
+			System.out.println("SOS2 dimensione pl_cur:"+pl_current.getVariables().length);
+			*/
+		    
+		    for (int i=0;i<group.size()-1;i++)  {
+		    	MilpManager clone_separation=clone();
+		    	for (int j=0;j<group.size();j++)  {
+		    		//System.out.println("SOS2 i-j:"+group.listVar.get(i).index+" "+group.listVar.get(j).index);
+		    		
+		    		if(group.typeSos==TYPE_SOS_GROUP.SOS2_BIN_FORCE)  {
+			    		double value=0; 
+			    		if(i==j || i==(j-1)) {  
+			    			//System.out.println("SOS222 i-j:"+group.listVar.get(i).index+" "+group.listVar.get(j).index);
+			    			value=1;  
+			    		}
+			    		InternalConstraint constraint=InternalConstraint.createConstraintFromVar(num_tot_var, group.listVar.get(j).index, value, InternalConstraint.TYPE_CONSTR.EQ);
+			    		clone_separation.pl_current.addConstraint(constraint); 
+		    		}	
+		    		
+		    		else if(group.typeSos==TYPE_SOS_GROUP.SOS2_BIN)  {
+			    		if(!(i==j || i==(j-1))) {  
+			    			InternalConstraint constraint=InternalConstraint.createConstraintFromVar(num_tot_var, group.listVar.get(j).index, 0.0, InternalConstraint.TYPE_CONSTR.EQ);
+				    		clone_separation.pl_current.addConstraint(constraint); 
+			    		}
+		    		}	
+		    		
+		    		else if(group.typeSos==TYPE_SOS_GROUP.SOS2 || group.typeSos==TYPE_SOS_GROUP.SOS2_INT)  {
+		    			if(!(i==j || i==(j-1))) {  
+				    		InternalConstraint constraint=InternalConstraint.createConstraintFromVar(num_tot_var, group.listVar.get(j).index, 0.0, InternalConstraint.TYPE_CONSTR.EQ);
+				    		clone_separation.pl_current.addConstraint(constraint); 
+		    			}
+		    		}
+		    	 }
+		    	 clones_sep.add(clone_separation);
+		    }
+			return clones_sep;
+		}
+	 
 	 MilpManager getCloneBySeparationInteger(int index_var,VERSUS_SEPARATION versus) throws CloneNotSupportedException, LPException {
 		double value=this.solution_pl.getVariables()[index_var].getValue();
 		MilpManager clone_separation=clone();
@@ -215,20 +330,31 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 	 }
 	 
 	 static public void  populateArrayListBySeparation(ArrayList<MilpManager> listMangerMilp, MilpManager milp_current2) throws CloneNotSupportedException, LPException {
-			MilpManager milp_sotto2,milp_sopra2;
-			if(!milp_current2.isProblemSemiContinusAmmisible()) {
+			MilpManager milp_sotto2=null,milp_sopra2=null;
+			ArrayList<MilpManager>  milpsDivideGroup=null;
+			if(milp_current2.existGroupsSos()) {
+				SosGroup group=milp_current2.removeGroupSos();
+				if(group.typeSos==TYPE_SOS_GROUP.SOS1 || group.typeSos==TYPE_SOS_GROUP.SOS1_BIN ||  
+				   group.typeSos==TYPE_SOS_GROUP.SOS1_INT || group.typeSos==TYPE_SOS_GROUP.SOS1_BIN_FORCE) 
+					 milpsDivideGroup=milp_current2.getCloneByRemouvingGroupsSOS1(group);
+				else milpsDivideGroup=milp_current2.getCloneByRemouvingGroupsSOS2(group);
+			}
+			
+			else if(!milp_current2.isProblemSemiContinusAmmisible()) {
 				int index_var_not_cont2=milp_current2.getIndexVarToBeSemiContinus();
 				milp_sotto2=milp_current2.getCloneBySeparationContinus(index_var_not_cont2, VERSUS_SEPARATION.ZERO);
 				milp_sopra2=milp_current2.getCloneBySeparationContinus(index_var_not_cont2, VERSUS_SEPARATION.INTERVAL);
 			}
 			else {
 				int index_var_not_integer2=milp_current2.getIndexVarToBeInteger();
+				System.out.println(":::::::"+index_var_not_integer2);
 				//System.out.println("DIVIDO PROBLEMA ID:"+milp_current.getId()+" z:"+milp_current.getOptimumValue());
 				milp_sotto2=milp_current2.getCloneBySeparationInteger(index_var_not_integer2, VERSUS_SEPARATION.MINOR);
 				milp_sopra2=milp_current2.getCloneBySeparationInteger(index_var_not_integer2, VERSUS_SEPARATION.MAJOR);
 			}	
 			if(milp_sotto2!=null) listMangerMilp.add(milp_sotto2);
 			if(milp_sopra2!=null) listMangerMilp.add(milp_sopra2);
+			if(milpsDivideGroup!=null) listMangerMilp.addAll(milpsDivideGroup);
 		}
 	
 	 int getIndexVarToBeSemiContinus() {
@@ -391,6 +517,16 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 		}
 		
 		System.out.println("");
+	}
+	
+	public boolean existGroupsSos() {
+		if(this.pl_current.existGroupsSos()) return true;
+		return false;
+	}
+	
+	public SosGroup removeGroupSos() {
+		ArrayList<SosGroup> listGroup=this.pl_current.getSosGroup();
+		return listGroup.remove(listGroup.size()-1);
 	}
 	
 }
