@@ -200,7 +200,7 @@ public class ScanConstraintFromLine {
 								throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromString.msg16",variabile));
 							
 							arraysProb.array_int[index]=1;
-							System.out.println("->"+none_var+"<- 111");
+							//System.out.println("->"+none_var+"<- 111");
 						}
 					}
 					if(!trovate)  throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromString.msg22")+prefix+"*");

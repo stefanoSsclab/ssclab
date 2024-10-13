@@ -41,13 +41,16 @@ public class ScanVarFromText {
 		else if (line.matches("\\s*(?i)(sos[12])(.+)")) return ;
 		
 		else if (line.matches("\\s*(\\p{Alpha}+\\w*\\s*:)?\\s*(((([+-]?)\\s*(\\d+\\.?\\d*))|(\\.))\\s*<\\s*=)?\\s*(\\p{Alpha}+\\w*)\\s*(<\\s*=\\s*((([+-]?)\\s*(\\d+\\.?\\d*))|(\\.)))?\\s*")) {
-			scanUpper(line)   ;            
+			scanUpper(line)   ;     
+			//System.out.println("11"+line);
 		}
 		else if (line.matches("\\s*(\\p{Alpha}+\\w*\\s*:)?\\s*(((([+-]?)\\s*(\\d+\\.?\\d*))|(\\.))\\s*>\\s*=)?\\s*(\\p{Alpha}+\\w*)\\s*(>\\s*=\\s*((([+-]?)\\s*(\\d+\\.?\\d*))|(\\.)))?\\s*")) {
 			scanUpper(line);
+			//System.out.println("22"+line);
 		}
 		else if (line.matches("(.+)((<\\s*=)|(>\\s*=)|(=))(.+)")) {
 			scanDisequestionCompleta(line);
+			//System.out.println("33"+line);
 		}
 	}
 	

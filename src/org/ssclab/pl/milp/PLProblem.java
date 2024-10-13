@@ -310,7 +310,11 @@ import org.ssclab.pl.milp.util.VectorsPL;
 				var.resetLower();
 				var.setUpperSemicon(upper);
 				var.setLowerSemicon(lower);
-				if((lower <= 0.0 || upper <= 0.0)) {
+				
+				if((lower == 0.0 || upper == 0.0)) {
+					throw new LPException(RB.format("it.ssc.pl.milp.MilpProblem.msg2", var.getName()));
+				}
+				else if((lower <= 0.0 || upper <= 0.0)) {
 					throw new LPException(RB.format("it.ssc.pl.milp.MilpProblem.msg3", var.getName()));
 				}
 				//se semicontinua upper-lower non possono contenere lo zero

@@ -182,20 +182,6 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 		return clone_separation;
 	}
 	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
 	 ArrayList<MilpManager>  getCloneByRemouvingGroupsSOS1(SosGroup group) throws CloneNotSupportedException, LPException {
 			
 		    //di tipo SOS1
@@ -250,18 +236,6 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 		 	ArrayList<MilpManager> clones_sep=new ArrayList<MilpManager> ();
 		 	int num_tot_var= this.solution_pl.getVariables().length;
 		 	
-		 	/*
-			ArrayList<Var> listaVarGroup=new ArrayList<Var> ();
-		    for(SosGroup.GroupVar varGroup:group.listVar) {
-		    	System.out.println("SOS2 nome originale:"+varGroup.name);
-		    	Var variable=this.pl_current.getVariables()[varGroup.index];
-		    	listaVarGroup.add(variable);
-		    	System.out.println("SOS2 nome ricavata:"+variable.getName());
-		    }
-		    System.out.println("SOS2 dimensione sol:"+num_tot_var);
-			System.out.println("SOS2 dimensione pl_cur:"+pl_current.getVariables().length);
-			*/
-		    
 		    for (int i=0;i<group.size()-1;i++)  {
 		    	MilpManager clone_separation=clone();
 		    	for (int j=0;j<group.size();j++)  {
@@ -347,7 +321,6 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 			}
 			else {
 				int index_var_not_integer2=milp_current2.getIndexVarToBeInteger();
-				System.out.println(":::::::"+index_var_not_integer2);
 				//System.out.println("DIVIDO PROBLEMA ID:"+milp_current.getId()+" z:"+milp_current.getOptimumValue());
 				milp_sotto2=milp_current2.getCloneBySeparationInteger(index_var_not_integer2, VERSUS_SEPARATION.MINOR);
 				milp_sopra2=milp_current2.getCloneBySeparationInteger(index_var_not_integer2, VERSUS_SEPARATION.MAJOR);

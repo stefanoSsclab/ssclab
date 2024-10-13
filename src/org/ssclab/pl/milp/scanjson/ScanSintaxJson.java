@@ -5,7 +5,9 @@ import static jakarta.json.stream.JsonParser.Event.*;
 
 import java.io.BufferedReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
@@ -146,6 +148,28 @@ public class ScanSintaxJson {
 					}
 				}
 			}
+			/*
+			else if (event == KEY_NAME && parser.getString().toUpperCase().equals("SOS")) {
+				System.out.println("entrato");
+				if (parser.next() == START_OBJECT) {
+					JsonValue jval=null;
+					JsonObject jsonObject=null;
+					List listOptionsSos =Arrays.asList( new String[]{"SOS1","SOS2","SOS1-BIN","SOS2-BIN","SOS1-INT","SOS2-INT","SOS1-BIN-FORCE","SOS2-BIN-FORCE"});
+					cs: while (parser.hasNext()) {
+						if ((event = parser.next()) == KEY_NAME) {
+							String key=parser.getString();
+							System.out.println("entrato:"+key);
+							if(!listOptionsSos.contains(key.toUpperCase())) 
+								throw new ParseException("nON TROVATA CHIAVE CORRETTA:"+key );
+						 
+						} 
+						else {
+							break cs;
+						}
+					}
+				}
+			}
+			*/
 		}
 		parser.close();
 	}
