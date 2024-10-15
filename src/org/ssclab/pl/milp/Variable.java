@@ -104,6 +104,6 @@ public interface Variable {
 		}
 		
 		
-		}; 
+	}; 
 
 }

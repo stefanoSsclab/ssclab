@@ -3,6 +3,7 @@ package org.ssclab.pl.milp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeSet;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.ssclab.datasource.DataSource;
 import org.ssclab.datasource.DataSourceException;
@@ -46,10 +47,26 @@ import org.ssclab.pl.milp.Variable.TYPE_VAR;
 
 		 Var xj;
 		 Double upper_val,lower_val;
+		 boolean trovateVarBinarieConUpper=false;
 		 for(int _a=0;_a<N; _a++)  {
 			 xj=lp_original.getVar(_a);
 			 lower_val=arrayProb.array_lower[_a];
 			 upper_val=arrayProb.array_upper[_a]; 
+			 if( arrayProb.array_sos[_a]==TYPE_VAR.BINARY) {
+				 if(upper_val!=null || lower_val!=null)  {
+					 if(!trovateVarBinarieConUpper) { 
+						 trovateVarBinarieConUpper=true;
+						 logger.log(Level.WARNING,RB.getString("it.ssc.pl.milp.MilpProblem.msg1"));
+					 }
+					 upper_val=null;
+					 lower_val=null;
+				 }
+			 }
+			 /*
+			 System.out.println("var:"+xj.getName());
+			 System.out.println("upper:"+upper_val);
+			 System.out.println("lower:"+lower_val);
+			 */
 			 if(upper_val!=null)  xj.setUpper(upper_val);
 			 if(lower_val!=null)  xj.setLower(lower_val);
 		 }
