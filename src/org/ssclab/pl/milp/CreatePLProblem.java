@@ -23,7 +23,6 @@ import org.ssclab.pl.milp.Variable.TYPE_VAR;
 
 		 //checkDimensionProblem(f,constraints);
 		 
-
 		 double[] C=f.getC();
 		 int N=C.length;
 		 PLProblem lp_original=new PLProblem(N);

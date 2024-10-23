@@ -1,0 +1,203 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.ssclab</groupId>
+	<artifactId>SSC-LP</artifactId>
+	<version>4.6.2</version>
+	<name>SSC LP Solver</name>
+	<description>Library for linear programming</description>
+	<url>https://www.ssclab.org/</url>
+	<packaging>jar</packaging>
+
+	<dependencies>
+		<dependency>
+    		<groupId>org.eclipse.parsson</groupId>
+    			<artifactId>parsson</artifactId>
+    			<version>1.1.7</version>
+		 </dependency>
+	</dependencies>
+
+	<licenses>
+		<license>
+			<name>GNU General Public License, Version 3</name>
+			<url>https://www.gnu.org/licenses/gpl-3.0.en.html</url>
+			<distribution>repo</distribution>
+			<comments>The GNU General Public License is a free, copyleft license
+				for software and other kinds of works.</comments>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<name>Stefano Scarioli</name> 
+			<email>info@ssclab.org</email>
+			<organization>SSCLAB</organization>
+			<organizationUrl>https://www.ssclab.org/</organizationUrl>
+		</developer>
+	</developers>
+
+	<scm>
+		<connection>scm:git:git://github.com/stefanoSsclab/ssclab.git</connection>
+		<developerConnection>scm:git:ssh://github.com:stefanoSsclab/ssclab.git</developerConnection>
+		<url>https://github.com/stefanoSsclab/ssclab</url>
+	</scm>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<build>
+		<sourceDirectory>src</sourceDirectory>
+		<resources>
+			<resource>
+				<directory>src</directory>
+				<excludes>
+					<exclude>**/*.java</exclude>
+					<exclude>**/*.txt</exclude>
+				</excludes>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
+				<configuration>
+					<compilerArgs>
+						<arg>-Xlint:unchecked</arg>
+					</compilerArgs>
+					<excludes> 
+					<!-- 
+						<exclude>xample/**</exclude>
+						<exclude>xxmilp/**</exclude>
+						<exclude>xdemo/**</exclude>
+						<exclude>ssc/sito/**</exclude>
+						<exclude>ssc/**</exclude>
+						<exclude>vrpTest/**</exclude>
+						<exclude>test/**</exclude>
+						
+					
+ 					-->
+					</excludes>
+					<source>10</source>
+					<target>10</target>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>3.2.1</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+						<configuration>
+							<excludes>
+								<exclude>xample/**</exclude>
+								<exclude>xdemo/**</exclude>
+								<exclude>xxmilp/**</exclude>
+								<exclude>ssc/sito/**</exclude>
+								<exclude>ssc/**</exclude>
+								<exclude>test/**</exclude>
+								<exclude>vrpTest/**</exclude>
+							</excludes>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>3.3.1</version>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+						<configuration>
+							<sourcepath>src</sourcepath>
+							<subpackages>org.ssclab.pl.milp,
+								org.ssclab.pl.milp.util,
+								org.ssclab.log</subpackages>
+							<additionalOptions>-html5</additionalOptions>
+							<excludePackageNames>
+								ssc.sito.esempi,ssc.sito.esempi2,ssc.sito.esempi4it,ssc.sito.esempiEn,
+								test,xample,xdemo,xxmilp,org.ssclab.pl.milp.scantext,
+								,org.ssclab.pl.milp.simplex,org.ssclab.pl.milp.scanjson
+							</excludePackageNames>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<version>1.5</version>
+				<executions>
+					<execution>
+						<id>sign-artifacts</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+						<configuration>
+							<gpgArguments>
+								<arg>--pinentry-mode</arg>
+								<arg>loopback</arg>
+							</gpgArguments>
+							<!--	  <skip>true</skip> --> 
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+		<!--
+			 <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.4.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                          <configuration>
+                        <filters>
+                            <filter>
+                                <artifact>*:*</artifact>
+                                <excludes>
+                                    <exclude>META-INF/MANIFEST.MF</exclude>
+                                </excludes>
+                            </filter>
+                        </filters>
+                    </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+		-->
+
+		<!--
+			<plugin>
+				<groupId>org.sonatype.central</groupId>
+				<artifactId>central-publishing-maven-plugin</artifactId>
+				<version>0.4.0</version>
+				<extensions>true</extensions>
+				<configuration>
+					<publishingServerId>central</publishingServerId>
+					<tokenAuth>true</tokenAuth>
+					<autoPublish>true</autoPublish>
+				</configuration>
+			</plugin>
+		-->
+	
+
+		</plugins>
+	</build>
+</project>
