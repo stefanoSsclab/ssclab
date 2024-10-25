@@ -8,7 +8,7 @@
 	<name>SSC LP Solver</name>
 	<description>Library for linear programming</description>
 	<url>https://www.ssclab.org/</url>
-	<packaging>jar</packaging>
+	<packaging>jar</packaging> 
 
 	<dependencies>
 		<dependency>
