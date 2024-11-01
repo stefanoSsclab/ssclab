@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.ssclab</groupId>
 	<artifactId>SSC-LP</artifactId> 
-	<version>4.6.2</version>
+	<version>4.6.3</version>
 	<name>SSC LP Solver</name>
 	<description>Library for linear programming</description>
 	<url>https://www.ssclab.org/</url>
@@ -67,16 +67,12 @@
 						<arg>-Xlint:unchecked</arg>
 					</compilerArgs>
 					<excludes> 
-					<!-- 
+					
 						<exclude>xample/**</exclude>
-						<exclude>xxmilp/**</exclude>
 						<exclude>xdemo/**</exclude>
-						<exclude>ssc/sito/**</exclude>
-						<exclude>ssc/**</exclude>
 						<exclude>vrpTest/**</exclude>
 						<exclude>test/**</exclude>
-						
-					
+					<!-- 
  					-->
 					</excludes>
 					<source>10</source>
@@ -98,9 +94,6 @@
 							<excludes>
 								<exclude>xample/**</exclude>
 								<exclude>xdemo/**</exclude>
-								<exclude>xxmilp/**</exclude>
-								<exclude>ssc/sito/**</exclude>
-								<exclude>ssc/**</exclude>
 								<exclude>test/**</exclude>
 								<exclude>vrpTest/**</exclude>
 							</excludes>
@@ -126,7 +119,6 @@
 								org.ssclab.log</subpackages>
 							<additionalOptions>-html5</additionalOptions>
 							<excludePackageNames>
-								ssc.sito.esempi,ssc.sito.esempi2,ssc.sito.esempi4it,ssc.sito.esempiEn,
 								test,xample,xdemo,xxmilp,org.ssclab.pl.milp.scantext,
 								,org.ssclab.pl.milp.simplex,org.ssclab.pl.milp.scanjson
 							</excludePackageNames>

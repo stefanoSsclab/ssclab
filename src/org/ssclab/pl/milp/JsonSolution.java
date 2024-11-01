@@ -6,10 +6,13 @@ import java.io.StringWriter;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.HashMap;
+
 import org.ssclab.pl.milp.ObjectiveFunction.TARGET_FO;
 import org.ssclab.pl.milp.Variable.TYPE_VAR;
 
 import jakarta.json.*;
+import jakarta.json.stream.JsonGenerator;
 
 /**
  * This class represents the solution of a Linear Programming (LP) problem in JSON format.
@@ -39,9 +42,10 @@ import jakarta.json.*;
  */
 
 public class JsonSolution {
-	JsonObject model;
-	SolutionDetail[] option;
-	SolutionType typeSolution;
+	private JsonObject model;
+	private SolutionDetail[] option;
+	private SolutionType typeSolution;
+	private boolean isFormatted;
 	
 	 /**
      * Constructor that initializes the JSON representation of the solution.
@@ -58,6 +62,7 @@ public class JsonSolution {
 	JsonSolution( Meta meta,TARGET_FO target,SolutionType typeSolution,Solution[] solution, SolutionDetail... option) {
 		// TODO Auto-generated constructor stub
 		String target_fo="min";
+		this.isFormatted=false;
 
 		if(target==TARGET_FO.MAX) target_fo="max";
 		this.typeSolution=typeSolution;
@@ -196,7 +201,16 @@ public class JsonSolution {
      */
 	
 	public JsonSolution saveToFile(String path) throws IOException {
-		JsonWriter jsonWriter = Json.createWriter(new FileWriter(path));
+		JsonWriter jsonWriter = null;
+		if(this.isFormatted) {
+			HashMap<String, Object> config = new HashMap<>();
+			config.put(JsonGenerator.PRETTY_PRINTING, true);
+			JsonWriterFactory writerFactory = Json.createWriterFactory(config);
+			jsonWriter = writerFactory.createWriter(new FileWriter(path));
+		}
+		else {
+			jsonWriter = Json.createWriter(new FileWriter(path));
+		}
 		jsonWriter.writeObject(this.model);
 		jsonWriter.close();
 		return this;
@@ -211,10 +225,32 @@ public class JsonSolution {
 	
 	
 	public String toString() {
-		StringWriter stWriter = new StringWriter();
-		JsonWriter jsonWriter = Json.createWriter(stWriter);
+    	
+    	StringWriter stWriter = new StringWriter();
+    	JsonWriter jsonWriter =null;
+		if (this.isFormatted) {
+			HashMap<String, Object> config = new HashMap<>();
+			config.put(JsonGenerator.PRETTY_PRINTING, true);
+			JsonWriterFactory writerFactory = Json.createWriterFactory(config);
+			jsonWriter = writerFactory.createWriter(stWriter);
+		} 
+		else {
+			jsonWriter = Json.createWriter(stWriter);
+		}
 		jsonWriter.writeObject(this.model);
 		jsonWriter.close();
 		return stWriter.toString();
 	}
+    
+	/**
+     * Formatted the Json String if save into String or File.
+     * 
+     * @param isFormatted true if formatted
+     * @return The current JsonSolution instance.
+    
+     */
+    public JsonSolution formatted(boolean isFormatted) {
+    	this.isFormatted=isFormatted;
+    	return this;
+    }
 }
