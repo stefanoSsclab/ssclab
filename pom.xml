@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.ssclab</groupId>
 	<artifactId>SSC-LP</artifactId> 
-	<version>4.6.3</version>
+	<version>4.6.4</version>
 	<name>SSC LP Solver</name>
 	<description>Library for linear programming</description>
 	<url>https://www.ssclab.org/</url>
@@ -149,7 +149,7 @@
 				</executions>
 			</plugin>
 
-		<!--
+		
 			 <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -173,7 +173,7 @@
                     </execution>
                 </executions>
             </plugin>
-		-->
+	
 
 		<!--
 			<plugin>

@@ -16,5 +16,6 @@ src/pl.json
 .classpath
 .project
 .settings
+dependency-reduced-pom.xml
 src/vrp*/
 src/org/ssclab/pl/milp/Appunti.txt

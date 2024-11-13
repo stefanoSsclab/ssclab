@@ -14,5 +14,5 @@ Add the following dependency to your `pom.xml`:
 <dependency>
     <groupId>org.ssclab</groupId>
     <artifactId>SSC-LP</artifactId>
-    <version>4.6.3</version>
+    <version>4.6.4</version>
 </dependency>

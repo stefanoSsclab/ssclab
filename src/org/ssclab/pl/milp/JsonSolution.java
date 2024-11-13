@@ -88,8 +88,8 @@ public class JsonSolution {
 			.add("threads", (Integer)meta.getProperty("threads"))
 			.add("iterations", (Long)meta.getProperty("iterationsLP"))
 			.add("optimizationDuration", meta.getProperty("optimizationDuration").toString())
-			.add("averageError", (Double)meta.getProperty("averageError"))
-			.add("maxError", (Double)meta.getProperty("maxError"));
+			.add("averageError",meta.getProperty("averageError")!=null ? (Double)meta.getProperty("averageError") :0)
+			.add("maxError",meta.getProperty("maxError")!=null ? (Double)meta.getProperty("maxError"):0);
 		}
 		
 		JsonObjectBuilder jsonObjectBuild= Json.createObjectBuilder();
