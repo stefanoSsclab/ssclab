@@ -94,6 +94,20 @@ public final class InternalConstraint implements Cloneable,Serializable {
 		return l_constraint;
 	}
 	
+	
+	public static InternalConstraint createConstraintBanal(int dim) {
+		
+		InternalConstraint l_constraint =new InternalConstraint(dim);
+		for(int j=0;j<dim;j++) {
+			  l_constraint.Ai[j]=0.0;
+			//else l_constraint.Ai[j]=0.0;
+		}
+		l_constraint.bi=0;
+		l_constraint.type=TYPE_CONSTR.EQ;
+		return l_constraint;
+		
+	}
+	
 	public void aprint() {
 		for(int j=0;j<Ai.length;j++) {
 			System.out.print(Ai[j]+"\t");
