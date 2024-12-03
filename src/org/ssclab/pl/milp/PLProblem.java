@@ -158,6 +158,13 @@ import org.ssclab.pl.milp.util.VectorsPL;
 				list_constraint.add(constraint);
 			}
 		}
+		
+		if(list_constraint.size()==0) {
+			//System.out.println("creato banale");
+			InternalConstraint constraintBanal=InternalConstraint.createConstraintBanal(array_var.length);
+			list_constraint.add(constraintBanal);
+		}
+		
 		//da mettere alla fine , per evere valori di b positivi, per farlo cambia anche i valori di Aij
 		for(InternalConstraint constraint: list_constraint) {
 			constraint.standardize_b_positive();
