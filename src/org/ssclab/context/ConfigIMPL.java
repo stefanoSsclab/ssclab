@@ -68,7 +68,7 @@ class ConfigIMPL implements Config, Cloneable {
 
 	}
 	
-	
+	 
 	
 	/*per ora non usato. Creava multiple directory radici.*/
 	private static String createTempWorkDirectory2() {
