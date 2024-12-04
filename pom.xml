@@ -67,12 +67,12 @@
 						<arg>-Xlint:unchecked</arg>
 					</compilerArgs>
 					<excludes> 
-			
+					
 						<exclude>xample/**</exclude>
 						<exclude>xdemo/**</exclude>
 						<exclude>vrpTest/**</exclude>
 						<exclude>test/**</exclude>
-							<!-- 
+					<!-- 
  					-->
 					</excludes>
 					<source>10</source>
@@ -175,7 +175,7 @@
                 </executions>
             </plugin>
           
-		  --> 
+	
 	
 		
 			<plugin>
@@ -189,7 +189,7 @@
 					<autoPublish>true</autoPublish>
 				</configuration>
 			</plugin>
-	
+		  --> 
 	
 
 		</plugins>
