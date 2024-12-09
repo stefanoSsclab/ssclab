@@ -2,8 +2,6 @@ package org.ssclab.context;
 
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -14,7 +12,6 @@ class ConfigIMPL implements Config, Cloneable {
 	
 	private static final Logger logger=SscLogger.getLogger();
 	//private String pathWorkArea=System.getProperty("user.dir");
-	//private String pathWorkArea=System.getProperty("java.io.tmpdir");
 	private String pathWorkArea=createTempWorkDirectory();
 	private String pathLocalDb=System.getProperty("user.dir");
 	private String pathFileConfig=null; 
@@ -63,48 +60,30 @@ class ConfigIMPL implements Config, Cloneable {
 				return tmpDirProperty;
 			}
 		}
-		SscLogger.warning("Unable to allocate working directory. Use 'Context.getConfig().setPathWorkArea(\"path\")' method to allocate one.");
-		return "";
+		SscLogger.error("Unable to allocate working directory. Use 'Context.getConfig().setPathWorkArea(\"path\")' method to allocate one.");
+		return null;
 
 	}
 	
-	 
-	
-	/*per ora non usato. Creava multiple directory radici.*/
-	private static String createTempWorkDirectory2() {
 
-		String directoryTemp=null;
-		try {
-			directoryTemp= Files.createTempDirectory("SSC_").toAbsolutePath().toString();
-			SscLogger.info("Created temporary directory:"+directoryTemp);
-		} 
-		catch (IOException e) {
-			// TODO Auto-generated catch block
-			logger.log(Level.SEVERE, "error creation directory temp :", e);
-			directoryTemp= System.getProperty("java.io.tmpdir");
-			SscLogger.warning("Setted temporary directory:"+directoryTemp);
-		}
-		//System.out.println(directoryTemp);
-		return directoryTemp;
-	}
 
 	/**
 	 * Ritorna la directory di work contenitrice di tutte le directory di work create 
 	 * con nomi randomici relative alle diverse sessioni fmt 
 	 */
-	public String getPathWorkArea()  {
+	public synchronized String getPathWorkArea()  {
 		return pathWorkArea;
 	}
 	
-	public void setPathWorkArea(String path_work) {
+	public synchronized void setPathWorkArea(String path_work) {
 		this.pathWorkArea=path_work;
 	}
 	
-	public String getPathLocalDb() {
+	public synchronized String getPathLocalDb() {
 		return pathLocalDb;
 	}
 
-	public void setPathLocalDb(String path_root_db_derby) {
+	public synchronized void setPathLocalDb(String path_root_db_derby) {
 		this.pathLocalDb = path_root_db_derby;
 	}
 	

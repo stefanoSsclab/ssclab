@@ -21,7 +21,7 @@ public class DataSource_Impl implements DataSource {
 	
 	private OptionsRead opt_read;
 	private OptionsTrasformation opt_trasf;
-	private SessionIPRIV parent_session;
+	//private SessionIPRIV parent_session;
 	private SourceDataInterface source;
 	private PDV pdv;
 	private PDVField<?> pdv_field;
@@ -30,12 +30,10 @@ public class DataSource_Impl implements DataSource {
 	
 	
 	public DataSource_Impl(Input input_ref,	SessionIPRIV parent_session) throws Exception {
-		this.parent_session = parent_session;
-		this.parent_session.generateExceptionOfSessionClose(); 
+		//parent_session.generateExceptionOfSessionClose(); 
+		//this.parent_session = parent_session;
 		this.opt_read = new OptionsRead();
 		this.opt_trasf = new OptionsTrasformation();
-	
-		
 		ReadData read_data = new ReadData(input_ref, opt_read);
 		//Crea il pdv 
 		this.pdv = read_data.createPDV();

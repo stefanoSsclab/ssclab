@@ -1,12 +1,15 @@
 package org.ssclab.dynamic_source;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Random;
@@ -33,6 +36,7 @@ public class CreateDynamicObject {
 	private String path_compiler;
 	private StringBuffer name_class;
 	private static final String nl=Config.NL; 
+	private static Random ra = new Random(new Date().getTime());
 
 	public CreateDynamicObject(DynamicSourceInterface dyn_source,String path_compiler) {
 		this.dyn_source = dyn_source;
@@ -113,13 +117,14 @@ public class CreateDynamicObject {
 		String java_source = null;
 		String name_cla =null;
 		do {
-			Random ra = new Random(new Date().getTime());
-			name_cla = "source_" + Math.abs(ra.nextInt());
+			//Random ra = new Random(new Date().getTime());
+			name_cla = "source_" + Math.abs(ra.nextInt(Integer.MAX_VALUE));
 			String name_with_path = path_compiler + name_cla + ".java";
 			javaFile = new File(name_with_path);
 		} 
 		while (javaFile.exists());
-		PrintWriter pw = new PrintWriter(new FileWriter(javaFile));
+		//PrintWriter pw = new PrintWriter(new FileWriter(javaFile));
+		PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(javaFile),StandardCharsets.UTF_8));
 		java_source = dyn_source.createCompleteJavaClassSource(name_cla);
 		pw.println(java_source);
 		pw.close();

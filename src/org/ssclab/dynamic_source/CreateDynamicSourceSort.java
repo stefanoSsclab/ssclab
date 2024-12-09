@@ -19,7 +19,7 @@ public class CreateDynamicSourceSort extends ExternalizableDynamicSourceSort imp
 	}
 	
 	public String createCompleteJavaClassSource(String name_class) {
-		String source = new String(nl);
+		String source = nl;
 		source += "import it.ssc.dynamic_source.*; "+nl;
 		source += "import it.ssc.step.sort.CompareMy; " +nl;
 		source += "import java.io.*; " +nl;
@@ -75,7 +75,7 @@ public class CreateDynamicSourceSort extends ExternalizableDynamicSourceSort imp
 
 		int size = this.pdv.getSize();
 		PDVField<?> pdv_field;
-		String save_var = new String("");
+		String save_var =  "";
 		for (int index_cicle_pdv = 0; index_cicle_pdv < size; index_cicle_pdv++) {
 			pdv_field = pdv.getField(index_cicle_pdv);
 			save_var += "     " + "if(_record_sort."+ pdv_field.getName() +"==null) pdv.getField(\""+ pdv_field.getName() + "\").is_null=true; "+nl;

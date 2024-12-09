@@ -121,7 +121,7 @@ class SessionIMPL implements SessionIPRIV {
 	 * @throws Exception  
 	 */
 
-	public void close() throws Exception {
+	public synchronized void close() throws Exception {
 		if(isClose()) return;
 		 //svuota e cancella la directory dei compilati
 		this.deleteDirectoryCompiler(); 
@@ -194,14 +194,20 @@ class SessionIMPL implements SessionIPRIV {
 	 * @throws DirectoryNotFound 
 	 */
 	
-	private void deleteDirectoryCompiler() throws DirectoryNotFound {
+	private   void deleteDirectoryCompiler() throws DirectoryNotFound {
 		String path_c = this.factory_libraries.getPathCompiler();
+		if(path_c==null) throw new DirectoryNotFound("PathCompiler is null");
 		File dir_lib = new File(path_c);
 		if (dir_lib.exists()) {
-			for (File file_lib : dir_lib.listFiles()) {
-				file_lib.delete();
-			}
-			dir_lib.delete();
+			File[] files = dir_lib.listFiles();
+			if(files!=null) {
+				for (File file_lib : files) {
+					boolean isDeleted=file_lib.delete();
+					if(!isDeleted) logger.log(Level.WARNING,"File in directory compiler '"+file_lib.getName()+"' not deleted");
+				}
+			}	
+			boolean isDeleted=dir_lib.delete();
+			if(!isDeleted) logger.log(Level.WARNING,"Directory '"+dir_lib.getAbsolutePath()+"' not deleted");
 		}
 	}
 	

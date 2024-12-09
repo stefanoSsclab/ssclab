@@ -16,7 +16,7 @@ public abstract class ExternalizableDynamicSourceSort extends GenericDynamicSour
 		
 		int size = this.pdv.getSize();
 		PDVField<?> pdv_field;
-		String save_ext = new String("");
+		String save_ext = "";
 		for (int index_cicle_pdv = 0; index_cicle_pdv < size; index_cicle_pdv++) {
 			pdv_field = pdv.getField(index_cicle_pdv);
 			
@@ -90,7 +90,7 @@ public abstract class ExternalizableDynamicSourceSort extends GenericDynamicSour
 		
 		int size = this.pdv.getSize();
 		PDVField<?> pdv_field;
-		String save_ext = new String("");
+		String save_ext = "";
 		for (int index_cicle_pdv = 0; index_cicle_pdv < size; index_cicle_pdv++) {
 			pdv_field = pdv.getField(index_cicle_pdv);
 			

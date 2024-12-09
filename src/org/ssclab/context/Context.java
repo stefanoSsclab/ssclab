@@ -96,7 +96,7 @@ public class Context {
 	 * @return l'oggetto Config corrente del contesto 
 	 */
 	
-	public static Config getConfig() {
+	public static synchronized Config getConfig() {
 		if(Context.config==null && pathFileConfig==null)  Context.config = new ConfigIMPL();
 		if(Context.config==null && pathFileConfig!=null)  Context.config = new ConfigIMPL(pathFileConfig);
 		return Context.config;

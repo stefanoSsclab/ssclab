@@ -27,24 +27,6 @@ public class Matrix  {
 		big_matrix=matrix;
 	}
 	
-	
-	
-	/*
-	public Matrix(double[][] matrix) throws MatrixException  {
-		
-		if(matrix==null) throw new MatrixException("Non posso costruire un Matrix con un argomento del costruttore a null");
-		this.n_row= matrix.length;
-		this.n_column=matrix[0].length;
-		big_matrix=new double[n_row][n_column];
-		for(int _i=0;_i<n_row;_i++) {
-			if(matrix[_i].length!=this.n_column) throw new MatrixException("La matrice passata deve avere righe di uguale lunghezza");
-			for(int _j=0;_j<n_column;_j++) {
-				big_matrix[_i][_j]=matrix[_i][_j];
-			}	
-		}
-	}
-	*/
-	
 	public void setCustomNrow(int n_row) {
 		this.n_row = n_row;
 	}

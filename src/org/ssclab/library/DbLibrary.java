@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -52,6 +53,7 @@ public class DbLibrary extends GenericLibrary  implements PLibraryInterface {
 
 	
 	public void renameTable(String new_name,String old_name) throws Exception {
+		
 		this.generateExceptionOfLibraryClose();
 		if(!this.existTable(old_name)) {
 			throw new DatasetNotFoundException("ERRORE ! la tabella "+old_name+" non esiste.");
@@ -63,20 +65,20 @@ public class DbLibrary extends GenericLibrary  implements PLibraryInterface {
 			        new_name+
 			        RB.getString("it.ssc.library.library.DbLibrary.msg6"));
 		}
-		
+		Statement stat=connect.createStatement();
 		if(this.produtc_name.equals(PRODUCT_NAME.ORACLE.getValue())) {
-			connect.createStatement().executeUpdate("alter table "+old_name+" rename to "+new_name);
+			stat.executeUpdate("alter table "+old_name+" rename to "+new_name);
 		}
 		else if(this.produtc_name.equals(PRODUCT_NAME.POSTGRESQL.getValue())) {
-			connect.createStatement().executeUpdate("alter table "+old_name+" rename to "+new_name);
+			stat.executeUpdate("alter table "+old_name+" rename to "+new_name);
 		}
 		else if(this.produtc_name.startsWith(PRODUCT_NAME.DB2.getValue())) {
-			connect.createStatement().executeUpdate("rename table "+old_name+" to "+new_name);
+			stat.executeUpdate("rename table "+old_name+" to "+new_name);
 		}
 		else {
 			throw new DmlNotDefinedForDbException("ERRORE ! Per questo db "+this.produtc_name +" non e' stata definita l'istruzione di rename.");
 		}
-		
+		if(stat!=null) stat.close();
 		logger.log(Level.INFO,
 				   RB.getString("it.ssc.library.library.DbLibrary.msg7")+" "+ 
 		           name+"."+old_name+" "+
@@ -171,7 +173,9 @@ public class DbLibrary extends GenericLibrary  implements PLibraryInterface {
 	public void dropTable(String name_table) throws Exception {
 		this.generateExceptionOfLibraryClose();
 		if(existTable(name_table)) {
-			this.connect.createStatement().executeUpdate("DROP TABLE "+name_table);
+			Statement stat=this.connect.createStatement();
+			stat.executeUpdate("DROP TABLE "+name_table);
+			stat.close();
 		}
 		else {
 			throw new DatasetNotFoundException(RB.getString("it.ssc.library.library.DbLibrary.msg5")+" "+ 

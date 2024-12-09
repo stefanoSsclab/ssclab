@@ -24,6 +24,7 @@ class FileRecordSorted {
 	private File file_sorted;
 	private DataInputStream  object_input_stream;
 	private int num_record=0;
+	private static Random ra = new Random(new Date().getTime());
 	
 	
 	//Gli viene passato il path_sort con separatore finale compreso 
@@ -97,14 +98,15 @@ class FileRecordSorted {
 	
 	private static synchronized File createFileSorted(String path_sort) throws IOException {
 		String path_and_name;
+	
 		File file;
 		do {
-			Random ra = new Random(new Date().getTime());
-			path_and_name = path_sort + "s" + Math.abs(ra.nextInt()) + ".ser"; 
+			path_and_name = path_sort + "s" + Math.abs(ra.nextInt(Integer.MAX_VALUE)) + ".ser"; 
 			file = new File(path_and_name);
 		} 
 		while (file.exists());
-		file.createNewFile();
+		boolean ok=file.createNewFile();
+		if(!ok)  throw new IOException("File not created "+path_and_name);
 		return file;
 	}
 }

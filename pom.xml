@@ -174,9 +174,17 @@
                     </execution>
                 </executions>
             </plugin>
-          
-	
-	<!--
+           
+ <!--
+			<plugin>
+				<groupId>com.github.spotbugs</groupId>
+				<artifactId>spotbugs-maven-plugin</artifactId>
+				<version>4.8.6.6</version>
+			</plugin>
+			
+-->
+
+			<!--
 		
 			<plugin>
 				<groupId>org.sonatype.central</groupId>

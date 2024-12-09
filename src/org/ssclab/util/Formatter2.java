@@ -3058,10 +3058,7 @@ public final class Formatter2 implements Closeable, Flushable {
             else {
                 if (f.contains(Flags.ALTERNATE))
                     failMismatch(Flags.ALTERNATE, 's');
-                if (arg == null)
-                    print("null");
-                else
-                    print(arg.toString());
+                print(arg.toString());
             }
         }
         

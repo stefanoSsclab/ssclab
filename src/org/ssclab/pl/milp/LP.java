@@ -904,8 +904,8 @@ public final class LP /*implements FormatTypeInput*/ {
 	
 	
 	private void closeAfterResolve() throws Exception {
-		if(toCloseSessionInternal) session.close();
 		amatrix.close();
+		if(toCloseSessionInternal) session.close();
 		amatrix=null;
 		session=null;
 	}

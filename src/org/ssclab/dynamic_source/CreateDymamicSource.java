@@ -19,7 +19,7 @@ public class CreateDymamicSource extends GenericDynamicSource implements Dynamic
 	}
 	
 	public void createSourceEquiJoin(String var1,String var2)  {
-		String source_equi =new String();
+		String source_equi ="";
 		source_equi+="if("+var1+"==null && "+var2+"==null) _setIsEquiJoin(true);	"+nl;
 		source_equi+="else if("+var1+"==null || "+var2+"==null) _setIsEquiJoin(false); "+nl;
 		if(pdv.getField(var1).type==String.class || pdv.getField(var1).type==StringBuffer.class ) {
@@ -37,7 +37,7 @@ public class CreateDymamicSource extends GenericDynamicSource implements Dynamic
 	}
 
 	public String createCompleteJavaClassSource(String name_class) {
-		String source = new String(nl);
+		String source = nl;
 		source += "import it.ssc.dynamic_source.*; "+nl;
 		source += "import it.ssc.pdv.PDVAll; " +nl;
 		
@@ -96,7 +96,7 @@ public class CreateDymamicSource extends GenericDynamicSource implements Dynamic
 
 		int size = this.pdv.getSize();
 		PDVField<?> pdv_field;
-		String save_var = new String("");
+		String save_var = "";
 		for (int index_cicle_pdv = 0; index_cicle_pdv < size; index_cicle_pdv++) {
 			pdv_field = pdv.getField(index_cicle_pdv);
 			save_var += "     " + "if("+ pdv_field.getName() +"==null) pdv.getField(\""+ pdv_field.getName() + "\").is_null=true; "+nl;

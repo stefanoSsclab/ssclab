@@ -131,7 +131,7 @@ public class ROuterJoinStep extends CoreOuterJoinStep  implements OuterJoinStep 
 		
 		if(input_ref2.getTypeRef()==TYPE_REF.REF_DB || input_ref2.getTypeRef()==TYPE_REF.REF_FILE) {
 			Random ra=new Random(new Date().getTime());
-			String name_tmp="WORK.tmp_"+Math.abs(ra.nextInt());
+			String name_tmp="WORK.tmp_"+Math.abs(ra.nextInt(Integer.MAX_VALUE));
 			FactorySteps factory_step = parent_session.getFactorySteps();
 			DataStep datastep = factory_step.createDataStep(name_tmp, input_ref2);
 			datastep.execute();

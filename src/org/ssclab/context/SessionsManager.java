@@ -25,12 +25,14 @@ class SessionsManager  {
 	 */
 
 	private HashMap<Integer,SessionIMPL> listSession;
+	private Random ra;
 	
 	/**
 	 * Costruttore 
 	 */
 	SessionsManager() { 
 		listSession=new HashMap<Integer,SessionIMPL> ();
+		ra = new Random(new Date().getTime());
 	}
 	
 	/**
@@ -87,8 +89,7 @@ class SessionsManager  {
 	private Integer getNewId() {
 		Integer id;
 		do {
-			Random ra = new Random(new Date().getTime());
-			id = Math.abs(ra.nextInt());
+			id = Math.abs(this.ra.nextInt(Integer.MAX_VALUE));
 		} 
 		while (listSession.containsKey(id));
 		return id;

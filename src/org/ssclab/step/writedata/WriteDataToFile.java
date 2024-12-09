@@ -56,11 +56,13 @@ final  class WriteDataToFile implements WriteDataInterface {
 	private void printHeader(String header) {
 		
 		if(header !=null && header.equals(RFileProcess.PRINT_ALL_HEADER)) {
-			String list_var="";
+			//String list_var="";
+			StringBuffer list_var_buff=new StringBuffer();
 			for(String name_var:this.var_to_print) {
-				list_var+=" "+name_var;
+				//list_var+=" "+name_var;
+				list_var_buff.append(" ").append(name_var);
 			}
-			this.pwriter_out.format(list_var+"%n", (Object)null);
+			this.pwriter_out.format(list_var_buff+"%n", (Object)null);
 		}
 		else if(header !=null)  {
 			this.pwriter_out.format(header+"%n", (Object)null);
