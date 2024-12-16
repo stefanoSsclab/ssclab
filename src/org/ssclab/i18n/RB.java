@@ -5,7 +5,7 @@ import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
 
 public class RB {
-	public static ResourceBundle msg; 
+	public final static ResourceBundle msg; 
 	
 	
 	static { 

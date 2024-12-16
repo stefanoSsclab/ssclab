@@ -186,10 +186,10 @@ final class Phase1 extends Phase {
 		
 		if(solution== SolutionType.OPTIMUM && (   Math.abs(z) > this.cepsilon )) {
 			if(!isMilp)  {
-				logger.log(SscLevel.NOTE,"Fase Uno - Condizione per esistenza di soluzioni ammissibili : |z| <= epsilon ="+cepsilon);
-				logger.log(SscLevel.WARNING,"Fase Uno - Non sussuste la condizione per esistenza di soluzioni ammissibili in quanto |z| > epsilon . Il valore epsilon puo' essere modificato tramite il metodo setCEpsilon()");
+				logger.log(SscLevel.WARNING,RB.getString("it.ssc.pl.milp.Phase1.msg2")+cepsilon);
+				logger.log(SscLevel.WARNING,RB.getString("it.ssc.pl.milp.Phase1.msg3"));
 			}
-			solution= SolutionType.VUOTUM;
+			solution= SolutionType.PHASE_ONE_GT_EPS;
 		}
 		else if(solution== SolutionType.ILLIMITATUM) {
 			if(!isMilp) logger.log(SscLevel.WARNING,"Fase Uno non ha raggiunto convergenza - Ottenuto ottimo illimitato. ");

@@ -30,6 +30,16 @@ public enum SolutionType {
 	 * The problem has no feasible solutions. The set of feasible solutions is empty.
 	 */
 	VUOTUM ("no Solutions / Empty"),
+	
+	
+	/**
+	 *Phase ONE - The condition for the existence of feasible solutions is not satisfied 
+	 *because |z| &gt; epsilon. The epsilon value can be adjusted using the setCEpsilon() method. 
+	 */
+	PHASE_ONE_GT_EPS ("Phase one simplex : |z| > epsilon"),
+	
+	
+	
 	/**
 	  * The problem has feasible solutions.
 	 */

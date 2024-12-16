@@ -23,7 +23,9 @@ public enum EPSILON {
 	_1E_M7 (1E-7),
 	_1E_M6 (1E-6),
 	_1E_M5 (1E-5),
-	_1E_M4 (1E-4);
+	_1E_M4 (1E-4),
+	_1E_M3 (1E-3),
+	_1E_M2 (1E-2);
 	
 	private double eps_value;
 	

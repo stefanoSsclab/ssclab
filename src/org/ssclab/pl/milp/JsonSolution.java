@@ -7,7 +7,10 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.logging.Logger;
 
+import org.ssclab.log.SscLevel;
+import org.ssclab.log.SscLogger;
 import org.ssclab.pl.milp.ObjectiveFunction.TARGET_FO;
 import org.ssclab.pl.milp.Variable.TYPE_VAR;
 
@@ -46,6 +49,7 @@ public class JsonSolution {
 	private SolutionDetail[] option;
 	private SolutionType typeSolution;
 	private boolean isFormatted;
+	private static final Logger logger=SscLogger.getLogger();
 	
 	 /**
      * Constructor that initializes the JSON representation of the solution.
@@ -137,9 +141,12 @@ public class JsonSolution {
 			return "max iterations";
 		case MAX_NUM_SIMPLEX:
 			return "max Simplexes";
-
+		case PHASE_ONE_GT_EPS:
+			return "Phase one: |z| > epsilon. Adjust epsilon";
+			
 		default:
-			System.out.println("Unknown solution status.");
+			//System.out.println("Unknown solution status.");
+			logger.log(SscLevel.ERROR,"Unknown solution status.");
 			return "Unknown";
 		}
 	}
