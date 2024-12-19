@@ -41,8 +41,7 @@ public class RFactoryLibraries implements  FactoryLibraries {
 		this.path_work=getRandomNameWork(parth_root_work);
 		this.list_library.put(Library.NAME_LIBRARY_WORK, new FmtLibrary(Library.NAME_LIBRARY_WORK,path_work,this));
 		
-		logger.log(Level.INFO,RB.getString("it.ssc.library.RFactoryLibraries.msg1")+" "+
-				   FmtLibrary.NAME_LIBRARY_WORK+" "+ path_work);
+		logger.log(Level.INFO,RB.getString("it.ssc.library.RFactoryLibraries.msg1")+" "+FmtLibrary.NAME_LIBRARY_WORK+" "+ path_work);
 		this.path_compiler=creteDirectoryInnerWork(Config.NAME_DIR_COMPILER);
 		this.path_sorting=creteDirectoryInnerWork(Config.NAME_DIR_SORTING);
 		
@@ -205,7 +204,7 @@ public class RFactoryLibraries implements  FactoryLibraries {
 		  
 		  DbLibrary library=new DbLibrary(name_library,conect,this);
 		  list_library.put(name_library, library);
-		  logger.log(Level.INFO,"Assegnata libreria "+name_library+" ");
+		  logger.log(Level.INFO,RB.getString("it.ssc.library.RFactoryLibraries.msg1")+" "+name_library+" ");
 		  return library;
 		  
 	  }
