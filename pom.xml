@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.ssclab</groupId>
 	<artifactId>SSC-LP</artifactId> 
-	<version>4.6.9</version>
+	<version>4.7.0</version>
 	<name>SSC LP Solver</name>
 	<description>Library for linear programming</description>
 	<url>https://www.ssclab.org/</url>
@@ -16,6 +16,25 @@
     			<artifactId>parsson</artifactId>
     			<version>1.1.7</version>
 		 </dependency>
+
+		<dependency>
+			<groupId>net.objecthunter</groupId>
+			<artifactId>exp4j</artifactId>
+			<version>0.4.8</version> <!-- Ultima versione disponibile -->
+			<scope>compile</scope>
+			<exclusions>
+				<!-- Escludiamo librerie di test o non necessarie -->
+				<exclusion>
+					<groupId>junit</groupId>
+					<artifactId>junit</artifactId>
+				</exclusion>
+				 <exclusion>
+		            <groupId>ch.qos.logback</groupId>
+		            <artifactId>logback-classic</artifactId>
+		        </exclusion>
+
+			</exclusions>
+		</dependency>
 	</dependencies>
 
 	<licenses>
@@ -23,8 +42,7 @@
 			<name>GNU General Public License, Version 3</name>
 			<url>https://www.gnu.org/licenses/gpl-3.0.en.html</url>
 			<distribution>repo</distribution>
-			<comments>The GNU General Public License is a free, copyleft license
-				for software and other kinds of works.</comments>
+			<comments>The GNU General Public License is a free, copyleft license for software and other kinds of works.</comments>
 		</license>
 	</licenses>
 
@@ -70,9 +88,8 @@
 					
 						<exclude>xample/**</exclude>
 						<exclude>xdemo/**</exclude>
-						<exclude>vrpTest/**</exclude>
 						<exclude>test/**</exclude>
-					<!-- 
+					<!-- 	
  					-->
 					</excludes>
 					<source>10</source>
@@ -151,7 +168,7 @@
 			</plugin>
 
 	
-	
+
 			 <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -175,8 +192,8 @@
                     </execution>
                 </executions>
             </plugin>
-           
- <!--
+
+<!--
 			<plugin>
 				<groupId>com.github.spotbugs</groupId>
 				<artifactId>spotbugs-maven-plugin</artifactId>
@@ -184,9 +201,7 @@
 			</plugin>
 			
 -->
-
-			<!--
-		
+<!--
 			<plugin>
 				<groupId>org.sonatype.central</groupId>
 				<artifactId>central-publishing-maven-plugin</artifactId>
@@ -198,6 +213,7 @@
 					<autoPublish>true</autoPublish>
 				</configuration>
 			</plugin>
+		
 		  --> 
 	
 

@@ -10,6 +10,9 @@ import org.ssclab.pl.milp.LPException;
 import org.ssclab.pl.milp.LinearObjectiveFunction;
 import org.ssclab.pl.milp.ParseException;
 
+import net.objecthunter.exp4j.Expression;
+import net.objecthunter.exp4j.ExpressionBuilder;
+
 public class ScanFoFromLine {
 	
 	private String target_fo;
@@ -55,6 +58,10 @@ public class ScanFoFromLine {
 	
 	private void scanFoFromString(String fo_string) throws ParseException  {
 
+		if(fo_string.contains("[]")) 
+			throw new ParseException(RB.getString("org.ssclab.pl.milp.scantext.CheckSintaxText.msg4")+" ["+fo_string+"]");
+		
+		Expression expression2=null;
 		Pattern pattern = Pattern.compile("\\s*(min|max)\\s*:\\s*(([+-]?)\\s*(\\d+\\.?\\d*)?(\\p{Alpha}+\\w*))\\s*",Pattern.CASE_INSENSITIVE);
 		Matcher matcher = pattern.matcher(fo_string);
 		int end=0;
@@ -77,23 +84,87 @@ public class ScanFoFromLine {
 			list_cj[index]=cj+list_cj[index];
 						
 		}	
+		
+	
+		Pattern pattern_eva = Pattern.compile("\\s*(min|max)\\s*:\\s*(([+-]?)\\s*(\\[(.+?)\\])(\\p{Alpha}+\\w*))\\s*",Pattern.CASE_INSENSITIVE);
+		Matcher matcher_eva = pattern_eva.matcher(fo_string);
+
+		//MAX o MIN
+		if (matcher_eva.lookingAt()) {
+			end=matcher_eva.end();
+			target_fo =matcher_eva.group(1).toUpperCase(); //MAX o MIN
+			String segno_prima_var=matcher_eva.group(3); 
+			if(segno_prima_var==null) segno_prima_var="+";
+
+			String number_prima_var=matcher_eva.group(5); 
+			if(number_prima_var==null) number_prima_var="1";
+			//double cj=Double.parseDouble(segno_prima_var+number_prima_var);
+			//System.out.println("prima_ss_fo:"+number_prima_var);
+			double cj=0;
+			try {
+				expression2 = new ExpressionBuilder(number_prima_var).build();
+				cj = expression2.evaluate();
+			}
+			catch(Exception e) {
+				throw new ParseException(RB.format("it.ssc.pl.milp.ScanConstraintFromLine.msg1")+" ["+number_prima_var+"]");
+			}
+			if(segno_prima_var.equals("-"))  cj=- cj;
+			
+			//System.out.println("prima_var_fo:"+cj);
+
+			String nome_prima_var=matcher_eva.group(6).toUpperCase(); 
+			//non verifico nulla, in quanto e' la prima variabile inserita 
+			//System.out.println("prima_nomevar_fo:"+nome_prima_var);
+			
+			int index=list_var.indexOf(nome_prima_var);
+			if(index==-1) throw new ParseException(RB.getString("org.ssclab.pl.milp.scantext.ScanFoFromLine.msg1")+" ["+nome_prima_var+"]");
+			list_cj[index]=cj+list_cj[index];
+						
+		}	
+		
+		
 		//tolgo la parte gia elaborata
 		String resto=fo_string.substring(end);
 
-		Pattern pattern2 = Pattern.compile("(([+-])\\s*(\\d+\\.?\\d*)?(\\p{Alpha}+\\w*)\\s*)",Pattern.CASE_INSENSITIVE);
+		Pattern pattern2 =     Pattern.compile("(([+-])\\s*(\\d+\\.?\\d*)?(\\p{Alpha}+\\w*)\\s*)",Pattern.CASE_INSENSITIVE);
 		Matcher matcher2 = pattern2.matcher(resto);
-		double cj;
-		while (matcher2.find()) {
-
-			String segno_var=matcher2.group(2); 
-			if(segno_var==null) segno_var="+";
-
-			String number_var=matcher2.group(3); 
-			if(number_var==null) number_var="1";
-			
-			cj=Double.parseDouble(segno_var+number_var);
-			
-			String nome_var=matcher2.group(4).toUpperCase(); 
+		Pattern pattern2_eva = Pattern.compile("(([+-])\\s*\\[(.+?)\\](\\p{Alpha}+\\w*)\\s*)",Pattern.CASE_INSENSITIVE);
+		Matcher matcher2_eva = pattern2_eva.matcher(resto);
+		boolean a;
+		double cj=0;
+		String nome_var=null;
+		while ((a=matcher2.find()) || matcher2_eva.find()  ) {
+			if(a) {
+				String segno_var=matcher2.group(2); 
+				if(segno_var==null) segno_var="+";
+	
+				String number_var=matcher2.group(3); 
+				if(number_var==null) number_var="1";
+				
+				cj=Double.parseDouble(segno_var+number_var);
+				nome_var=matcher2.group(4).toUpperCase(); 
+			}	
+			else {
+				String segno_var=matcher2_eva.group(2); 
+				if(segno_var==null) segno_var="+";
+	
+				String number_var=matcher2_eva.group(3); 
+				if(number_var==null) number_var="1";
+				try {
+					expression2 = new ExpressionBuilder(number_var).build();
+					cj = expression2.evaluate();
+				}
+				catch(Exception e) {
+					throw new ParseException(RB.format("it.ssc.pl.milp.ScanConstraintFromLine.msg1")+" ["+number_var+"]");
+				}
+				if(segno_var.equals("-"))  cj=- cj;
+				
+				//System.out.println("dopo_var_fo:"+cj);
+				
+				//cj=Double.parseDouble(segno_var+number_var);
+				nome_var=matcher2_eva.group(4).toUpperCase(); 
+				//System.out.println("dopo_nomevar_fo:"+nome_var);
+			}
 			//if(list_nomi_var.contains(nome_var)) throw new LPException(RB.format("it.ssc.pl.milp.ScanLineFOFromString.msg2",nome_var));
 			
 			int index=list_var.indexOf(nome_var);

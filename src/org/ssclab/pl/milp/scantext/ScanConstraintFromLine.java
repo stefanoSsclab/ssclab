@@ -15,6 +15,9 @@ import org.ssclab.pl.milp.InternalConstraint.TYPE_CONSTR;
 import org.ssclab.pl.milp.SosGroup.TYPE_SOS_GROUP;
 import org.ssclab.pl.milp.Variable.TYPE_VAR;
 
+import net.objecthunter.exp4j.Expression;
+import net.objecthunter.exp4j.ExpressionBuilder;
+
 public class ScanConstraintFromLine {
 	
 	private ArrayList<InternalConstraint> new_constraints;
@@ -23,13 +26,16 @@ public class ScanConstraintFromLine {
 	private double Ai[];
 	private ArrayProblem arraysProb;
 	//nei pattern il |(\\.) , serve ad indicare il missing
-	Pattern pattern_gen1 = Pattern.compile("\\s*(\\p{Alpha}+\\w*\\s*:)?\\s*(((([+-]?)\\s*(\\d+\\.?\\d*))|(\\.))\\s*<\\s*=)?\\s*(\\p{Alpha}+\\w*)\\s*(<\\s*=\\s*((([+-]?)\\s*(\\d+\\.?\\d*))|(\\.)))?\\s*",Pattern.CASE_INSENSITIVE);
-	Pattern pattern_gen2 = Pattern.compile("\\s*(\\p{Alpha}+\\w*\\s*:)?\\s*(((([+-]?)\\s*(\\d+\\.?\\d*))|(\\.))\\s*>\\s*=)?\\s*(\\p{Alpha}+\\w*)\\s*(>\\s*=\\s*((([+-]?)\\s*(\\d+\\.?\\d*))|(\\.)))?\\s*",Pattern.CASE_INSENSITIVE);
+	Pattern pattern_gen1 = Pattern.compile("\\s*(\\p{Alpha}+\\w*\\s*:)?\\s*(((([+-]?)\\s*(\\d+\\.?\\d*|\\[(.+?)\\]))|(\\.))\\s*<\\s*=)?\\s*(\\p{Alpha}+\\w*)\\s*(<\\s*=\\s*((([+-]?)\\s*(\\d+\\.?\\d*|\\[(.+?)\\]))|(\\.)))?\\s*",Pattern.CASE_INSENSITIVE);
+	Pattern pattern_gen2 = Pattern.compile("\\s*(\\p{Alpha}+\\w*\\s*:)?\\s*(((([+-]?)\\s*(\\d+\\.?\\d*|\\[(.+?)\\]))|(\\.))\\s*>\\s*=)?\\s*(\\p{Alpha}+\\w*)\\s*(>\\s*=\\s*((([+-]?)\\s*(\\d+\\.?\\d*|\\[(.+?)\\]))|(\\.)))?\\s*",Pattern.CASE_INSENSITIVE);
 	Pattern pattern_gen3 = Pattern.compile("\\s*((bin)|(sec)|(int))\\s+((\\p{Alpha}+)(\\w*))\\s*",Pattern.CASE_INSENSITIVE);
 	Pattern pattern_gen4 = Pattern.compile("\\s*((sos[12])|(sos[12]\\s*:\\s*bin(\\s*:\\s*force)?)|(sos[12]\\s*:\\s*int))\\s+((\\p{Alpha}+)(\\w*))\\s*",Pattern.CASE_INSENSITIVE);
-	Pattern pattern_upper1= Pattern.compile("\\s*(((([+-]?)\\s*(\\d+\\.?\\d*))|(\\.))\\s*(>|<)\\s*=)?\\s*(\\p{Alpha}+\\w*)\\s*((>|<)\\s*=\\s*((([+-]?)\\s*(\\d+\\.?\\d*))|(\\.)))?\\s*",Pattern.CASE_INSENSITIVE);
+	Pattern pattern_upper1= Pattern.compile("\\s*(((([+-]?)\\s*(\\d+\\.?\\d*|\\[.+?\\]))|(\\.))\\s*(>|<)\\s*=)?\\s*(\\p{Alpha}+\\w*)\\s*((>|<)\\s*=\\s*((([+-]?)\\s*(\\d+\\.?\\d*|\\[.+?\\]))|(\\.)))?\\s*",Pattern.CASE_INSENSITIVE);
 	Pattern pattern_cons1 = Pattern.compile("(([+-])\\s*(\\d+\\.?\\d*)?(\\p{Alpha}+\\w*)\\s*)",Pattern.CASE_INSENSITIVE);
 	Pattern pattern_cons2 = Pattern.compile("([+-]\\s*(\\d+)(\\.?)(\\d*))\\s*",Pattern.CASE_INSENSITIVE);
+
+	Pattern pattern_cons3 = Pattern.compile("(([+-]?)\\s*\\[(.+?)\\](\\p{Alpha}+\\w*)\\s*)",Pattern.CASE_INSENSITIVE);
+	Pattern pattern_cons4 = Pattern.compile("([+-]?)\\s*\\[(.+?)\\]\\s*",Pattern.CASE_INSENSITIVE);
 
 	
 	public ScanConstraintFromLine(ArrayList<String> inequality,ArrayList<String> nomi_var) throws  ParseException, LPException {
@@ -103,7 +109,8 @@ public class ScanConstraintFromLine {
 	private void scanUpper(String line) throws LPException {
 
 		line=  line.replaceAll("\\s*(\\p{Alpha}+\\w*\\s*:)\\s*", "");
-		boolean minore=false;                               
+		boolean minore=false;   
+		Expression expression2=null;
 		Matcher upper = pattern_upper1.matcher(line);
 		if (line.matches("(.+)<\\s*=(.+)")) minore=true; 
 		
@@ -123,6 +130,7 @@ public class ScanConstraintFromLine {
 			int index=nomi_var.indexOf(nome_var);
 			if(index==-1 ) throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromString.msg5",nome_var,line));
 
+			
 			/*
 			System.out.println("--NUMERO1>>>>>"+numero1);
 			System.out.println("--NUMERO2>>>>>"+numero2);
@@ -138,9 +146,29 @@ public class ScanConstraintFromLine {
 
 			double a1=0,a2=0;
 			if(punto1!=null) a1=Double.NaN;
+			else if(numero1!=null && numero1.contains("[")) {
+				try {
+					expression2 = new ExpressionBuilder(numero1).build();
+					a1 = expression2.evaluate();
+				}
+				catch(Exception e) {
+					throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromLine.msg1")+" ["+numero1+"]");
+				}
+				if(segno1.equals("-"))  a1=- a1;
+			}
 			else if(numero1!=null) a1=Double.parseDouble(segno1+numero1);
 
 			if(punto2!=null) a2=Double.NaN;
+			else if(numero2!=null && numero2.contains("[")) {
+				try {
+					expression2 = new ExpressionBuilder(numero2).build();
+					a2 = expression2.evaluate();
+				}
+				catch(Exception e) {
+					throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromLine.msg1")+" ["+numero2+"]");
+				}
+				if(segno2.equals("-"))  a2=- a2;
+			}
 			else if(numero2!=null) a2=Double.parseDouble(segno2+numero2);
 
 			if(minore) {
@@ -302,8 +330,9 @@ public class ScanConstraintFromLine {
 	private void scanDisequestionCompleta(String line) throws LPException, ParseException {
 		
 		InternalConstraint internal=new InternalConstraint(dimension);
+		Expression expression2=null;
 		String name;
-		double aj=0,b=0;
+		double aj=0,b=0,bi=0;
 		int index=0;
 		for(int a=0;a<dimension;a++) Ai[a]=0;
 		String line2=line;
@@ -327,7 +356,7 @@ public class ScanConstraintFromLine {
 
 		String[] disequation = line2.split("[><]?\\s*=");
 		
-		//deve iniziare per + o - o nienmte, se niente va in errore. 
+		//deve iniziare per + o - o niente, se niente va in errore. 
     	for(int _i=0;_i<disequation.length;_i++) {
     		disequation[_i]=disequation[_i].trim();
     		char inizio=disequation[_i].charAt(0);
@@ -343,6 +372,8 @@ public class ScanConstraintFromLine {
 			while(!resto.equals(""))  {
 				Matcher matcher2 = pattern_cons1.matcher(resto);
 				Matcher matcher3 = pattern_cons2.matcher(resto);
+				Matcher matcher4 = pattern_cons3.matcher(resto);
+				Matcher matcher5 = pattern_cons4.matcher(resto);
 				if (matcher2.lookingAt()) {
 					
 					String segno_var=matcher2.group(2); 
@@ -362,16 +393,76 @@ public class ScanConstraintFromLine {
 					end=matcher2.end();
 					resto=resto.substring(end);
 				}	
+				
+				
+				else if (matcher4.lookingAt()) {
+					
+					String segno_var=matcher4.group(2); 
+					if(segno_var==null) segno_var="+";
+					
+					String number_var=matcher4.group(3); 
+					if(number_var==null) number_var="1";
+					try {
+						expression2 = new ExpressionBuilder(number_var).build();
+				  	    aj = expression2.evaluate();
+					}
+					catch(Exception e) {
+						throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromLine.msg1")+" ["+number_var+"]");
+					}
+					if(segno_var.equals("-"))  aj=- aj;
+					
+					//aj=Double.parseDouble(segno_var+number_var);
+					//System.out.println("numero []:"+aj);
+					String nome_var=matcher4.group(4).toUpperCase(); 
+					index=nomi_var.indexOf(nome_var);
+					if(index==-1 ) throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromString.msg2",nome_var));
+					//System.out.println("var []:"+nome_var);
+					if(_j==0) Ai[index]=aj+Ai[index];
+					else Ai[index]=-aj+Ai[index];
+					
+					end=matcher4.end();
+					resto=resto.substring(end);
+				}	
+				
+				
 				else if (matcher3.lookingAt()) {
 					end=matcher3.end();
 					resto=resto.substring(end);
 					//System.out.println("Greuppo b:"+matcher3.group(0));
 					String doppio=matcher3.group(0).replaceAll("\\s", "");
-					double bi= Double.parseDouble(doppio);
+					bi= Double.parseDouble(doppio);
 					if(_j==0) b=b-bi;
 					else b=b+bi;
 				}	
+				
+				
+				else if (matcher5.lookingAt()) {
+					end=matcher5.end();
+					resto=resto.substring(end);
+					
+					String segno_var=matcher5.group(1); 
+					if(segno_var==null) segno_var="+";
+					
+					String number_var=matcher5.group(2); 
+					if(number_var==null) number_var="1";
+					
+					try {
+						expression2 = new ExpressionBuilder(number_var).build();
+						bi = expression2.evaluate();
+					}
+					catch(Exception e) {
+						throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromLine.msg1")+" ["+number_var+"]");
+						
+					}
+					if(segno_var.equals("-"))  bi=- bi;
+					//System.out.println("numero bb []:"+bi);
+					if(_j==0) b=b-bi;
+					else b=b+bi;
+				}	
+				
+				
 				else { 
+					//System.out.println("reess:"+resto);
 					throw new ParseException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg1")+" ["+line+"]");
 				}
 			}

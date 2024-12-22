@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
+import org.ssclab.i18n.RB;
 import org.ssclab.log.SscLevel;
 import org.ssclab.log.SscLogger;
 import org.ssclab.pl.milp.ObjectiveFunction.TARGET_FO;
@@ -81,6 +82,7 @@ public class JsonSolution {
 		if(solution.length==2) { 
 			metaJsonBuilder
 			.add("problemDescription","MILP problem")
+			.add("library",RB.getString("it.ssc.context.Session_Impl.msg0"))
 			.add("threads", (Integer)meta.getProperty("threads"))
 			.add("numberOfSimplices", (Integer)meta.getProperty("numberOfSimplices"))
 			.add("optimizationDuration",meta.getProperty("optimizationDuration").toString());
@@ -89,6 +91,7 @@ public class JsonSolution {
 		else { 
 			metaJsonBuilder
 			.add("problemDescription","LP problem")
+			.add("library",RB.getString("it.ssc.context.Session_Impl.msg0"))
 			.add("threads", (Integer)meta.getProperty("threads"))
 			.add("iterations", (Long)meta.getProperty("iterationsLP"))
 			.add("optimizationDuration", meta.getProperty("optimizationDuration").toString())
@@ -141,8 +144,8 @@ public class JsonSolution {
 			return "max iterations";
 		case MAX_NUM_SIMPLEX:
 			return "max Simplexes";
-		case PHASE_ONE_GT_EPS:
-			return "Phase one: |z| > epsilon. Adjust epsilon";
+		/*case PHASE_ONE_GT_EPS:
+			return "Phase one: |z| > epsilon. Adjust epsilon";*/
 			
 		default:
 			//System.out.println("Unknown solution status.");

@@ -399,7 +399,7 @@ public final class MILP  {
 		if(target==TARGET_FO.MIN)  lb.value=Double.POSITIVE_INFINITY;    //per il min 
 		
 		if(type_solution_initial==SolutionType.ILLIMITATUM) type_solution=type_solution_initial;
-		else if(type_solution_initial==SolutionType.PHASE_ONE_GT_EPS) type_solution=type_solution_initial;
+		//else if(type_solution_initial==SolutionType.PHASE_ONE_GT_EPS) type_solution=type_solution_initial;
 		
 		if(type_solution_initial==SolutionType.OPTIMUM) {
 			if(milp_initiale.isSolutionIntegerAmmisible() && 

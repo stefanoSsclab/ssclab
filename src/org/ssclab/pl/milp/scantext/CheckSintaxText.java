@@ -11,11 +11,24 @@ import org.ssclab.pl.milp.ParseException;
 
 public class CheckSintaxText {
 	
-	Pattern pattern_fo1 = Pattern.compile("\\s*(min|max)\\s*:\\s*([+-]?)\\s*((\\d+)(\\.)?(\\d*))?((\\p{Alpha}+)(\\w*))\\s*",Pattern.CASE_INSENSITIVE);
-	Pattern pattern_fo2 = Pattern.compile("[+-]\\s*(\\d+\\.?\\d*)?(\\p{Alpha}+\\w*)\\s*",Pattern.CASE_INSENSITIVE);
+	/*pattern per identificare la f.o , la parte iniziale*/
+	Pattern pattern_fo1 = Pattern.compile("\\s*(min|max)\\s*:\\s*([+-]?)\\s*(((\\d+)(\\.)?(\\d*))|(\\[(.+?)\\]))?((\\p{Alpha}+)(\\w*))\\s*",Pattern.CASE_INSENSITIVE);
+	/*pattern per identificare i token successivi della funziona obiettivo*/
+	Pattern pattern_fo2 = Pattern.compile("[+-]\\s*((\\d+\\.?\\d*)|(\\[(.+?)\\]))?(\\p{Alpha}+\\w*)\\s*",Pattern.CASE_INSENSITIVE);
+	//parte iniziale vincolo con nome, ovvero vincolo completo, non upper o lower
 	Pattern pattern_cons1 = Pattern.compile("\\s*(\\p{Alpha}+\\w*\\s*:\\s*)",Pattern.CASE_INSENSITIVE);
+	//parte per identificare token dei vincoli completi, con associata variabile
 	Pattern pattern_cons3 = Pattern.compile("[+-]\\s*(\\d+\\.?\\d*)?(\\p{Alpha}+\\w*)\\s*",Pattern.CASE_INSENSITIVE);
+	//parte per identificare token dei vincoli completi, quelli costituiti da soli numeri
 	Pattern pattern_cons4 = Pattern.compile("(([+-])\\s*(\\d+)(\\.?)(\\d*))\\s*",Pattern.CASE_INSENSITIVE);
+	
+	
+	//parte per identificare token dei vincoli completi, con associata variabile con []
+	Pattern pattern_cons5 = Pattern.compile("(([+-]?)\\s*\\[(.+?)\\])(\\p{Alpha}+\\w*)\\s*",Pattern.CASE_INSENSITIVE);
+	//parte per identificare token dei vincoli completi, quelli costituiti da soli numeri con []
+	Pattern pattern_cons6 = Pattern.compile("(([+-]?)\\s*\\[(.+?)\\])\\s*",Pattern.CASE_INSENSITIVE);
+	
+	
 	String line_fo="";
 	boolean exist_fo=false;
 
@@ -39,18 +52,23 @@ public class CheckSintaxText {
 			this.line_fo=line;
 			this.exist_fo=true;
 		}
-		else if (line.matches("\\s*(\\p{Alpha}+\\w*\\s*:)?\\s*(((([+-]?)\\s*(\\d+\\.?\\d*))|(\\.))\\s*<\\s*=)?\\s*(\\p{Alpha}+\\w*)\\s*(<\\s*=\\s*((([+-]?)\\s*(\\d+\\.?\\d*))|(\\.)))?\\s*")) {
+		//pattern per identificare uppur o lower del tipo  "nome_upper: a<= x <= b"  , anche con a o b mancanti 
+		else if (line.matches("\\s*(\\p{Alpha}+\\w*\\s*:)?\\s*(((([+-]?)\\s*(\\d+\\.?\\d*|\\[(.+?)\\]))|(\\.))\\s*<\\s*=)?\\s*(\\p{Alpha}+\\w*)\\s*(<\\s*=\\s*((([+-]?)\\s*(\\d+\\.?\\d*|\\[(.+?)\\]))|(\\.)))?\\s*")) {
 			//non sono presenti tutti i controlli, altri controlli li fa quando lo elabora
 		}
-		else if (line.matches("\\s*(\\p{Alpha}+\\w*\\s*:)?\\s*(((([+-]?)\\s*(\\d+\\.?\\d*))|(\\.))\\s*>\\s*=)?\\s*(\\p{Alpha}+\\w*)\\s*(>\\s*=\\s*((([+-]?)\\s*(\\d+\\.?\\d*))|(\\.)))?\\s*")) {
+		//pattern per identificare uppur o lower del tipo  "nome_upper: a>= x >= b"  , anche con a o b mancanti 
+		else if (line.matches("\\s*(\\p{Alpha}+\\w*\\s*:)?\\s*(((([+-]?)\\s*(\\d+\\.?\\d*|\\[(.+?)\\]))|(\\.))\\s*>\\s*=)?\\s*(\\p{Alpha}+\\w*)\\s*(>\\s*=\\s*((([+-]?)\\s*(\\d+\\.?\\d*|\\[(.+?)\\]))|(\\.)))?\\s*")) {
 			//non sono presenti tutti i controlli, altri controlli li fa quando lo elabora
 		}
+		//per identificare vincoli completi
 		else if (line.matches("(.+)((<\\s*=)|(>\\s*=)|(=))(.+)")) {
 			checkSintassiConstraint(line);
 		}
+		//per identificare variabili int,bin,sec
 		else if (line.matches("\\s*(?i)((bin)|(sec)|(int))\\s+((\\p{Alpha}+)(\\w*))\\s*(.*)")) {
 			checkSintassiInt(line);
 		}
+		//per identiicare SOS
 		else if (line.matches("\\s*(?i)((sos[12])|(sos[12]\\s*:\\s*bin(\\s*:\\s*force)?)|(sos[12]\\s*:\\s*int))\\s+((\\p{Alpha}+)(\\w*))\\s*(.*)")) {
 			checkSintassiSOS(line);
 		}
@@ -93,7 +111,10 @@ public class CheckSintaxText {
 	
 	
 	private void checkSintassiConstraint(String line) throws  ParseException {
-
+		
+		if(line.contains("[]")) 
+			throw new ParseException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg1")+" ["+line+"]");
+		
 		Matcher matcher_group_var = pattern_cons1.matcher(line);
 		int end=0,end2=0;;
 		//MAX o MIN
@@ -128,12 +149,23 @@ public class CheckSintaxText {
 			while(!resto.equals(""))  {
 				Matcher matcher2 = pattern_cons3.matcher(resto);
 				Matcher matcher3 = pattern_cons4.matcher(resto);
+				Matcher matcher4 = pattern_cons5.matcher(resto);
+				Matcher matcher5 = pattern_cons6.matcher(resto);
+				//System.out.println("resto:"+resto);
 				if (matcher2.lookingAt()) {
 					end2=matcher2.end();
 					resto=resto.substring(end2);
 				}	
 				else if (matcher3.lookingAt()) {
 					end2=matcher3.end();
+					resto=resto.substring(end2);
+				}	
+				else if (matcher4.lookingAt()) {
+					end2=matcher4.end();
+					resto=resto.substring(end2);
+				}	
+				else if (matcher5.lookingAt()) {
+					end2=matcher5.end();
 					resto=resto.substring(end2);
 				}	
 				else { 

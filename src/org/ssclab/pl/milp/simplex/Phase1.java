@@ -184,12 +184,13 @@ final class Phase1 extends Phase {
 			logger.log(SscLevel.INFO,RB.getString("it.ssc.pl.milp.Phase1.msg1")+z);
 		}
 		
-		if(solution== SolutionType.OPTIMUM && (   Math.abs(z) > this.cepsilon )) {
+		if(solution== SolutionType.OPTIMUM && ( Math.abs(z) > this.cepsilon )) {
 			if(!isMilp)  {
 				logger.log(SscLevel.WARNING,RB.getString("it.ssc.pl.milp.Phase1.msg2")+cepsilon);
 				logger.log(SscLevel.WARNING,RB.getString("it.ssc.pl.milp.Phase1.msg3"));
 			}
-			solution= SolutionType.PHASE_ONE_GT_EPS;
+			//solution= SolutionType.PHASE_ONE_GT_EPS;
+			solution= SolutionType.VUOTUM;
 		}
 		else if(solution== SolutionType.ILLIMITATUM) {
 			if(!isMilp) logger.log(SscLevel.WARNING,"Fase Uno non ha raggiunto convergenza - Ottenuto ottimo illimitato. ");

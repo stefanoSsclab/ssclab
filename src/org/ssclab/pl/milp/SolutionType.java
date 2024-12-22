@@ -32,11 +32,11 @@ public enum SolutionType {
 	VUOTUM ("no Solutions / Empty"),
 	
 	
-	/**
+	/*
 	 *Phase ONE - The condition for the existence of feasible solutions is not satisfied 
 	 *because |z| &gt; epsilon. The epsilon value can be adjusted using the setCEpsilon() method. 
 	 */
-	PHASE_ONE_GT_EPS ("Phase one simplex : |z| > epsilon"),
+	//PHASE_ONE_GT_EPS ("Phase one simplex : |z| > epsilon"),
 	
 	
 	
