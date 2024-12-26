@@ -403,6 +403,7 @@ public class ScanConstraintFromLine {
 					String number_var=matcher4.group(3); 
 					if(number_var==null) number_var="1";
 					try {
+						//System.out.println(":"+number_var);
 						expression2 = new ExpressionBuilder(number_var).build();
 				  	    aj = expression2.evaluate();
 					}
@@ -445,8 +446,8 @@ public class ScanConstraintFromLine {
 					
 					String number_var=matcher5.group(2); 
 					if(number_var==null) number_var="1";
-					
 					try {
+						//System.out.println(number_var);
 						expression2 = new ExpressionBuilder(number_var).build();
 						bi = expression2.evaluate();
 					}

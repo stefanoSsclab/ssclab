@@ -133,7 +133,7 @@ public class CheckSintaxText {
 	    }
     	//System.out.println("conteggio:"+conteggio);
     	if(conteggio!=1 || separation.length!=2 || separation[0].trim().equals("")) { 
-    		throw new ParseException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg1")+" ["+line+"]");
+    		throw new ParseException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg1")+" "+line+"");
 		}
 		//deve iniziare per + o - o niente, se niente va in errore. 
     	for(int _i=0;_i<separation.length;_i++) {
@@ -169,7 +169,7 @@ public class CheckSintaxText {
 					resto=resto.substring(end2);
 				}	
 				else { 
-					throw new ParseException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg1")+" ["+line+"]");
+					throw new ParseException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg1")+" "+line+"");
 				}
 			}
 		}	
@@ -186,7 +186,7 @@ public class CheckSintaxText {
 			end=matcher_group_var.end();
 		}	
 		else { 
-			throw new ParseException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg4")+" ["+line+"]");
+			throw new ParseException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg4")+" "+line+"");
 		}
 		String resto=line.substring(end);
 		resto=resto.trim();
@@ -196,7 +196,7 @@ public class CheckSintaxText {
 			for(String token:tokens) {  
 				//System.out.println("qua3:"+token);
 				if(!token.matches("\\s*(\\p{Alpha}+\\w*)\\**\\s*"))
-					throw new ParseException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg4")+" ["+line+"] : error in "+token);
+					throw new ParseException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg4")+" "+line+" , error in "+token);
 			}	
 		}
 	}
@@ -224,7 +224,7 @@ public class CheckSintaxText {
 			end=matcher_group_var3.end();
 		}	
 		else { 
-			throw new ParseException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg4")+" ["+line+"]");
+			throw new ParseException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg4")+" "+line+"");
 		}
 		String resto=line.substring(end).trim();
 		//System.out.println("qua:"+resto);
@@ -232,7 +232,7 @@ public class CheckSintaxText {
 			String[] tokens = resto.split("\\s*,\\s*");
 			for(String token:tokens) {  
 				if(!token.matches("\\s*(\\p{Alpha}+\\w*)\\**\\s*"))
-					throw new ParseException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg4")+" ["+line+"] : error in "+token);
+					throw new ParseException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg4")+" "+line+" , error in "+token);
 			}	
 		}
 	}

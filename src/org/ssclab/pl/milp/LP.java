@@ -660,6 +660,7 @@ public final class LP /*implements FormatTypeInput*/ {
 		
 		if(title!=null) logger.log(SscLevel.INFO,RB.format("it.ssc.pl.milp.MILP.msg13")+" \""+title+"\"");
 		meta.put("threads", threadsNumber.getNumberThread());
+		meta.put("cepsilon", epsilons.cepsilon.toString());
 		logger.log(SscLevel.INFO,RB.format("it.ssc.pl.milp.LP.msg11")+threadsNumber.getNumberThread());
 		logger.log(Level.INFO,  "---------------------------------------------");
 		

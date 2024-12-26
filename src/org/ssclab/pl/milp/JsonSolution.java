@@ -78,6 +78,10 @@ public class JsonSolution {
 		String title=(String)meta.getProperty("title");
 		if(title==null) metaJsonBuilder.add("problemTitle", JsonValue.NULL);
 		else metaJsonBuilder.add("problemTitle", title);
+		
+		String cepsilon=(String)meta.getProperty("cepsilon");
+		if(cepsilon==null) metaJsonBuilder.add("cepsilon", JsonValue.NULL);
+		else metaJsonBuilder.add("epsilon_c", cepsilon);
 	
 		if(solution.length==2) { 
 			metaJsonBuilder

@@ -367,7 +367,7 @@ public final class MILP  {
 		if(title!=null) logger.log(SscLevel.INFO,RB.format("it.ssc.pl.milp.MILP.msg13")+" \""+title+"\"");
 		logger.log(SscLevel.INFO,RB.format("it.ssc.pl.milp.MILP.msg10")+threadNumber.getThread());
 		meta.put("threads", threadNumber.getThread());
-		
+		meta.put("cepsilon", epsilons.cepsilon.toString());
 		int num_simplex_resolved=1;
 		long start=System.currentTimeMillis();
 		type_solution=SolutionType.VUOTUM;
