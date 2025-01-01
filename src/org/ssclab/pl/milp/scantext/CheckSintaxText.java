@@ -11,6 +11,8 @@ import org.ssclab.pl.milp.ParseException;
 
 public class CheckSintaxText {
 	
+	/*pattern per identificare la f.o , con il solo zero*/
+	Pattern pattern_fo_zero = Pattern.compile("\\s*(min|max)\\s*:\\s*([+-]?)\\s*((\\d+)(\\.)?(\\d*))\\s*",Pattern.CASE_INSENSITIVE);
 	/*pattern per identificare la f.o , la parte iniziale*/
 	Pattern pattern_fo1 = Pattern.compile("\\s*(min|max)\\s*:\\s*([+-]?)\\s*(((\\d+)(\\.)?(\\d*))|(\\[(.+?)\\]))?((\\p{Alpha}+)(\\w*))\\s*",Pattern.CASE_INSENSITIVE);
 	/*pattern per identificare i token successivi della funziona obiettivo*/
@@ -84,11 +86,15 @@ public class CheckSintaxText {
 	}
 
 	private void checkSintassiFo(String fo_string) throws ParseException {
-		//Pattern pattern_fo1 = Pattern.compile("\\s*(min|max)\\s*:\\s*([+-]?)\\s*((\\d+)(\\.)?(\\d*))?((\\p{Alpha}+)(\\w*))\\s*",Pattern.CASE_INSENSITIVE);
+		
 		Matcher matcher_group_var = pattern_fo1.matcher(fo_string);
+		Matcher matcher_fo_zero=pattern_fo_zero.matcher(fo_string);
 		int end=0;
 		//MAX o MIN
-		if (matcher_group_var.lookingAt()) {
+		if(matcher_fo_zero.matches()) {
+			end=matcher_fo_zero.end();
+		}
+		else if (matcher_group_var.lookingAt()) {
 			end=matcher_group_var.end();
 		}	
 		else { 

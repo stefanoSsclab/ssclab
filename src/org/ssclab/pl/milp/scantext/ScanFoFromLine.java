@@ -62,9 +62,29 @@ public class ScanFoFromLine {
 			throw new ParseException(RB.getString("org.ssclab.pl.milp.scantext.CheckSintaxText.msg4")+" ["+fo_string+"]");
 		
 		Expression expression2=null;
+		
+		Pattern pattern_zero = Pattern.compile("\\s*(min|max)\\s*:\\s*(([+-]?)\\s*(\\d+\\.?\\d*))\\s*",Pattern.CASE_INSENSITIVE);
+		Matcher matcher_zero = pattern_zero.matcher(fo_string);
+		int end=0;
+		//MAX o MIN
+		if (matcher_zero.matches()) {
+			end=matcher_zero.end();
+			target_fo =matcher_zero.group(1).toUpperCase(); //MAX o MIN
+			/*
+			String segno_prima_var=matcher_zero.group(3); 
+			System.out.println(segno_prima_var);
+			if(segno_prima_var==null) segno_prima_var="+"; */
+
+			String number_prima_var=matcher_zero.group(4); 
+			//System.out.println("NUMBER:"+number_prima_var);
+			if(number_prima_var==null) throw new ParseException(RB.getString("org.ssclab.pl.milp.scantext.ScanFoFromLine.msg2")); 
+			double cj=Double.parseDouble(number_prima_var);
+			if(cj!=0) throw new ParseException(RB.getString("org.ssclab.pl.milp.scantext.ScanFoFromLine.msg2"));
+		}	
+		
 		Pattern pattern = Pattern.compile("\\s*(min|max)\\s*:\\s*(([+-]?)\\s*(\\d+\\.?\\d*)?(\\p{Alpha}+\\w*))\\s*",Pattern.CASE_INSENSITIVE);
 		Matcher matcher = pattern.matcher(fo_string);
-		int end=0;
+		//int end=0;
 		//MAX o MIN
 		if (matcher.lookingAt()) {
 			end=matcher.end();
