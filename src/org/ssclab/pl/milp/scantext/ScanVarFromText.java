@@ -43,17 +43,19 @@ public class ScanVarFromText {
 		
 		if(line.trim().equals("")) return;
 		
-		if (line.matches("\\s*(?i)(min|max)\\s*:(.+)")) return ;
+		//se e' un vincolo , analizza dopo con le if successive
+		if(Pattern.compile("<\\s*=|>\\s*=|=").matcher(line).find()) { }
+		
+		else if (line.matches("\\s*(?i)(min|max)\\s*:(.+)")) return ;
 		
 		else if (line.matches("\\s*(?i)(bin|int|sec)\\s+(.+)")) return ;
 		
 		else if (line.matches("\\s*(?i)(sos[12])(.+)")) return ;
 		
 		//upper bound del tipo "nome_vincolo:a<=x<=b" , con a o b opzionali
-		else if (line.matches("\\s*(\\p{Alpha}+\\w*\\s*:)?\\s*(((([+-]?)\\s*(\\d+\\.?\\d*))|(\\.))\\s*<\\s*=)?\\s*(\\p{Alpha}+\\w*)\\s*(<\\s*=\\s*((([+-]?)\\s*(\\d+\\.?\\d*))|(\\.)))?\\s*")) {
+		if (line.matches("\\s*(\\p{Alpha}+\\w*\\s*:)?\\s*(((([+-]?)\\s*(\\d+\\.?\\d*))|(\\.))\\s*<\\s*=)?\\s*(\\p{Alpha}+\\w*)\\s*(<\\s*=\\s*((([+-]?)\\s*(\\d+\\.?\\d*))|(\\.)))?\\s*")) {
 			//System.out.println("11"+line);
 			scanUpper(line)   ;     
-			
 		}
 		//upper bound del tipo "nome_vincolo:a>=x>=b" , con a o b opzionali
 		else if (line.matches("\\s*(\\p{Alpha}+\\w*\\s*:)?\\s*(((([+-]?)\\s*(\\d+\\.?\\d*))|(\\.))\\s*>\\s*=)?\\s*(\\p{Alpha}+\\w*)\\s*(>\\s*=\\s*((([+-]?)\\s*(\\d+\\.?\\d*))|(\\.)))?\\s*")) {
@@ -107,7 +109,8 @@ public class ScanVarFromText {
 					String nome_var=matcher2.group(4).toUpperCase(); 
 					//System.out.println(nome_var);
 					if(nome_var.equals("BIN") || nome_var.equals("INT") ||  nome_var.equals("SEC") || 
-					   nome_var.equals("TYPE") || nome_var.equals("RHS") || nome_var.equals("ALL") 	) 
+					   nome_var.equals("TYPE") || nome_var.equals("RHS") || nome_var.equals("ALL") || 
+					   nome_var.startsWith("SOS")) 
 						throw new ParseException(RB.getString("it.ssc.pl.milp.ScanLineFOFromString.msg4")+" ["+line+"]");
 					
 					if(!list_nomi_var.contains(nome_var)) list_nomi_var.add(nome_var);		
@@ -119,7 +122,8 @@ public class ScanVarFromText {
 					String nome_var=matcher4.group(4).toUpperCase(); 
 					//System.out.println(nome_var);
 					if(nome_var.equals("BIN") || nome_var.equals("INT") ||  nome_var.equals("SEC") || 
-					   nome_var.equals("TYPE") || nome_var.equals("RHS") || nome_var.equals("ALL") 	) 
+					   nome_var.equals("TYPE") || nome_var.equals("RHS") || nome_var.equals("ALL") ||
+					   nome_var.startsWith("SOS")) 
 						throw new ParseException(RB.getString("it.ssc.pl.milp.ScanLineFOFromString.msg4")+" ["+line+"]");
 					
 					if(!list_nomi_var.contains(nome_var)) list_nomi_var.add(nome_var);			

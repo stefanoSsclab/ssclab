@@ -142,10 +142,10 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 		if(this.solutionType==SolutionType.OPTIMUM) { 
 			this.solutionType =simplex.runPhaseTwo();
 			this.solution_pl=new SolutionImpl(this.solutionType,
-				pl_current, //dovevo passare un clone in quanto modifiva l'array di Var
+				pl_current, //dovevo passare un clone in quanto modificava l'array di Var
 				simplex.getFinalBasis(),
 				simplex.getFinalValuesBasis(),
-				pl_current.getVariables());
+				pl_original_zero.getVariables());
 		}	
 		
 		return this.solutionType;
@@ -412,7 +412,11 @@ import org.ssclab.pl.milp.simplex.SimplexException;
 	}
 	
 	
-	public Solution getSolution()  {
+	public SolutionImpl getSolution()  {
+		return this.solution_pl;
+	}
+	
+	public Solution getSolutionWithUpperOrig()  {
 		return this.solution_pl;
 	}
 	

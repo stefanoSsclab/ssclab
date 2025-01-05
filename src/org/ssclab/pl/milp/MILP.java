@@ -54,7 +54,7 @@ public final class MILP  {
 	protected PLProblem father_pl_original_zero;
 	private Meta meta = new Meta();
 	private String title;
-	private Solution solutionForRelaxed;
+	//private Solution solutionForRelaxed;
 
 	{
 		logger.log(Level.INFO,  "##############################################");
@@ -535,7 +535,7 @@ public final class MILP  {
 	
 	public Solution getSolution()  throws SimplexException {
 		if(lb.milp==null)  throw new SimplexException(RB.getString("it.ssc.pl.milp.LP.msg10"));
-		return lb.milp.getSolution();
+		return lb.milp.getSolution().getThisWithUpperOrig(); //ok
 		
 	}
 	

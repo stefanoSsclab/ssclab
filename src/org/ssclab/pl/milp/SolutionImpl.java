@@ -11,6 +11,7 @@ import org.ssclab.log.SscLogger;
 final class SolutionImpl implements Solution {
 	
 	private Var[] variables;
+	private Var[] variables_orig;
 	private PLProblem milp_original;
 	private SolutionType type_solution;
 	private boolean isFeasibleSolution;
@@ -18,9 +19,10 @@ final class SolutionImpl implements Solution {
 	
 	
 	//Costruttore da usare sulla parte MILP
-	SolutionImpl(SolutionType type_solution,PLProblem milp_originall,  int basis[],double values[], Var[] variables_deep) {
+	SolutionImpl(SolutionType type_solution,PLProblem pl_current,  int basis[],double values[], Var[] variables_orig) {
+		this.variables_orig=variables_orig;
 		this.type_solution=type_solution;
-		this.milp_original=milp_originall;
+		this.milp_original=pl_current;
 		this.variables= milp_original.getVariablesClone();
 		//passaZeroSemicontVar(variables_deep);
 		int index_var=0;
@@ -66,7 +68,38 @@ final class SolutionImpl implements Solution {
 			}*/
 			index_var++;
 		}
+		
+		
+		
+		
+		
+		
 	}
+	
+	//parte aggiunta il 05/01/2025 ,in quanto gli uper sono disallineati e non corrispondono a quelli iniziali
+	Solution getThisWithUpperOrig() {
+		if(variables_orig==null ) {
+			logger.log(Level.SEVERE,"Internal Error array VAR[] null");
+			return this;
+		}
+		int index_var=0;
+		for(Var var:variables) {
+			//System.out.println(var.getName() +" - "+variables_orig[index_var].getName());
+			if(!var.getName().equals(variables_orig[index_var].getName())) {
+				logger.log(Level.SEVERE,"Internal Error in dimension array VAR[]");
+			}
+			try {
+				var.setLower(variables_orig[index_var].getLower());
+				var.setUpper(variables_orig[index_var].getUpper());
+			} 
+			catch (LPException e) {
+				logger.log(Level.SEVERE,"Internal Error in set lower/upper in solution");
+			}
+			index_var++;
+		}
+		return this;
+	}
+	
 	
 	//Costruttore da usare sulla parte LP , poi per tutti e due 
 	SolutionImpl(SolutionType type_solution,PLProblem milp_originall,  int basis[],double values[]) {
