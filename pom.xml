@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.ssclab</groupId>
 	<artifactId>SSC-LP</artifactId> 
-	<version>4.7.3</version>
+	<version>4.7.4</version>
 	<name>SSC LP Solver</name>
 	<description>Library for linear programming</description>
 	<url>https://www.ssclab.org/</url>
@@ -89,7 +89,7 @@
 						<exclude>xample/**</exclude>
 						<exclude>xdemo/**</exclude>
 						<exclude>test/**</exclude>
-						<!-- 
+					<!-- 
  					-->
 					</excludes>
 					<source>10</source>
@@ -144,7 +144,7 @@
 				</executions>
 			</plugin>
 
-
+<!--
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-gpg-plugin</artifactId>
@@ -158,7 +158,7 @@
 						</goals>
 						<configuration>
 							<gpgArguments>
-								<arg>--pinentry-mode</arg>
+								<arg>-ttt-pinentry-mode</arg>
 								<arg>loopback</arg>
 							</gpgArguments>
 						
@@ -166,9 +166,9 @@
 					</execution>
 				</executions>
 			</plugin>
-
+-->
 	
-<!--
+
 			 <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -193,7 +193,7 @@
                 </executions>
             </plugin>
 
-
+<!--
 			<plugin>
 				<groupId>com.github.spotbugs</groupId>
 				<artifactId>spotbugs-maven-plugin</artifactId>
@@ -201,7 +201,7 @@
 			</plugin>
 			
 -->
-	
+		<!--
 			<plugin>
 				<groupId>org.sonatype.central</groupId>
 				<artifactId>central-publishing-maven-plugin</artifactId>
@@ -214,7 +214,7 @@
 				</configuration>
 			</plugin>
 		
-	<!--
+
 		  --> 
 	
 

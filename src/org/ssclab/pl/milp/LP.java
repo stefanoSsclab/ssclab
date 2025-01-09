@@ -118,6 +118,7 @@ public final class LP /*implements FormatTypeInput*/ {
 		ArrayList<InternalConstraint> list_constraints=scan_const.getConstraints();
 		PLProblem pl_original=CreatePLProblem.create(fo,list_constraints,list_var,scan_const.getArraysProblem(),isMilp);
 		
+		this.target=pl_original.getTarget_fo();
 		//memorizza nella work il pl_original come oggetto prima di essere standardizzato. 
 		//pl original , non e' memorizzato in LP , una volta terminato questo metodo, 
 		//ogni riferimento e' perso. 
@@ -152,13 +153,6 @@ public final class LP /*implements FormatTypeInput*/ {
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
 	/**
 	 * Constructor for use with the problem statement in text format stored in an ArrayList.
 	*
@@ -181,6 +175,7 @@ public final class LP /*implements FormatTypeInput*/ {
 		ArrayList<InternalConstraint> list_constraints=scan_const.getConstraints();
 		PLProblem pl_original=CreatePLProblem.create(fo,list_constraints,list_var,scan_const.getArraysProblem(),isMilp);
 		
+		this.target=pl_original.getTarget_fo();
 		//memorizza nella work il pl_original come oggetto prima di essere standardizzato. 
 		//pl original , non e' memorizzato in LP , una volta terminato questo metodo, 
 		//ogni riferimento e' perso. 
@@ -357,6 +352,7 @@ public final class LP /*implements FormatTypeInput*/ {
 		this.session=Context.createNewSession();
 		PLProblem pl_original=CreatePLProblem.create(fo,constraints,isMilp,null);
 		
+		this.target=pl_original.getTarget_fo();
 		//memorizza nella work il pl_original come oggetto prima di essere standardizzato. 
 		//pl original , non e' memorizzato in LP , una volta terminato questo metodo, 
 		//ogni riferimento e' perso. 
@@ -401,6 +397,7 @@ public final class LP /*implements FormatTypeInput*/ {
 		this.session=Context.createNewSession();
 		PLProblem pl_original=CreatePLProblem.create(fo,constraints.getListConstraint(),isMilp,null);
 		
+		this.target=pl_original.getTarget_fo();
 		//memorizza nella work il pl_original come oggetto prima di essere standardizzato. 
 		//pl original , non e' memorizzato in LP , una volta terminato questo metodo, 
 		//ogni riferimento e' perso. 
@@ -452,6 +449,7 @@ public final class LP /*implements FormatTypeInput*/ {
 		if(format==FormatType.SPARSE) pl_original=CreatePLProblem.createFromSparse(milp_data_source,isMilp);
 		else if(format==FormatType.COEFF) pl_original=CreatePLProblem.create(milp_data_source, isMilp);
 		
+		this.target=pl_original.getTarget_fo();
 		//memorizza nella work il pl_original come oggetto prima di essere standardizzato. 
 		//pl original , non e' memorizzato in LP , una volta terminato questo metodo, 
 		//ogni riferimento e' perso. 
@@ -531,6 +529,7 @@ public final class LP /*implements FormatTypeInput*/ {
 		/*Crea im problema puro , cosi come dichiarato dall'utente A <=> b , f=C*/
 		PLProblem pl_original=CreatePLProblem.create(milp_data_source, isMilp);
 		
+		this.target=pl_original.getTarget_fo();
 		//memorizza nella work il pl_original come oggetto prima di essere standardizzato. 
 		//pl original , non e' memorizzato in LP , una volta terminato questo metodo, 
 		//ogni riferimento e' perso. 
@@ -1086,5 +1085,24 @@ public final class LP /*implements FormatTypeInput*/ {
         	this.resolve();
         	return this;
     }
+    
+    
+    /**
+     * Returns the goal type set for the linear programming problem.
+     * <p>
+     * This method checks the value of the {@code target} field to determine 
+     * whether the goal is maximization or minimization. 
+     * It returns {@link GoalType#MAX} if the target is set to {@code TARGET_FO.MAX}, 
+     * otherwise it returns {@link GoalType#MIN}.
+     * </p>
+     *
+     * @return the goal type, {@link GoalType#MAX} or {@link GoalType#MIN}.
+     */
+    
+    public GoalType getGoalType() {
+    	if(target==TARGET_FO.MAX) return GoalType.MAX; 
+    	else return GoalType.MIN; 
+    }
+	
 }
 

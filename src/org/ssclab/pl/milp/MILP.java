@@ -35,7 +35,7 @@ import org.ssclab.pl.milp.FormatTypeInput.FormatType;
  * @author Stefano Scarioli
  * @version 4.2
  * @see <a target="_new" href="http://www.ssclab.org">SSC Software www.sscLab.org</a> 
- */
+ */ 
 
 public final class MILP  {
 	
@@ -751,6 +751,25 @@ public final class MILP  {
         // Logica per risolvere il problema
         	this.resolve();
         	return this;
+    }
+    
+    
+    /**
+     * Returns the goal type set for the linear programming problem.
+     * <p>
+     * This method checks the value of the {@code target} field to determine 
+     * whether the goal is maximization or minimization. 
+     * It returns {@link GoalType#MAX} if the target is set to {@code TARGET_FO.MAX}, 
+     * otherwise it returns {@link GoalType#MIN}.
+     * </p>
+     *
+     * @return the goal type, {@link GoalType#MAX} or {@link GoalType#MIN}.
+     */
+    
+    
+    public GoalType getGoalType() {
+    	if(father_pl_original_zero.getTarget_fo()==TARGET_FO.MAX) return GoalType.MAX; 
+    	else return GoalType.MIN; 
     }
 	
 }
