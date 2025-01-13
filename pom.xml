@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.ssclab</groupId>
 	<artifactId>SSC-LP</artifactId> 
-	<version>4.7.4</version>
+	<version>4.7.5</version>
 	<name>SSC LP Solver</name>
 	<description>Library for linear programming</description>
 	<url>https://www.ssclab.org/</url>
@@ -144,7 +144,7 @@
 				</executions>
 			</plugin>
 
-<!--
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-gpg-plugin</artifactId>
@@ -158,7 +158,7 @@
 						</goals>
 						<configuration>
 							<gpgArguments>
-								<arg>-ttt-pinentry-mode</arg>
+								<arg>--pinentry-mode</arg>
 								<arg>loopback</arg>
 							</gpgArguments>
 						
@@ -166,7 +166,7 @@
 					</execution>
 				</executions>
 			</plugin>
--->
+
 	
 
 			 <plugin>
@@ -188,7 +188,7 @@
                                 </excludes>
                             </filter>
                         </filters>
-                    </configuration>
+                    </configuration> 
                     </execution>
                 </executions>
             </plugin>
@@ -200,8 +200,8 @@
 				<version>4.8.6.6</version>
 			</plugin>
 			
--->
-		<!--
+
+	
 			<plugin>
 				<groupId>org.sonatype.central</groupId>
 				<artifactId>central-publishing-maven-plugin</artifactId>
@@ -214,8 +214,8 @@
 				</configuration>
 			</plugin>
 		
-
-		  --> 
+-->
+		
 	
 
 		</plugins>

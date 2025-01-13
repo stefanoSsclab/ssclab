@@ -1,5 +1,7 @@
 package org.ssclab.pl.milp;
 
+import static org.ssclab.pl.milp.util.CsvSplitter.splitterCsv;
+
 import java.io.BufferedReader;
 import java.io.StringReader;
 import java.nio.file.Files;
@@ -79,12 +81,15 @@ public final class MILP  {
 		LinearObjectiveFunction fo;
 		try {
 			br= new BufferedReader(new StringReader(pl_text));
+			br=splitterCsv(br);
 			String line_fo=new CheckSintaxText(br).getLineFO();
-		    br.close();br=null;
+		    br.close();
 		    br= new BufferedReader(new StringReader(pl_text));
+		    br=splitterCsv(br);
 			list_var=new ScanVarFromText(br).getListNomiVar();
-			br.close();br=null;
+			br.close();
 			br= new BufferedReader(new StringReader(pl_text));
+			br=splitterCsv(br);
 			//for(String namev:list_var) System.out.println("name_ord :"+namev);
 			ScanFoFromLine fo_from_string=new ScanFoFromLine(line_fo,list_var);
 			fo=fo_from_string.getFOFunction();
@@ -138,12 +143,15 @@ public final class MILP  {
 		LinearObjectiveFunction fo;
 		try {
 			br=Files.newBufferedReader(path);
+			br=splitterCsv(br);
 		    String line_fo=new CheckSintaxText(br).getLineFO();
-		    br.close();br=null;
+		    br.close();
 		    br=Files.newBufferedReader(path);
+		    br=splitterCsv(br);
 			list_var=new ScanVarFromText(br).getListNomiVar();
-			br.close();br=null;
+			br.close();
 			br=Files.newBufferedReader(path);
+			br=splitterCsv(br);
 			//for(String namev:list_var) System.out.println("name_ord :"+namev);
 			ScanFoFromLine fo_from_string=new ScanFoFromLine(line_fo,list_var);
 			fo=fo_from_string.getFOFunction();
@@ -187,14 +195,7 @@ public final class MILP  {
 		this.milp_initiale = new MilpManager(fo, constraints.getListConstraint(),this,null);
 		setAllEpsilon();
 	}
-	
-	
-	
-	
-	
-	
-	
-	
+		
 
 	/**
 	 * Constructor of a MILP object for solving problems expressed in coefficient format.
