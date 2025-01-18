@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.ssclab</groupId>
 	<artifactId>SSC-LP</artifactId> 
-	<version>4.7.5</version>
+	<version>4.7.6</version>
 	<name>SSC LP Solver</name>
 	<description>Library for linear programming</description>
 	<url>https://www.ssclab.org/</url>

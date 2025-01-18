@@ -22,7 +22,7 @@ public class CsvSplitter {
 		try (BufferedReader originalReader = new BufferedReader(new StringReader(pl_string))) {
 
 			// Converte lo StringWriter in un nuovo BufferedReader
-			try (BufferedReader resultReader = splitterCsv(originalReader)) {
+			try (BufferedReader resultReader = splitterBounds(originalReader)) {
 				String newLine;
 				while ((newLine = resultReader.readLine()) != null) {
 					System.out.println(newLine); // Stampa ogni nuova riga
@@ -34,7 +34,7 @@ public class CsvSplitter {
 		}
 	}
 
-	public static BufferedReader splitterCsv(BufferedReader originalReader) throws IOException,ParseException {
+	public static BufferedReader splitterBounds(BufferedReader originalReader) throws IOException,ParseException {
     	
 		StringWriter stringWriter = new StringWriter() ;
         String line;
@@ -54,12 +54,7 @@ public class CsvSplitter {
 		        		else if (token.matches("\\s*(((([+-]?)\\s*(\\d+\\.?\\d*|\\[(.+?)\\]))|(\\.))\\s*>\\s*=)?\\s*(\\p{Alpha}+\\w*)\\s*(>\\s*=\\s*((([+-]?)\\s*(\\d+\\.?\\d*|\\[(.+?)\\]))|(\\.)))?\\s*")) {
 		        			//non sono presenti tutti i controlli, altri controlli li fa quando lo elabora
 		        		}
-		            	/*
-		        		else if (token.matches("\\s*(\\p{Alpha}+\\w*)\\s*=\\s*(([+-]?)\\s*(\\d+\\.?\\d*|\\[(.+?)\\]))|(\\.)\\s*")) {
-		        			//non sono presenti tutti i controlli, altri controlli li fa quando lo elabora
-		        		}
-		            	*/
-		            	
+		            			            	
 		        		else {
 		        			throw new ParseException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg1")+" "+line+"");
 		        		}
@@ -75,4 +70,87 @@ public class CsvSplitter {
        return new BufferedReader(new StringReader(stringWriter.toString())); 
 	
     }
+	
+	
+	
+	
+	
+	
+	
+public static BufferedReader splitterBoundsAndDouble(BufferedReader originalReader) throws IOException,ParseException {
+    	
+		StringWriter stringWriter = new StringWriter() ;
+        String line;
+        String[] tokens;
+    	while ((line = originalReader.readLine()) != null) {
+    		if(line.matches("\\s*(\\p{Alpha}+\\w*\\s*:)?(.+)(<\\s*=)(\\s*([+-]?)\\s*(((\\d+)(\\.)?(\\d*))|(\\[(.+?)\\]))?((\\p{Alpha}+)(\\w*))\\s*){2,}(<\\s*=)(.+)") || 
+    		   line.matches("\\s*(\\p{Alpha}+\\w*\\s*:)?(.+)(>\\s*=)(\\s*([+-]?)\\s*(((\\d+)(\\.)?(\\d*))|(\\[(.+?)\\]))?((\\p{Alpha}+)(\\w*))\\s*){2,}(>\\s*=)(.+)")		         ) { 
+    			
+    			Pattern pattern_double =Pattern.compile("\\s*(\\p{Alpha}+\\w*\\s*:)?(.+)((<|>)\\s*=)(.+)((<|>)\\s*=)(.+)");
+    			Matcher matcher_double = pattern_double.matcher(line);
+    			if (matcher_double.matches()) { 
+    			//System.out.println("numero--:"+matcher_double.groupCount());
+    			
+    				String gruppo1=matcher_double.group(1); 
+    				if(gruppo1==null) gruppo1="";
+    				//System.out.println("numero1-:"+gruppo1);
+    				String gruppo2=matcher_double.group(2);
+    				//System.out.println("numero2-:"+gruppo2);
+    				String gruppo3=matcher_double.group(3);
+    				//System.out.println("numero3-:"+gruppo3);
+    				//String gruppo4=matcher_double.group(4);
+    				//System.out.println("numero4-:"+gruppo4);
+    				String gruppo5=matcher_double.group(5);
+    				//System.out.println("numero5-:"+gruppo5);
+    				String gruppo6=matcher_double.group(6); 
+    				//System.out.println("numero6-:"+gruppo6);
+    				
+    				//String gruppo7=matcher_double.group(7);
+    				//System.out.println("numero7-:"+gruppo7);
+    				String gruppo8=matcher_double.group(8); 
+    				//System.out.println("numero8-:"+gruppo8);
+    				
+    				String vincolo_1=gruppo1+gruppo2+gruppo3+gruppo5;
+    				String vincolo_2=gruppo1+gruppo5+gruppo6+gruppo8;
+    				//System.out.println("VINCOLO 1:"+vincolo_1);
+    				//System.out.println("VINCOLO 2:"+vincolo_2);
+    				 
+    				stringWriter.write(vincolo_1+System.lineSeparator());
+    				stringWriter.write(vincolo_2+System.lineSeparator());
+    			}
+    		}
+    		
+    		else if(line.matches("(.+)((<\\s*=)|(>\\s*=)|(=))(.+)")) { 
+    			// Suddivide la riga in token separati da virgole
+	            tokens = line.split(",");
+	            for (String token : tokens) {
+	                // Scrive ogni token come una nuova riga nello StringWriter
+	            	if(tokens.length > 1 ) {
+	            		//System.out.println("entrato"); // Stampa ogni nuova riga
+		            	if (token.matches("\\s*(((([+-]?)\\s*(\\d+\\.?\\d*|\\[(.+?)\\]))|(\\.))\\s*<\\s*=)?\\s*(\\p{Alpha}+\\w*)\\s*(<\\s*=\\s*((([+-]?)\\s*(\\d+\\.?\\d*|\\[(.+?)\\]))|(\\.)))?\\s*")) {
+		        			//non sono presenti tutti i controlli, altri controlli li fa quando lo elabora
+		        		}
+		        		//pattern per identificare uppur o lower del tipo  "nome_upper: a>= x >= b"  , anche con a o b mancanti 
+		        		else if (token.matches("\\s*(((([+-]?)\\s*(\\d+\\.?\\d*|\\[(.+?)\\]))|(\\.))\\s*>\\s*=)?\\s*(\\p{Alpha}+\\w*)\\s*(>\\s*=\\s*((([+-]?)\\s*(\\d+\\.?\\d*|\\[(.+?)\\]))|(\\.)))?\\s*")) {
+		        			//non sono presenti tutti i controlli, altri controlli li fa quando lo elabora
+		        		}
+		            			            	
+		        		else {
+		        			throw new ParseException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg1")+" "+line+"");
+		        		}
+	            	}	
+	                stringWriter.write(token+System.lineSeparator());
+	            }
+    		}
+    		else  stringWriter.write(line+System.lineSeparator());
+        }
+
+       originalReader.close();
+       //Converte lo StringWriter in un nuovo BufferedReader
+       return new BufferedReader(new StringReader(stringWriter.toString())); 
+	
+    }
+	
+	
+	
 }

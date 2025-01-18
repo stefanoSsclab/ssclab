@@ -62,6 +62,21 @@ public class CheckSintaxText {
 		else if (line.matches("\\s*(\\p{Alpha}+\\w*\\s*:)?\\s*(((([+-]?)\\s*(\\d+\\.?\\d*|\\[(.+?)\\]))|(\\.))\\s*>\\s*=)?\\s*(\\p{Alpha}+\\w*)\\s*(>\\s*=\\s*((([+-]?)\\s*(\\d+\\.?\\d*|\\[(.+?)\\]))|(\\.)))?\\s*")) {
 			//non sono presenti tutti i controlli, altri controlli li fa quando lo elabora
 		}
+		
+		// per identificare vincoli completi ma con doppio limite u <= x1 + x2 <= l
+		else if (line.matches("\\s*(\\p{Alpha}+\\w*\\s*:)?(.+)(<\\s*=)(\\s*([+-]?)\\s*(((\\d+)(\\.)?(\\d*))|(\\[(.+?)\\]))?((\\p{Alpha}+)(\\w*))\\s*){2,}(<\\s*=)(.+)")) {
+			//non sono presenti tutti i controlli, altri controlli li fa quando lo elabora
+			//System.out.println("entra qua:"+line);
+			checkSintassiConstraintDouble(line,'<');
+		}
+		
+		// per identificare vincoli completi ma con doppio limite u >= x1 + x2 >= l
+		else if (line.matches("\\s*(\\p{Alpha}+\\w*\\s*:)?(.+)(>\\s*=)(\\s*([+-]?)\\s*(((\\d+)(\\.)?(\\d*))|(\\[(.+?)\\]))?((\\p{Alpha}+)(\\w*))\\s*){2,}(>\\s*=)(.+)")) {
+			//non sono presenti tutti i controlli, altri controlli li fa quando lo elabora
+			//System.out.println("entra qua2:"+line);
+			checkSintassiConstraintDouble(line,'>');
+		}
+		
 		//per identificare vincoli completi
 		else if (line.matches("(.+)((<\\s*=)|(>\\s*=)|(=))(.+)")) {
 			checkSintassiConstraint(line);
@@ -75,7 +90,7 @@ public class CheckSintaxText {
 			checkSintassiSOS(line);
 		}
 		else { 
-			throw new ParseException(RB.getString("org.ssclab.pl.milp.scantext.CheckSintaxText.msg1")+" ["+line+"]");
+			throw new ParseException(RB.getString("org.ssclab.pl.milp.scantext.CheckSintaxText.msg1")+" "+line);
 		}
 	}
 	
@@ -98,7 +113,7 @@ public class CheckSintaxText {
 			end=matcher_group_var.end();
 		}	
 		else { 
-			throw new ParseException(RB.getString("org.ssclab.pl.milp.scantext.CheckSintaxText.msg4")+" ["+fo_string+"]");
+			throw new ParseException(RB.getString("org.ssclab.pl.milp.scantext.CheckSintaxText.msg4")+" "+fo_string);
 		}
 		String resto=fo_string.substring(end);
 		
@@ -110,16 +125,53 @@ public class CheckSintaxText {
 				resto=resto.substring(end);
 			}	
 			else { 
-				throw new ParseException(RB.getString("org.ssclab.pl.milp.scantext.CheckSintaxText.msg5")+" ["+resto+"]");
+				throw new ParseException(RB.getString("org.ssclab.pl.milp.scantext.CheckSintaxText.msg5")+" "+resto);
 			}
 		}
 	}
 	
 	
-	private void checkSintassiConstraint(String line) throws  ParseException {
+	
+	private void  checkSintassiConstraintDouble(String line,char versus) throws  ParseException {
+		Pattern pattern_double =Pattern.compile("\\s*(\\p{Alpha}+\\w*\\s*:)?(.+)("+versus+"\\s*=)(.+)("+versus+"\\s*=)(.+)");
+		Matcher matcher_double = pattern_double.matcher(line);
+		if (matcher_double.matches()) { 
+		//System.out.println("numero:"+matcher_double.groupCount());
+		
+			String gruppo1=matcher_double.group(1); 
+			if(gruppo1==null) gruppo1="";
+			//System.out.println("numero1:"+gruppo1);
+			String gruppo2=matcher_double.group(2);
+			//System.out.println("numero2:"+gruppo2);
+			String gruppo3=matcher_double.group(3);
+			//System.out.println("numero3:"+gruppo3);
+			String gruppo4=matcher_double.group(4);
+			//System.out.println("numero4:"+gruppo4);
+			String gruppo5=matcher_double.group(5);
+			//System.out.println("numero5:"+gruppo5);
+			String gruppo6=matcher_double.group(6); 
+			//System.out.println("numero6:"+gruppo6);
+			
+			String vincolo_1=gruppo1+gruppo2+gruppo3+gruppo4;
+			String vincolo_2=gruppo1+gruppo4+gruppo5+gruppo6;
+			//System.out.println("VINCOLO 1:"+vincolo_1);
+			//System.out.println("VINCOLO 2:"+vincolo_2);
+			try {
+				checkSintassiConstraint(vincolo_1);
+				checkSintassiConstraint(vincolo_2);
+			}
+			catch(ParseException ee) {
+				throw new ParseException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg1")+" "+line+"");
+			}
+			
+		}
+	}
+	
+	
+	private void  checkSintassiConstraint(String line) throws  ParseException {
 		
 		if(line.contains("[]")) 
-			throw new ParseException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg1")+" ["+line+"]");
+			throw new ParseException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg1")+" "+line);
 		
 		Matcher matcher_group_var = pattern_cons1.matcher(line);
 		int end=0,end2=0;;

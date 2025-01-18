@@ -102,7 +102,7 @@ public class ScanConstraintFromLine {
 			scanDisequestionCompleta(inequality);
 		}
 		else {
-			throw new ParseException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg1")+" ["+inequality+"]");
+			throw new ParseException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg1")+" "+inequality);
 		}
 	}
 	
@@ -124,7 +124,7 @@ public class ScanConstraintFromLine {
 			String numero2=upper.group(14);
 			String punto2=upper.group(15); 
 			
-			if(numero1==null && punto1==null  && numero2==null && punto2==null) throw new LPException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg4")+"["+line+"]");
+			if(numero1==null && punto1==null  && numero2==null && punto2==null) throw new LPException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg4")+" "+line);
 
 			String nome_var=upper.group(8).toUpperCase();
 			int index=nomi_var.indexOf(nome_var);
@@ -152,7 +152,7 @@ public class ScanConstraintFromLine {
 					a1 = expression2.evaluate();
 				}
 				catch(Exception e) {
-					throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromLine.msg1")+" ["+numero1+"]");
+					throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromLine.msg1")+" "+numero1);
 				}
 				if(segno1.equals("-"))  a1=- a1;
 			}
@@ -165,7 +165,7 @@ public class ScanConstraintFromLine {
 					a2 = expression2.evaluate();
 				}
 				catch(Exception e) {
-					throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromLine.msg1")+" ["+numero2+"]");
+					throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromLine.msg1")+" "+numero2);
 				}
 				if(segno2.equals("-"))  a2=- a2;
 			}
@@ -214,7 +214,7 @@ public class ScanConstraintFromLine {
 			String line2=line.replaceAll("\\s*(?i)(int)\\s+", "").trim();
 			//System.out.println("@@@@@@@@@@@@::"+line);
 			String[] tokens = line2.split("\\s*,\\s*");
-			if(tokens.length==0) throw new LPException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg8")+"["+line+"]");
+			if(tokens.length==0) throw new LPException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg8")+" "+line);
 			for(String none_var:tokens) {  
 				//System.out.println("->"+none_var+"<-");
 				if(none_var.endsWith("*")) { 
@@ -255,7 +255,7 @@ public class ScanConstraintFromLine {
 			String line2=line.replaceAll("\\s*(?i)(bin)\\s+", "").trim();
 			//System.out.println("@@@@@@@@@@@@::"+line);
 			String[] tokens = line2.split("\\s*,\\s*");
-			if(tokens.length==0) throw new LPException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg10")+"["+line+"]");
+			if(tokens.length==0) throw new LPException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg10")+" "+line);
 			for(String none_var:tokens) {  
 				if(none_var.endsWith("*")) { 
 					String prefix=none_var.replace("*", "").toUpperCase();
@@ -294,7 +294,7 @@ public class ScanConstraintFromLine {
 			String line2=line.replaceAll("\\s*(?i)(sec)\\s+", "").trim();
 			//System.out.println("@@@@@@@@@@@@::"+line);
 			String[] tokens = line2.split("\\s*,\\s*");
-			if(tokens.length==0) throw new LPException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg9")+"["+line+"]");
+			if(tokens.length==0) throw new LPException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg9")+" "+line);
 			for(String none_var:tokens) {  
 				if(none_var.endsWith("*")) { 
 					String prefix=none_var.replace("*", "").toUpperCase();
@@ -407,7 +407,7 @@ public class ScanConstraintFromLine {
 				  	    aj = expression2.evaluate();
 					}
 					catch(Exception e) {
-						throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromLine.msg1")+" ["+number_var+"]");
+						throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromLine.msg1")+" "+number_var);
 					}
 					if(segno_var.equals("-"))  aj=- aj;
 					
@@ -451,7 +451,7 @@ public class ScanConstraintFromLine {
 						bi = expression2.evaluate();
 					}
 					catch(Exception e) {
-						throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromLine.msg1")+" ["+number_var+"]");
+						throw new LPException(RB.format("it.ssc.pl.milp.ScanConstraintFromLine.msg1")+" "+number_var);
 						
 					}
 					if(segno_var.equals("-"))  bi=- bi;
@@ -463,7 +463,7 @@ public class ScanConstraintFromLine {
 				
 				else { 
 					//System.out.println("reess:"+resto);
-					throw new ParseException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg1")+" ["+line+"]");
+					throw new ParseException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg1")+" "+line);
 				}
 			}
 		}	
@@ -489,7 +489,7 @@ public class ScanConstraintFromLine {
 			
 			String line2=line.replaceAll("\\s*(?i)(sos[12]\\s*:\\s*bin(\\s*:\\s*force)?)\\s+","").trim();
 			String[] tokens = line2.split("\\s*,\\s*");
-			if(tokens.length==0) throw new LPException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg13")+"["+line+"]");
+			if(tokens.length==0) throw new LPException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg13")+" "+line);
 			for(String none_var:tokens) {  
 				if(none_var.endsWith("*") && (typeSos==TYPE_SOS_GROUP.SOS1_BIN_FORCE || typeSos==TYPE_SOS_GROUP.SOS1_BIN)) { 
 					String prefix=none_var.replace("*", "").toUpperCase();
@@ -543,7 +543,7 @@ public class ScanConstraintFromLine {
 						
 			String line2=line.replaceAll("\\s*(?i)(sos[12]\\s*:\\s*int)\\s+", "").trim();
 			String[] tokens = line2.split("\\s*,\\s*");
-			if(tokens.length==0) throw new LPException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg13")+"["+line+"]");
+			if(tokens.length==0) throw new LPException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg13")+" "+line);
 			for(String none_var:tokens) {  
 				if(none_var.endsWith("*") && typeSos==TYPE_SOS_GROUP.SOS1_INT) { 
 					String prefix=none_var.replace("*", "").toUpperCase();
@@ -594,7 +594,7 @@ public class ScanConstraintFromLine {
 			
 			String line2=line.replaceAll("\\s*(?i)(sos[12])\\s+", "").trim();
 			String[] tokens = line2.split("\\s*,\\s*");
-			if(tokens.length==0) throw new LPException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg13")+"["+line+"]");
+			if(tokens.length==0) throw new LPException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg13")+" "+line);
 			for(String none_var:tokens) {  
 				if(none_var.endsWith("*") && typeSos==TYPE_SOS_GROUP.SOS1) { 
 					String prefix=none_var.replace("*", "").toUpperCase();

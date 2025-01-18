@@ -34,7 +34,7 @@ import org.ssclab.pl.milp.simplex.SimplexInterface;
 import org.ssclab.pl.milp.simplex.SimplexException;
 import org.ssclab.pl.milp.FormatTypeInput.FormatType;
 import org.ssclab.pl.milp.ObjectiveFunction.TARGET_FO;
-import static org.ssclab.pl.milp.util.CsvSplitter.splitterCsv;
+import static org.ssclab.pl.milp.util.CsvSplitter.*;
 
 
 /**
@@ -101,15 +101,15 @@ public final class LP /*implements FormatTypeInput*/ {
 			//System.out.println("Da file");
 			//File file =new File(path);
 			br= new BufferedReader(new StringReader(pl_text));
-			br=splitterCsv(br);
+			br=splitterBounds(br);
 			String line_fo=new CheckSintaxText(br).getLineFO();
 			br.close();
 			br= new BufferedReader(new StringReader(pl_text));
-			br=splitterCsv(br);
+			br=splitterBoundsAndDouble(br);
 			list_var=new ScanVarFromText(br).getListNomiVar();
 			br.close();
 			br= new BufferedReader(new StringReader(pl_text));
-			br=splitterCsv(br);
+			br=splitterBoundsAndDouble(br);
 			//for(String namev:list_var) System.out.println("name_ord :"+namev);
 			ScanFoFromLine fo_from_string=new ScanFoFromLine(line_fo,list_var);
 			fo=fo_from_string.getFOFunction();
@@ -232,15 +232,15 @@ public final class LP /*implements FormatTypeInput*/ {
 			//System.out.println("Da file");
 			//File file =new File(path);
 			br=Files.newBufferedReader(path);
-			br=splitterCsv(br);
+			br=splitterBounds(br);
 			String line_fo=new CheckSintaxText(br).getLineFO();
 			br.close(); 
 			br=Files.newBufferedReader(path);
-			br=splitterCsv(br);
+			br=splitterBoundsAndDouble(br);
 			list_var=new ScanVarFromText(br).getListNomiVar();
 			br.close();
 			br=Files.newBufferedReader(path);
-			br=splitterCsv(br);
+			br=splitterBoundsAndDouble(br);
 			//for(String namev:list_var) System.out.println("name_ord :"+namev);
 			ScanFoFromLine fo_from_string=new ScanFoFromLine(line_fo,list_var);
 			fo=fo_from_string.getFOFunction();
