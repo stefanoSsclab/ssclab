@@ -394,7 +394,6 @@ public class ScanConstraintFromLine {
 					resto=resto.substring(end);
 				}	
 				
-				
 				else if (matcher4.lookingAt()) {
 					
 					String segno_var=matcher4.group(2); 

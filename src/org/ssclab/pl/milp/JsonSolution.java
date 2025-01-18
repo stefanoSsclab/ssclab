@@ -3,6 +3,7 @@ package org.ssclab.pl.milp;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
@@ -71,8 +72,11 @@ public class JsonSolution {
 
 		if(target==TARGET_FO.MAX) target_fo="max";
 		this.typeSolution=typeSolution;
-		ZonedDateTime now = ZonedDateTime.now();
-	    String executionTimestamp =  now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+		/*ZonedDateTime now = ZonedDateTime.now();
+	    String executionTimestamp =  now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));*/
+		ZonedDateTime nowUTC = ZonedDateTime.now(ZoneOffset.UTC);
+		String executionTimestamp = nowUTC.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss 'UTC'")); 
+		 
 		JsonObjectBuilder metaJsonBuilder= Json.createObjectBuilder()
 				                           .add("executionTimestamp", executionTimestamp);
 		String title=(String)meta.getProperty("title");
