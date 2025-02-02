@@ -5,15 +5,11 @@ import static jakarta.json.stream.JsonParser.Event.*;
 
 import java.io.BufferedReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
-
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonValue;
 import jakarta.json.stream.JsonParser;
-
 import org.ssclab.i18n.RB;
 import org.ssclab.pl.milp.GoalType;
 import org.ssclab.pl.milp.LPException;
@@ -195,7 +191,7 @@ public class ScanSintaxJson {
 			int index=listNomiVar.indexOf(varNameFo.toUpperCase());
 			double cj=coeff.getJsonNumber(varNameFo).doubleValue();
 			//System.out.println("->"+cj);
-			if(index==-1) throw new ParseException(RB.getString("org.ssclab.pl.milp.scantext.ScanFoFromLine.msg1")+" ["+varNameFo+"]");
+			if(index==-1) throw new ParseException(RB.getString("org.ssclab.pl.milp.scantext.ScanFoFromLine.msg1")+" "+varNameFo);
 			list_cj[index]=cj;	
 		}
 	}

@@ -251,6 +251,7 @@ final class Phase1 extends Phase {
 
  private final class Pulish {
 	   
+	   /*
 	   double[][] deleteRowAux_old(double[][] table_pulish) {
 			int index_aux_out = -1;
 			while (((index_aux_out = existAuxBaseCorr(index_aux_out+1)) != -1) && ifAllCoeffZeroAuxCaz(index_aux_out)) {
@@ -260,6 +261,7 @@ final class Phase1 extends Phase {
 			}
 		    return table_pulish;
 	   }
+	   */
 	   
 	   double[][] deleteRowAux(double[][] table_pulish) {
 			int index_aux_out = -1;
@@ -284,7 +286,7 @@ final class Phase1 extends Phase {
 			basis=new_basis;
 		    return new_table;
 	   }
-	   
+	   /*
 	   void updateBase(int row_canc ) {
 		   int new_basis[]=new int[basis.length-1];
 		   int index_row = 0;
@@ -294,7 +296,7 @@ final class Phase1 extends Phase {
 			   index_row++;
 		   }
 		   basis=new_basis;
-	   }
+	   }*/
 	    
 	    private boolean ifAllCoeffZeroAuxCaz(int index) {
 	 	   for (int j = 0; j < n ; j++) {
@@ -415,6 +417,7 @@ final class Phase1 extends Phase {
 	   
 	   //versione nuove da Testare. Fatta copia riga per riga.   ???????????????
 	   
+	   /* 
 	   double[][] deleteSingleRowAux(int row_canc ,double[][] table_pulish) {
 			int n_row = table_pulish.length;  
 			double[][] table=new double[n_row-1][] ;
@@ -426,7 +429,7 @@ final class Phase1 extends Phase {
 				index_row++;
 			}
 			return table;
-	   }
+	   }*/
  }  
 }
 

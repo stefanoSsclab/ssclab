@@ -45,6 +45,9 @@ public class CsvSplitter {
     	while ((line = originalReader.readLine()) != null) {
     		if(line.matches("(.+)((<\\s*=)|(>\\s*=)|(=))(.+)")) { 
     			// Suddivide la riga in token separati da virgole
+    			if (line.endsWith(",")) {
+    				 throw new ParseException(RB.getString("it.ssc.pl.milp.ScanConstraintFromString.msg1")+" "+line+"");
+    			}
 	            tokens = line.split(",");
 	            for (String token : tokens) {
 	                // Scrive ogni token come una nuova riga nello StringWriter

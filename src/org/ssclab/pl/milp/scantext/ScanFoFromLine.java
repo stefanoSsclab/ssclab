@@ -100,7 +100,7 @@ public class ScanFoFromLine {
 			//non verifico nulla, in quanto e' la prima variabile inserita 
 				
 			int index=list_var.indexOf(nome_prima_var);
-			if(index==-1) throw new ParseException(RB.getString("org.ssclab.pl.milp.scantext.ScanFoFromLine.msg1")+" ["+nome_prima_var+"]");
+			if(index==-1) throw new ParseException(RB.getString("org.ssclab.pl.milp.scantext.ScanFoFromLine.msg1")+" "+nome_prima_var);
 			list_cj[index]=cj+list_cj[index];
 						
 		}	
@@ -137,7 +137,7 @@ public class ScanFoFromLine {
 			//System.out.println("prima_nomevar_fo:"+nome_prima_var);
 			
 			int index=list_var.indexOf(nome_prima_var);
-			if(index==-1) throw new ParseException(RB.getString("org.ssclab.pl.milp.scantext.ScanFoFromLine.msg1")+" ["+nome_prima_var+"]");
+			if(index==-1) throw new ParseException(RB.getString("org.ssclab.pl.milp.scantext.ScanFoFromLine.msg1")+" "+nome_prima_var);
 			list_cj[index]=cj+list_cj[index];
 						
 		}	
@@ -188,7 +188,7 @@ public class ScanFoFromLine {
 			//if(list_nomi_var.contains(nome_var)) throw new LPException(RB.format("it.ssc.pl.milp.ScanLineFOFromString.msg2",nome_var));
 			
 			int index=list_var.indexOf(nome_var);
-			if(index==-1) throw new ParseException(RB.getString("org.ssclab.pl.milp.scantext.ScanFoFromLine.msg1")+" ["+nome_var+"]");
+			if(index==-1) throw new ParseException(RB.getString("org.ssclab.pl.milp.scantext.ScanFoFromLine.msg1")+" "+nome_var);
 			list_cj[index]=cj+list_cj[index];	
 		}	
 	}
