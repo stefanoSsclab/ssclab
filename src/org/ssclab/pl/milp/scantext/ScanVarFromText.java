@@ -19,9 +19,9 @@ public class ScanVarFromText {
 	Pattern pattern3 = Pattern.compile("([+-]\\s*(\\d+)(\\.?)(\\d*))\\s*",Pattern.CASE_INSENSITIVE);
 	
 	//pattern per un token del vincolo con presenza di variabile :" +[4*3]X1"
-	Pattern pattern4 = Pattern.compile("(([+-]?)\\s*\\[(.+?)\\](\\p{Alpha}+\\w*)\\s*)",Pattern.CASE_INSENSITIVE);
+	Pattern pattern4 = Pattern.compile("(([+-]?)\\s*\\[([^\\[\\]]+?)\\](\\p{Alpha}+\\w*)\\s*)",Pattern.CASE_INSENSITIVE);
 	//pattern per un token del vincolo con solo numero :" +[4-2]"
-	Pattern pattern5 = Pattern.compile("(([+-]?)\\s*\\[(.+?)\\])\\s*",Pattern.CASE_INSENSITIVE);
+	Pattern pattern5 = Pattern.compile("(([+-]?)\\s*\\[([^\\[\\]]+?)\\])\\s*",Pattern.CASE_INSENSITIVE);
 	
 	Pattern pattern_up = Pattern.compile("\\s*(((([+-]?)\\s*(\\d+\\.?\\d*))|(\\.))\\s*(>|<)\\s*=)?\\s*(\\p{Alpha}+\\w*)\\s*((>|<)\\s*=\\s*((([+-]?)\\s*(\\d+\\.?\\d*))|(\\.)))?\\s*",Pattern.CASE_INSENSITIVE);
 	

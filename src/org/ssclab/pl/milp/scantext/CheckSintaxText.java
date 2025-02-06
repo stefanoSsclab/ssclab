@@ -14,9 +14,9 @@ public class CheckSintaxText {
 	/*pattern per identificare la f.o , con il solo zero*/
 	Pattern pattern_fo_zero = Pattern.compile("\\s*(min|max)\\s*:\\s*([+-]?)\\s*((\\d+)(\\.)?(\\d*))\\s*",Pattern.CASE_INSENSITIVE);
 	/*pattern per identificare la f.o , la parte iniziale*/
-	Pattern pattern_fo1 = Pattern.compile("\\s*(min|max)\\s*:\\s*([+-]?)\\s*(((\\d+)(\\.)?(\\d*))|(\\[(.+?)\\]))?((\\p{Alpha}+)(\\w*))\\s*",Pattern.CASE_INSENSITIVE);
+	Pattern pattern_fo1 = Pattern.compile("\\s*(min|max)\\s*:\\s*([+-]?)\\s*(((\\d+)(\\.)?(\\d*))|(\\[([^\\[\\]]+?)\\]))?((\\p{Alpha}+)(\\w*))\\s*",Pattern.CASE_INSENSITIVE);
 	/*pattern per identificare i token successivi della funziona obiettivo*/
-	Pattern pattern_fo2 = Pattern.compile("[+-]\\s*((\\d+\\.?\\d*)|(\\[(.+?)\\]))?(\\p{Alpha}+\\w*)\\s*",Pattern.CASE_INSENSITIVE);
+	Pattern pattern_fo2 = Pattern.compile("[+-]\\s*((\\d+\\.?\\d*)|(\\[([^\\[\\]]+?)\\]))?(\\p{Alpha}+\\w*)\\s*",Pattern.CASE_INSENSITIVE);
 	//parte iniziale vincolo con nome, ovvero vincolo completo, non upper o lower
 	Pattern pattern_cons1 = Pattern.compile("\\s*(\\p{Alpha}+\\w*\\s*:\\s*)",Pattern.CASE_INSENSITIVE);
 	//parte per identificare token dei vincoli completi, con associata variabile
@@ -26,9 +26,9 @@ public class CheckSintaxText {
 	
 	
 	//parte per identificare token dei vincoli completi, con associata variabile con []
-	Pattern pattern_cons5 = Pattern.compile("(([+-]?)\\s*\\[(.+?)\\])(\\p{Alpha}+\\w*)\\s*",Pattern.CASE_INSENSITIVE);
+	Pattern pattern_cons5 = Pattern.compile("(([+-]?)\\s*\\[([^\\[\\]]+?)\\])(\\p{Alpha}+\\w*)\\s*",Pattern.CASE_INSENSITIVE);
 	//parte per identificare token dei vincoli completi, quelli costituiti da soli numeri con []
-	Pattern pattern_cons6 = Pattern.compile("(([+-]?)\\s*\\[(.+?)\\])\\s*",Pattern.CASE_INSENSITIVE);
+	Pattern pattern_cons6 = Pattern.compile("(([+-]?)\\s*\\[([^\\[\\]]+?)\\])\\s*",Pattern.CASE_INSENSITIVE);
 	
 	
 	String line_fo="";
@@ -55,34 +55,40 @@ public class CheckSintaxText {
 			this.exist_fo=true;
 		}
 		//pattern per identificare uppur o lower del tipo  "nome_upper: a<= x <= b"  , anche con a o b mancanti 
-		else if (line.matches("\\s*(\\p{Alpha}+\\w*\\s*:)?\\s*(((([+-]?)\\s*(\\d+\\.?\\d*|\\[(.+?)\\]))|(\\.))\\s*<\\s*=)?\\s*(\\p{Alpha}+\\w*)\\s*(<\\s*=\\s*((([+-]?)\\s*(\\d+\\.?\\d*|\\[(.+?)\\]))|(\\.)))?\\s*")) {
+		else if (line.matches("\\s*(\\p{Alpha}+\\w*\\s*:)?\\s*(((([+-]?)\\s*(\\d+\\.?\\d*|\\[([^\\[\\]]+?)\\]))|(\\.))\\s*<\\s*=)?\\s*(\\p{Alpha}+\\w*)\\s*(<\\s*=\\s*((([+-]?)\\s*(\\d+\\.?\\d*|\\[([^\\[\\]]+?)\\]))|(\\.)))?\\s*")) {
 			//non sono presenti tutti i controlli, altri controlli li fa quando lo elabora
+			//System.out.println("AAAAAAAAAA:"+line);
 		}
 		//pattern per identificare uppur o lower del tipo  "nome_upper: a>= x >= b"  , anche con a o b mancanti 
-		else if (line.matches("\\s*(\\p{Alpha}+\\w*\\s*:)?\\s*(((([+-]?)\\s*(\\d+\\.?\\d*|\\[(.+?)\\]))|(\\.))\\s*>\\s*=)?\\s*(\\p{Alpha}+\\w*)\\s*(>\\s*=\\s*((([+-]?)\\s*(\\d+\\.?\\d*|\\[(.+?)\\]))|(\\.)))?\\s*")) {
+		else if (line.matches("\\s*(\\p{Alpha}+\\w*\\s*:)?\\s*(((([+-]?)\\s*(\\d+\\.?\\d*|\\[([^\\[\\]]+?)\\]))|(\\.))\\s*>\\s*=)?\\s*(\\p{Alpha}+\\w*)\\s*(>\\s*=\\s*((([+-]?)\\s*(\\d+\\.?\\d*|\\[([^\\[\\]]+?)\\]))|(\\.)))?\\s*")) {
 			//non sono presenti tutti i controlli, altri controlli li fa quando lo elabora
+			//System.out.println("BBBBBBBBBB:"+line);
 		}
 		
 		// per identificare vincoli completi ma con doppio limite u <= x1 + x2 <= l
-		else if (line.matches("\\s*(\\p{Alpha}+\\w*\\s*:)?(.+)(<\\s*=)(\\s*([+-]?)\\s*(((\\d+)(\\.)?(\\d*))|(\\[(.+?)\\]))?((\\p{Alpha}+)(\\w*))\\s*){2,}(<\\s*=)(.+)")) {
+		else if (line.matches("\\s*(\\p{Alpha}+\\w*\\s*:)?(.+)(<\\s*=)(\\s*([+-]?)\\s*(((\\d+)(\\.)?(\\d*))|(\\[([^\\[\\]]+?)\\]))?((\\p{Alpha}+)(\\w*))\\s*){2,}(<\\s*=)(.+)")) {
 			//non sono presenti tutti i controlli, altri controlli li fa quando lo elabora
 			//System.out.println("entra qua:"+line);
+			//System.out.println("CCCCCCCCCCCC:"+line);
 			checkSintassiConstraintDouble(line,'<');
 		}
 		
 		// per identificare vincoli completi ma con doppio limite u >= x1 + x2 >= l
-		else if (line.matches("\\s*(\\p{Alpha}+\\w*\\s*:)?(.+)(>\\s*=)(\\s*([+-]?)\\s*(((\\d+)(\\.)?(\\d*))|(\\[(.+?)\\]))?((\\p{Alpha}+)(\\w*))\\s*){2,}(>\\s*=)(.+)")) {
+		else if (line.matches("\\s*(\\p{Alpha}+\\w*\\s*:)?(.+)(>\\s*=)(\\s*([+-]?)\\s*(((\\d+)(\\.)?(\\d*))|(\\[([^\\[\\]]+?)\\]))?((\\p{Alpha}+)(\\w*))\\s*){2,}(>\\s*=)(.+)")) {
 			//non sono presenti tutti i controlli, altri controlli li fa quando lo elabora
 			//System.out.println("entra qua2:"+line);
+			//System.out.println("DDDDDDDDD:"+line);
 			checkSintassiConstraintDouble(line,'>');
 		}
 		
 		//per identificare vincoli completi
 		else if (line.matches("(.+)((<\\s*=)|(>\\s*=)|(=))(.+)")) {
+			//System.out.println("EEEEEEEEEE:"+line);
 			checkSintassiConstraint(line);
 		}
 		//per identificare variabili int,bin,sec
 		else if (line.matches("\\s*(?i)((bin)|(sec)|(int))\\s+((\\p{Alpha}+)(\\w*))\\s*(.*)")) {
+			//System.out.println("FFFFFFFFFFFF:"+line);
 			checkSintassiInt(line);
 		}
 		//per identiicare SOS
@@ -107,9 +113,11 @@ public class CheckSintaxText {
 		int end=0;
 		//MAX o MIN
 		if(matcher_fo_zero.matches()) {
+			//System.out.println("foooooo_zero:"+matcher_fo_zero.group());
 			end=matcher_fo_zero.end();
 		}
 		else if (matcher_group_var.lookingAt()) {
+			//System.out.println("foooooo4:"+matcher_group_var.group());
 			end=matcher_group_var.end();
 		}	
 		else { 
@@ -121,6 +129,7 @@ public class CheckSintaxText {
 			//Pattern pattern_fo2 = Pattern.compile("[+-]\\s*(\\d+\\.?\\d*)?(\\p{Alpha}+\\w*)\\s*",Pattern.CASE_INSENSITIVE);
 			Matcher matcher2 = pattern_fo2.matcher(resto);
 			if (matcher2.lookingAt()) {
+				//System.out.println("fooooooDDDDD:"+matcher2.group());
 				end=matcher2.end();
 				resto=resto.substring(end);
 			}	
@@ -204,6 +213,7 @@ public class CheckSintaxText {
 	
 		for(String meta:separation)	 {
 			String resto=meta;
+			//System.out.println("RRRRRRRRRR:"+resto);
 			while(!resto.equals(""))  {
 				Matcher matcher2 = pattern_cons3.matcher(resto);
 				Matcher matcher3 = pattern_cons4.matcher(resto);
@@ -211,18 +221,22 @@ public class CheckSintaxText {
 				Matcher matcher5 = pattern_cons6.matcher(resto);
 				//System.out.println("resto:"+resto);
 				if (matcher2.lookingAt()) {
+					//System.out.println("RRRRRRRRRR2:"+matcher2.group());
 					end2=matcher2.end();
 					resto=resto.substring(end2);
 				}	
 				else if (matcher3.lookingAt()) {
+					//System.out.println("RRRRRRRRRR3:"+matcher3.group());
 					end2=matcher3.end();
 					resto=resto.substring(end2);
 				}	
 				else if (matcher4.lookingAt()) {
+					//System.out.println("RRRRRRRRRR4:"+matcher4.group());
 					end2=matcher4.end();
 					resto=resto.substring(end2);
 				}	
 				else if (matcher5.lookingAt()) {
+					//System.out.println("RRRRRRRRRR5:"+matcher5.group());
 					end2=matcher5.end();
 					resto=resto.substring(end2);
 				}	

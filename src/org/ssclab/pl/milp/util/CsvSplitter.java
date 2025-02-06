@@ -37,8 +37,8 @@ public class CsvSplitter {
 	public static BufferedReader splitterBounds(BufferedReader originalReader) throws IOException,ParseException {
     	
 		StringWriter stringWriter = new StringWriter() ;
-		Pattern pattern_min =Pattern.compile("\\s*(((([+-]?)\\s*(\\d+\\.?\\d*|\\[(.+?)\\]))|(\\.))\\s*<\\s*=)?\\s*(\\p{Alpha}+\\w*)\\s*(<\\s*=\\s*((([+-]?)\\s*(\\d+\\.?\\d*|\\[(.+?)\\]))|(\\.)))?\\s*");
-		Pattern pattern_max =Pattern.compile("\\s*(((([+-]?)\\s*(\\d+\\.?\\d*|\\[(.+?)\\]))|(\\.))\\s*>\\s*=)?\\s*(\\p{Alpha}+\\w*)\\s*(>\\s*=\\s*((([+-]?)\\s*(\\d+\\.?\\d*|\\[(.+?)\\]))|(\\.)))?\\s*");
+		Pattern pattern_min =Pattern.compile("\\s*(((([+-]?)\\s*(\\d+\\.?\\d*|\\[([^\\[\\]]+?)\\]))|(\\.))\\s*<\\s*=)?\\s*(\\p{Alpha}+\\w*)\\s*(<\\s*=\\s*((([+-]?)\\s*(\\d+\\.?\\d*|\\[([^\\[\\]]+?)\\]))|(\\.)))?\\s*");
+		Pattern pattern_max =Pattern.compile("\\s*(((([+-]?)\\s*(\\d+\\.?\\d*|\\[([^\\[\\]]+?)\\]))|(\\.))\\s*>\\s*=)?\\s*(\\p{Alpha}+\\w*)\\s*(>\\s*=\\s*((([+-]?)\\s*(\\d+\\.?\\d*|\\[([^\\[\\]]+?)\\]))|(\\.)))?\\s*");
 		Matcher matcher_min,matcher_max;
 		String line;
         String[] tokens;
@@ -99,8 +99,8 @@ public class CsvSplitter {
         String[] tokens;
         Matcher matcher_double;
     	while ((line = originalReader.readLine()) != null) {
-    		if(line.matches("\\s*(\\p{Alpha}+\\w*\\s*:)?(.+)(<\\s*=)(\\s*([+-]?)\\s*(((\\d+)(\\.)?(\\d*))|(\\[(.+?)\\]))?((\\p{Alpha}+)(\\w*))\\s*){2,}(<\\s*=)(.+)") || 
-    		   line.matches("\\s*(\\p{Alpha}+\\w*\\s*:)?(.+)(>\\s*=)(\\s*([+-]?)\\s*(((\\d+)(\\.)?(\\d*))|(\\[(.+?)\\]))?((\\p{Alpha}+)(\\w*))\\s*){2,}(>\\s*=)(.+)")		         ) { 
+    		if(line.matches("\\s*(\\p{Alpha}+\\w*\\s*:)?(.+)(<\\s*=)(\\s*([+-]?)\\s*(((\\d+)(\\.)?(\\d*))|(\\[([^\\[\\]]+?)\\]))?((\\p{Alpha}+)(\\w*))\\s*){2,}(<\\s*=)(.+)") || 
+    		   line.matches("\\s*(\\p{Alpha}+\\w*\\s*:)?(.+)(>\\s*=)(\\s*([+-]?)\\s*(((\\d+)(\\.)?(\\d*))|(\\[([^\\[\\]]+?)\\]))?((\\p{Alpha}+)(\\w*))\\s*){2,}(>\\s*=)(.+)")		         ) { 
     			
     			matcher_double = pattern_double.matcher(line);
     			if (matcher_double.matches()) { 

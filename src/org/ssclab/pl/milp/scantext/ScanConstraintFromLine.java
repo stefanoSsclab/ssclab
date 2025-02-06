@@ -26,16 +26,16 @@ public class ScanConstraintFromLine {
 	private double Ai[];
 	private ArrayProblem arraysProb;
 	//nei pattern il |(\\.) , serve ad indicare il missing
-	Pattern pattern_gen1 = Pattern.compile("\\s*(\\p{Alpha}+\\w*\\s*:)?\\s*(((([+-]?)\\s*(\\d+\\.?\\d*|\\[(.+?)\\]))|(\\.))\\s*<\\s*=)?\\s*(\\p{Alpha}+\\w*)\\s*(<\\s*=\\s*((([+-]?)\\s*(\\d+\\.?\\d*|\\[(.+?)\\]))|(\\.)))?\\s*",Pattern.CASE_INSENSITIVE);
-	Pattern pattern_gen2 = Pattern.compile("\\s*(\\p{Alpha}+\\w*\\s*:)?\\s*(((([+-]?)\\s*(\\d+\\.?\\d*|\\[(.+?)\\]))|(\\.))\\s*>\\s*=)?\\s*(\\p{Alpha}+\\w*)\\s*(>\\s*=\\s*((([+-]?)\\s*(\\d+\\.?\\d*|\\[(.+?)\\]))|(\\.)))?\\s*",Pattern.CASE_INSENSITIVE);
+	Pattern pattern_gen1 = Pattern.compile("\\s*(\\p{Alpha}+\\w*\\s*:)?\\s*(((([+-]?)\\s*(\\d+\\.?\\d*|\\[([^\\[\\]]+?)\\]))|(\\.))\\s*<\\s*=)?\\s*(\\p{Alpha}+\\w*)\\s*(<\\s*=\\s*((([+-]?)\\s*(\\d+\\.?\\d*|\\[([^\\[\\]]+?)\\]))|(\\.)))?\\s*",Pattern.CASE_INSENSITIVE);
+	Pattern pattern_gen2 = Pattern.compile("\\s*(\\p{Alpha}+\\w*\\s*:)?\\s*(((([+-]?)\\s*(\\d+\\.?\\d*|\\[([^\\[\\]]+?)\\]))|(\\.))\\s*>\\s*=)?\\s*(\\p{Alpha}+\\w*)\\s*(>\\s*=\\s*((([+-]?)\\s*(\\d+\\.?\\d*|\\[([^\\[\\]]+?)\\]))|(\\.)))?\\s*",Pattern.CASE_INSENSITIVE);
 	Pattern pattern_gen3 = Pattern.compile("\\s*((bin)|(sec)|(int))\\s+((\\p{Alpha}+)(\\w*))\\s*",Pattern.CASE_INSENSITIVE);
 	Pattern pattern_gen4 = Pattern.compile("\\s*((sos[12])|(sos[12]\\s*:\\s*bin(\\s*:\\s*force)?)|(sos[12]\\s*:\\s*int))\\s+((\\p{Alpha}+)(\\w*))\\s*",Pattern.CASE_INSENSITIVE);
-	Pattern pattern_upper1= Pattern.compile("\\s*(((([+-]?)\\s*(\\d+\\.?\\d*|\\[.+?\\]))|(\\.))\\s*(>|<)\\s*=)?\\s*(\\p{Alpha}+\\w*)\\s*((>|<)\\s*=\\s*((([+-]?)\\s*(\\d+\\.?\\d*|\\[.+?\\]))|(\\.)))?\\s*",Pattern.CASE_INSENSITIVE);
+	Pattern pattern_upper1= Pattern.compile("\\s*(((([+-]?)\\s*(\\d+\\.?\\d*|\\[[^\\[\\]]+?\\]))|(\\.))\\s*(>|<)\\s*=)?\\s*(\\p{Alpha}+\\w*)\\s*((>|<)\\s*=\\s*((([+-]?)\\s*(\\d+\\.?\\d*|\\[[^\\[\\]]+?\\]))|(\\.)))?\\s*",Pattern.CASE_INSENSITIVE);
 	Pattern pattern_cons1 = Pattern.compile("(([+-])\\s*(\\d+\\.?\\d*)?(\\p{Alpha}+\\w*)\\s*)",Pattern.CASE_INSENSITIVE);
 	Pattern pattern_cons2 = Pattern.compile("([+-]\\s*(\\d+)(\\.?)(\\d*))\\s*",Pattern.CASE_INSENSITIVE);
 
-	Pattern pattern_cons3 = Pattern.compile("(([+-]?)\\s*\\[(.+?)\\](\\p{Alpha}+\\w*)\\s*)",Pattern.CASE_INSENSITIVE);
-	Pattern pattern_cons4 = Pattern.compile("([+-]?)\\s*\\[(.+?)\\]\\s*",Pattern.CASE_INSENSITIVE);
+	Pattern pattern_cons3 = Pattern.compile("(([+-]?)\\s*\\[([^\\[\\]]+?)\\](\\p{Alpha}+\\w*)\\s*)",Pattern.CASE_INSENSITIVE);
+	Pattern pattern_cons4 = Pattern.compile("([+-]?)\\s*\\[([^\\[\\]]+?)\\]\\s*",Pattern.CASE_INSENSITIVE);
 
 	
 	public ScanConstraintFromLine(ArrayList<String> inequality,ArrayList<String> nomi_var) throws  ParseException, LPException {

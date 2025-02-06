@@ -106,7 +106,7 @@ public class ScanFoFromLine {
 		}	
 		
 	
-		Pattern pattern_eva = Pattern.compile("\\s*(min|max)\\s*:\\s*(([+-]?)\\s*(\\[(.+?)\\])(\\p{Alpha}+\\w*))\\s*",Pattern.CASE_INSENSITIVE);
+		Pattern pattern_eva = Pattern.compile("\\s*(min|max)\\s*:\\s*(([+-]?)\\s*(\\[([^\\[\\]]+?)\\])(\\p{Alpha}+\\w*))\\s*",Pattern.CASE_INSENSITIVE);
 		Matcher matcher_eva = pattern_eva.matcher(fo_string);
 
 		//MAX o MIN
@@ -148,7 +148,7 @@ public class ScanFoFromLine {
 
 		Pattern pattern2 =     Pattern.compile("(([+-])\\s*(\\d+\\.?\\d*)?(\\p{Alpha}+\\w*)\\s*)",Pattern.CASE_INSENSITIVE);
 		Matcher matcher2 = pattern2.matcher(resto);
-		Pattern pattern2_eva = Pattern.compile("(([+-])\\s*\\[(.+?)\\](\\p{Alpha}+\\w*)\\s*)",Pattern.CASE_INSENSITIVE);
+		Pattern pattern2_eva = Pattern.compile("(([+-])\\s*\\[([^\\[\\]]+?)\\](\\p{Alpha}+\\w*)\\s*)",Pattern.CASE_INSENSITIVE);
 		Matcher matcher2_eva = pattern2_eva.matcher(resto);
 		boolean a;
 		double cj=0;
