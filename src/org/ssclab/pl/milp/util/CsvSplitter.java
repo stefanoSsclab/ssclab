@@ -14,11 +14,12 @@ public class CsvSplitter {
 	                "      5Y +2x2       +3X4      >= 9 \n"+
 	                "      3Y + X2   + Z      +5X5  = 12 \n"+
 	                "      6Y +3.0x2 +4Z +5X4      <= 124\n"+
-	                "       Y +3x2       +3X4 +6X5 <= 854\n"+
+	                "     0<=  Y +3x2       +3X4 +6X5 <= 854\n"+
 	                "-1<=  x2 <= 6, Y >=0 ,  N >=0\n"+
 	                ". <=  z  <= . , x4 >=5 \n"+
 	                "int x2,x3,x4";
 
+		 
 		try (BufferedReader originalReader = new BufferedReader(new StringReader(pl_string))) {
 
 			// Converte lo StringWriter in un nuovo BufferedReader
@@ -28,10 +29,11 @@ public class CsvSplitter {
 					System.out.println(newLine); // Stampa ogni nuova riga
 				}
 			}
-
-		} catch (IOException e) {
+		}	
+		catch (IOException e) {
 			e.printStackTrace();
 		}
+		
 	}
 
 	public static BufferedReader splitterBounds(BufferedReader originalReader) throws IOException,ParseException {
@@ -99,8 +101,8 @@ public class CsvSplitter {
         String[] tokens;
         Matcher matcher_double;
     	while ((line = originalReader.readLine()) != null) {
-    		if(line.matches("\\s*(\\p{Alpha}+\\w*\\s*:)?(.+)(<\\s*=)(\\s*([+-]?)\\s*(((\\d+)(\\.)?(\\d*))|(\\[([^\\[\\]]+?)\\]))?((\\p{Alpha}+)(\\w*))\\s*){2,}(<\\s*=)(.+)") || 
-    		   line.matches("\\s*(\\p{Alpha}+\\w*\\s*:)?(.+)(>\\s*=)(\\s*([+-]?)\\s*(((\\d+)(\\.)?(\\d*))|(\\[([^\\[\\]]+?)\\]))?((\\p{Alpha}+)(\\w*))\\s*){2,}(>\\s*=)(.+)")		         ) { 
+    		if(line.matches("\\s*(\\p{Alpha}+\\w*\\s*:)?(.+)(<\\s*=)(\\s*([+-]?)\\s*(((\\d+)(\\.)?(\\d*))|(\\[([^\\[\\]]+?)\\]))?\\s*((\\p{Alpha}+)(\\w*))\\s*){2,}(<\\s*=)(.+)") || 
+    		   line.matches("\\s*(\\p{Alpha}+\\w*\\s*:)?(.+)(>\\s*=)(\\s*([+-]?)\\s*(((\\d+)(\\.)?(\\d*))|(\\[([^\\[\\]]+?)\\]))?\\s*((\\p{Alpha}+)(\\w*))\\s*){2,}(>\\s*=)(.+)")		         ) { 
     			
     			matcher_double = pattern_double.matcher(line);
     			if (matcher_double.matches()) { 

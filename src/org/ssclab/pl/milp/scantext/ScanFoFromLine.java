@@ -82,7 +82,7 @@ public class ScanFoFromLine {
 			if(cj!=0) throw new ParseException(RB.getString("org.ssclab.pl.milp.scantext.ScanFoFromLine.msg2"));
 		}	
 		
-		Pattern pattern = Pattern.compile("\\s*(min|max)\\s*:\\s*(([+-]?)\\s*(\\d+\\.?\\d*)?(\\p{Alpha}+\\w*))\\s*",Pattern.CASE_INSENSITIVE);
+		Pattern pattern = Pattern.compile("\\s*(min|max)\\s*:\\s*(([+-]?)\\s*(\\d+\\.?\\d*)?\\s*(\\p{Alpha}+\\w*))\\s*",Pattern.CASE_INSENSITIVE);
 		Matcher matcher = pattern.matcher(fo_string);
 		//int end=0;
 		//MAX o MIN
@@ -106,7 +106,7 @@ public class ScanFoFromLine {
 		}	
 		
 	
-		Pattern pattern_eva = Pattern.compile("\\s*(min|max)\\s*:\\s*(([+-]?)\\s*(\\[([^\\[\\]]+?)\\])(\\p{Alpha}+\\w*))\\s*",Pattern.CASE_INSENSITIVE);
+		Pattern pattern_eva = Pattern.compile("\\s*(min|max)\\s*:\\s*(([+-]?)\\s*(\\[([^\\[\\]]+?)\\])\\s*(\\p{Alpha}+\\w*))\\s*",Pattern.CASE_INSENSITIVE);
 		Matcher matcher_eva = pattern_eva.matcher(fo_string);
 
 		//MAX o MIN
@@ -146,9 +146,9 @@ public class ScanFoFromLine {
 		//tolgo la parte gia elaborata
 		String resto=fo_string.substring(end);
 
-		Pattern pattern2 =     Pattern.compile("(([+-])\\s*(\\d+\\.?\\d*)?(\\p{Alpha}+\\w*)\\s*)",Pattern.CASE_INSENSITIVE);
+		Pattern pattern2 =     Pattern.compile("(([+-])\\s*(\\d+\\.?\\d*)?\\s*(\\p{Alpha}+\\w*)\\s*)",Pattern.CASE_INSENSITIVE);
 		Matcher matcher2 = pattern2.matcher(resto);
-		Pattern pattern2_eva = Pattern.compile("(([+-])\\s*\\[([^\\[\\]]+?)\\](\\p{Alpha}+\\w*)\\s*)",Pattern.CASE_INSENSITIVE);
+		Pattern pattern2_eva = Pattern.compile("(([+-])\\s*\\[([^\\[\\]]+?)\\]\\s*(\\p{Alpha}+\\w*)\\s*)",Pattern.CASE_INSENSITIVE);
 		Matcher matcher2_eva = pattern2_eva.matcher(resto);
 		boolean a;
 		double cj=0;

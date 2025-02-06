@@ -14,19 +14,19 @@ public class CheckSintaxText {
 	/*pattern per identificare la f.o , con il solo zero*/
 	Pattern pattern_fo_zero = Pattern.compile("\\s*(min|max)\\s*:\\s*([+-]?)\\s*((\\d+)(\\.)?(\\d*))\\s*",Pattern.CASE_INSENSITIVE);
 	/*pattern per identificare la f.o , la parte iniziale*/
-	Pattern pattern_fo1 = Pattern.compile("\\s*(min|max)\\s*:\\s*([+-]?)\\s*(((\\d+)(\\.)?(\\d*))|(\\[([^\\[\\]]+?)\\]))?((\\p{Alpha}+)(\\w*))\\s*",Pattern.CASE_INSENSITIVE);
+	Pattern pattern_fo1 = Pattern.compile("\\s*(min|max)\\s*:\\s*([+-]?)\\s*(((\\d+)(\\.)?(\\d*))|(\\[([^\\[\\]]+?)\\]))?\\s*((\\p{Alpha}+)(\\w*))\\s*",Pattern.CASE_INSENSITIVE);
 	/*pattern per identificare i token successivi della funziona obiettivo*/
-	Pattern pattern_fo2 = Pattern.compile("[+-]\\s*((\\d+\\.?\\d*)|(\\[([^\\[\\]]+?)\\]))?(\\p{Alpha}+\\w*)\\s*",Pattern.CASE_INSENSITIVE);
+	Pattern pattern_fo2 = Pattern.compile("[+-]\\s*((\\d+\\.?\\d*)|(\\[([^\\[\\]]+?)\\]))?\\s*(\\p{Alpha}+\\w*)\\s*",Pattern.CASE_INSENSITIVE);
 	//parte iniziale vincolo con nome, ovvero vincolo completo, non upper o lower
 	Pattern pattern_cons1 = Pattern.compile("\\s*(\\p{Alpha}+\\w*\\s*:\\s*)",Pattern.CASE_INSENSITIVE);
 	//parte per identificare token dei vincoli completi, con associata variabile
-	Pattern pattern_cons3 = Pattern.compile("[+-]\\s*(\\d+\\.?\\d*)?(\\p{Alpha}+\\w*)\\s*",Pattern.CASE_INSENSITIVE);
+	Pattern pattern_cons3 = Pattern.compile("[+-]\\s*(\\d+\\.?\\d*)?\\s*(\\p{Alpha}+\\w*)\\s*",Pattern.CASE_INSENSITIVE);
 	//parte per identificare token dei vincoli completi, quelli costituiti da soli numeri
 	Pattern pattern_cons4 = Pattern.compile("(([+-])\\s*(\\d+)(\\.?)(\\d*))\\s*",Pattern.CASE_INSENSITIVE);
 	
 	
 	//parte per identificare token dei vincoli completi, con associata variabile con []
-	Pattern pattern_cons5 = Pattern.compile("(([+-]?)\\s*\\[([^\\[\\]]+?)\\])(\\p{Alpha}+\\w*)\\s*",Pattern.CASE_INSENSITIVE);
+	Pattern pattern_cons5 = Pattern.compile("(([+-]?)\\s*\\[([^\\[\\]]+?)\\])\\s*(\\p{Alpha}+\\w*)\\s*",Pattern.CASE_INSENSITIVE);
 	//parte per identificare token dei vincoli completi, quelli costituiti da soli numeri con []
 	Pattern pattern_cons6 = Pattern.compile("(([+-]?)\\s*\\[([^\\[\\]]+?)\\])\\s*",Pattern.CASE_INSENSITIVE);
 	
@@ -66,7 +66,7 @@ public class CheckSintaxText {
 		}
 		
 		// per identificare vincoli completi ma con doppio limite u <= x1 + x2 <= l
-		else if (line.matches("\\s*(\\p{Alpha}+\\w*\\s*:)?(.+)(<\\s*=)(\\s*([+-]?)\\s*(((\\d+)(\\.)?(\\d*))|(\\[([^\\[\\]]+?)\\]))?((\\p{Alpha}+)(\\w*))\\s*){2,}(<\\s*=)(.+)")) {
+		else if (line.matches("\\s*(\\p{Alpha}+\\w*\\s*:)?(.+)(<\\s*=)(\\s*([+-]?)\\s*(((\\d+)(\\.)?(\\d*))|(\\[([^\\[\\]]+?)\\]))?\\s*((\\p{Alpha}+)(\\w*))\\s*){2,}(<\\s*=)(.+)")) {
 			//non sono presenti tutti i controlli, altri controlli li fa quando lo elabora
 			//System.out.println("entra qua:"+line);
 			//System.out.println("CCCCCCCCCCCC:"+line);
@@ -74,7 +74,7 @@ public class CheckSintaxText {
 		}
 		
 		// per identificare vincoli completi ma con doppio limite u >= x1 + x2 >= l
-		else if (line.matches("\\s*(\\p{Alpha}+\\w*\\s*:)?(.+)(>\\s*=)(\\s*([+-]?)\\s*(((\\d+)(\\.)?(\\d*))|(\\[([^\\[\\]]+?)\\]))?((\\p{Alpha}+)(\\w*))\\s*){2,}(>\\s*=)(.+)")) {
+		else if (line.matches("\\s*(\\p{Alpha}+\\w*\\s*:)?(.+)(>\\s*=)(\\s*([+-]?)\\s*(((\\d+)(\\.)?(\\d*))|(\\[([^\\[\\]]+?)\\]))?\\s*((\\p{Alpha}+)(\\w*))\\s*){2,}(>\\s*=)(.+)")) {
 			//non sono presenti tutti i controlli, altri controlli li fa quando lo elabora
 			//System.out.println("entra qua2:"+line);
 			//System.out.println("DDDDDDDDD:"+line);
