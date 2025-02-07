@@ -10,7 +10,7 @@
 	<url>https://www.ssclab.org/</url>
 	<packaging>jar</packaging> 
 
-	<dependencies>
+	<dependencies> 
 		<dependency>
     		<groupId>org.eclipse.parsson</groupId>
     			<artifactId>parsson</artifactId>
@@ -136,7 +136,7 @@
 								org.ssclab.log</subpackages>
 							<additionalOptions>-html5</additionalOptions>
 							<excludePackageNames>
-								test,xample,xdemo,xxmilp,org.ssclab.pl.milp.scantext,
+								test,xample,xdemo,org.ssclab.pl.milp.scantext,
 								,org.ssclab.pl.milp.simplex,org.ssclab.pl.milp.scanjson
 							</excludePackageNames>
 						</configuration>
@@ -168,7 +168,7 @@
 				</executions>
 			</plugin>
 <!--			
--->
+
 
 
 			 <plugin>
@@ -194,6 +194,7 @@
                     </execution>
                 </executions>
             </plugin>
+            -->
 <!--
 
 			<plugin>
@@ -202,7 +203,7 @@
 				<version>4.8.6.6</version>
 			</plugin>
 			
-
+-->
 	
 			<plugin>
 				<groupId>org.sonatype.central</groupId>
@@ -216,7 +217,7 @@
 				</configuration>
 			</plugin>
 		
--->
+
 		
 	
 
